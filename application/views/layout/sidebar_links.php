@@ -75,12 +75,14 @@
                     <li class="<?php if(isset($activeLink['classes']['your_timetable'])) echo "active" ?>"><a href="<?php echo site_url("classes/your_timetable") ?>"> <?php echo lang("ctn_709") ?></a></li>
                     <?php if($this->common->has_permissions(array("admin", "class_manager"), $this->user)) : ?>
                       <li class="<?php if(isset($activeLink['classes']['cats'])) echo "active" ?>"><a href="<?php echo site_url("classes/categories") ?>"> <?php echo lang("ctn_710") ?></a></li>
+                      <li class="<?php if(isset($activeLink['classes']['branches'])) echo "active" ?>"><a href="<?php echo site_url("classes/branches") ?>"> <?php echo lang("ctn_985") ?></a></li>
+                      <li class="<?php if(isset($activeLink['classes']['rooms'])) echo "active" ?>"><a href="<?php echo site_url("classes/rooms") ?>"> <?php echo lang("ctn_992") ?></a></li>
                     <?php endif; ?>
                   </ul>
                 </div>
               </li>
             <?php endif; ?>
-          <?php endif; ?>
+            <?php endif; ?>
             <?php if($this->settings->info->subjects_section) : ?>
               <?php if($this->common->has_permissions(array("admin", "subject_manager", "subject_viewer"), $this->user)) : ?>
               <li id="subject_sb">

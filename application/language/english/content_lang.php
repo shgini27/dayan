@@ -1048,12 +1048,14 @@ $lang['ctn_981'] = "Academic Hours";
 $lang['ctn_982'] = "Hours";
 $lang['ctn_983'] = "Download";
 $lang['ctn_984'] = "Status";
-$lang['ctn_985'] = "";
-$lang['ctn_986'] = "";
-$lang['ctn_987'] = "";
-$lang['ctn_988'] = "";
-$lang['ctn_989'] = "";
-$lang['ctn_990'] = "";
+$lang['ctn_985'] = "Branches";
+$lang['ctn_986'] = "ID";
+$lang['ctn_987'] = "Code";
+$lang['ctn_988'] = "Room Total";
+$lang['ctn_989'] = "Add Branch";
+$lang['ctn_990'] = "Class Branches";
+$lang['ctn_991'] = 'Update Branch';
+$lang['ctn_992'] = 'Rooms';
 
 
 ?>

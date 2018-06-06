@@ -222,10 +222,10 @@ $lang['error_211'] = "Please Enter Start Date";
 $lang['error_212'] = "Please Enter End Date";
 $lang['error_213'] = "Please Enter Category No";
 $lang['error_214'] = "Please Enter Category Hours";
-$lang['error_215'] = "";
-$lang['error_216'] = "";
-$lang['error_217'] = "";
-$lang['error_218'] = "";
+$lang['error_215'] = "Branch Code cannot be empty!";
+$lang['error_216'] = "Branch Name cannot be empty!";
+$lang['error_217'] = "Branch Room Total cannot be empty!";
+$lang['error_218'] = "Invalid Branch!";
 $lang['error_219'] = "";
 $lang['error_2120'] = "";
 

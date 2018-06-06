@@ -46,6 +46,8 @@
             <option value='<?php echo site_url("classes/your_timetable") ?>'><?php echo lang("ctn_709") ?></option>
             <?php if($this->common->has_permissions(array("admin", "class_manager"), $this->user)) : ?>
             <option value='<?php echo site_url("classes/categories") ?>'><?php echo lang("ctn_710") ?></option>
+            <option value='<?php echo site_url("classes/branches") ?>'><?php echo lang("ctn_985") ?></option>
+            <option value='<?php echo site_url("classes/rooms") ?>'><?php echo lang("ctn_992") ?></option>
             <?php endif; ?>
            <?php endif; ?>
            <?php if($this->settings->info->subjects_section && $this->common->has_permissions(array("admin", "subject_manager", "subject_viewer"), $this->user)) : ?>

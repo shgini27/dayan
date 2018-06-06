@@ -3112,6 +3112,200 @@ class Classes extends CI_Controller {
         $this->session->set_flashdata("globalmsg", lang("success_76"));
         redirect(site_url("classes/class_students/" . $student->classid));
     }
+    
+    /**
+
+     * Method to get all branches
+     * @author shagy
+     * @return view list of branches
+     */
+    public function branches(){
+        //check permissions
+        if(!$this->common->has_permissions(array("admin", "class_manager"), $this->user)){
+            $this->template->error(lang("error_2"));
+        }
+        
+        $this->template->loadData("activeLink", array("classes" => array("branches" => 1)));
+
+        $this->template->loadContent("classes/branches.php", array(
+                )
+        );
+    }
+    
+    /**
+
+     * Method to draw table with branches
+     * @author shagy
+     * @return branch table data
+     */
+    public function branch_page(){
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $this->load->library("datatables");
+
+        $this->datatables->set_default_order("branch.branch_id", "asc");
+
+        $this->datatables->set_total_rows(
+                $this->classes_model
+                        ->get_branches_total()
+        );
+        $cats = $this->classes_model->get_branches_dt($this->datatables);
+
+
+        foreach ($cats->result() as $r) {
+            $this->datatables->data[] = array(
+                $r->branch_id,
+                $r->code,
+                $r->name,
+                $r->room_total,
+                '<a href="' . site_url("classes/edit_branch/" . $r->branch_id) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("classes/delete_branch/" . $r->branch_id . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>'
+            );
+        }
+
+        //log_message("debug", json_encode($this->datatables->process()));
+
+        echo json_encode($this->datatables->process());
+    }
+    
+    /**
+
+     * Method to load branch view to be edited
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $branch_id     /
+     * @return view Returns view of branch to be edited
+     */
+    public function edit_branch($branch_id) {
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $id = intval($branch_id);
+        $branch = $this->classes_model->get_branch($id);
+        if ($branch->num_rows() == 0) {
+            $this->template->error(lang("error_94"));
+        }
+
+        $branch = $branch->row();
+
+        $this->template->loadData("activeLink", array("classes" => array("branches" => 1)));
+
+
+        $this->template->loadContent("classes/edit_branch.php", array(
+            "branch" => $branch
+                )
+        );
+    }
+    
+    /**
+
+     * Method to edit branch data
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $branch_id     /
+     */
+    public function add_branch_pro() {
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        
+        $code = $this->common->nohtml($this->input->post("code"));
+        $name = $this->common->nohtml($this->input->post("name"));
+        $room_total = intval($this->common->nohtml($this->input->post("room_total")));
+
+        if (empty($code)) {
+            $this->template->error(lang("error_215"));
+        }
+        
+        if (empty($name)) {
+            $this->template->error(lang("error_216"));
+        }
+
+        if (empty($room_total)) {
+            $this->template->error(lang("error_217"));
+        }
+
+
+        $branchid = $this->classes_model->add_branch(array(
+            "code" => $code,
+            "name" => $name,
+            "room_total" => $room_total
+                )
+        );
+        
+        $this->session->set_flashdata("globalmsg", lang("success_158"));
+        redirect(site_url("classes/branches"));
+    }
+    
+    /**
+
+     * Method to edit branch data
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $branch_id     /
+     */
+    public function edit_branch_pro($branch_id) {
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $id = intval($branch_id);
+        $branch = $this->classes_model->get_branch($id);
+        if ($branch->num_rows() == 0) {
+            $this->template->error(lang("error_218"));
+        }
+
+        //$branch = $branch->row();
+
+        $code = $this->common->nohtml($this->input->post("code"));
+        $name = $this->common->nohtml($this->input->post("name"));
+        $room_total = intval($this->common->nohtml($this->input->post("room_total")));
+
+        if (empty($code)) {
+            $this->template->error(lang("error_215"));
+        }
+        
+        if (empty($name)) {
+            $this->template->error(lang("error_216"));
+        }
+
+        if (empty($room_total)) {
+            $this->template->error(lang("error_217"));
+        }
+
+
+        $this->classes_model->update_branch($id, array(
+            "code" => $code,
+            "name" => $name,
+            "room_total" => $room_total
+                )
+        );
+        
+        $this->session->set_flashdata("globalmsg", lang("success_156"));
+        redirect(site_url("classes/branches"));
+    }
+    
+    /**
+
+     * Method to delete branch data
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $branch_id     /
+     * @param string $hash
+     */
+    public function delete_branch($branch_id, $hash) {
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        if ($hash != $this->security->get_csrf_hash()) {
+            $this->template->error(lang("error_6"));
+        }
+        $id = intval($branch_id);
+        $branch = $this->classes_model->get_branch($id);
+        if ($branch->num_rows() == 0) {
+            $this->template->error(lang("error_218"));
+        }
+
+        $this->classes_model->delete_branch($id);
+        
+        $this->session->set_flashdata("globalmsg", lang("success_157"));
+        redirect(site_url("classes/branches"));
+    }
 
     public function categories() {
         if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
