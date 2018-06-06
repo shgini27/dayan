@@ -1,0 +1,9 @@
+core/Security.php file line 638
+ERROR MESSAGE: is_readable(): open_basedir restriction in effect. File(/dev/urandom) 
+is not within the allowed path(s): (/var/www/ttweb/data:.)
+
+cd /nginx/chroot/
+touch random
+touch urandom
+mount --bind /dev/random /nginx/chroot/dev/random
+mount --bind /dev/urandom /nginx/chroot/dev/urandom

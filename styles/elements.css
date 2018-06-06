@@ -1,0 +1,109 @@
+.content-separator { margin-top: 20px !important; }
+.content-title { border-bottom: 1px solid #DDD; padding-bottom: 5px; }
+.head-subject { font-size: 11px; border: 1px solid #000; border-radius: 4px; padding: 5px; margin-left: 10px; margin-right: 10px; }
+.user-box-name { display: inline-block; font-size: 12px; line-height: 6px; vertical-align: middle;}
+.user-box-name p { margin-bottom: 0px; }
+.user-box-username { font-size: 11px; color: #8c8c8c; line-height: 10px; margin-top: 7px; }
+.margin-left { margin-left: 10px; }
+.ui-datepicker{z-index: 9999999 !important};
+
+.finance-blob-unit { font-size: 14px; color: #000;  }
+.finance-blob { display: inline-block; margin: 5px; font-size: 11px; color: #b4b4b4; width: 150px; }
+
+#notifications-scroll { overflow-x: hidden; }
+#email-scroll { overflow-x: hidden; }
+#projects-scroll { overflow-x: hidden; }
+#timer-scroll { overflow-x: hidden; }
+.tool-item { display: inline-block; border: 1px solid #DDD; border-radius: 4px; padding: 5px; margin: 5px; text-align: center; }
+
+/* NOTIFICATION BOX */
+.notification-icon { font-size: 18px; }
+.notification-user-icon { width: 30px; height: 30px; border-radius: 15px; }
+#notifications-box { position: absolute; width: 270px; top: 45px; right: 50px; background: #FFF; border: 1px solid #DDD; border-radius: 4px; min-height: 100px; z-index: 2000; display: none; }
+#notifications-box a:hover { background-color: #FFF !important; }
+.notification-box-bit { position: relative; width: 268px; padding: 10px;  }
+.notification-box-bit:hover { background: #E1ECF3; }
+.notification-icon-bit { float: left; margin-right: 5px; width: 33px;}
+.notification-text-bit { float: left; width: 208px; vertical-align: top; color: #000; font-size: 12px;}
+.notification-text-bit a { color: #0B82F9 !important; }
+.notification-text-bit a:hover { color: #0B82F9 !important; }
+.notification-box-title { border-bottom: 1px solid #EEE; font-size: 14px; margin-bottom: 10px; font-weight: 600; padding: 10px; color: #000 !important; }
+.notification-box-footer { border-top: 1px solid #EEE; font-size: 14px; font-weight: 500; padding: 10px; text-align: center; color: #000 !important; }
+.notification-box-footer a { color: #2d89f0 !important; }
+.badge { background: #FC2232 !important; }
+#notifications-scroll { height: 150px; }
+.active-noti { border-right: 2px solid #F32838; }
+.notification-datestamp { padding: 0px; margin: 0px; color: #B0B0B0; }
+.click { cursor: pointer; }
+
+/* MAIL */
+.mail-border-top{ border-top: 1px solid #EEE; }
+.mail-border-right { }
+.mail-box-snippet { padding: 10px; position: relative; border-bottom: 1px solid #EEE; }
+.mail-box-snippet:hover {background: #EEE;}
+.mail-box-avatar { float: left; width: 100px; text-align: center; position: relative; }
+.mail-box-text { overflow: hidden; }
+.mail-box-avatar img { width: 40px; height: 40px; border-radius: 20px;  }
+.mail-box-username { margin: 0px; }
+.mail-box-title { margin: 0px; }
+.mail-box-message { margin: 0px; color: #848484 !important; font-size: 12px; }
+.mail-box-timestamp { position: absolute; right: 10px; top: 10px; font-size: 11px; }
+#mail-view { min-height: 500px; border-left: 1px solid #EEE; }
+.mail-header { border-bottom: 1px solid #EEE; padding: 10px; font-weight: 600; }
+#loading_spinner_mail { display: none; font-size: 48px; position:absolute; top:0; bottom:0; left:0; right:0; width:30px; height:30px; margin:auto; }
+.mail-header-timestamp { float: right; margin-left: 5px; font-size: 11px; }
+
+.mail-reply { border-bottom: 1px solid #eee; padding: 10px; }
+.mail-reply-avatar { float: left; width: 100px; text-align: center; position: relative; padding-top: 15px; }
+.mail-reply-avatar img { width: 40px; height: 40px; border-radius: 20px; }
+.mail-reply-body { overflow: hidden; padding-top: 15px; position: relative; }
+.mail-reply-timestamp { position: absolute; top: 5px; right: 5px; font-size: 11px; }
+.mail-reply-user { margin: 0px; }
+.mail-reply-message { margin: 0px; font-size: 12px; }
+.mail-reply-message p { margin: 0px; font-size: 12px; }
+.mail-reply-button{ margin-top: 10px; }
+.mail-reply-textbox { padding: 10px; padding-top: 20px; }
+.mail-options { float: right; }
+.mail-pagination { float: left; }
+
+.online-dot { background: #26E612; width: 8px; height: 8px; border-radius: 4px; border: 1px solid #FFF; position: absolute; bottom: 0px; left: 33px;}
+.no-padding { padding: 0px !important; }
+.mail-unread-alert { border-left: 2px solid #e12760; }
+
+.warning-text { color: #ef3b56; }
+
+.cat-icon { width: 30px; height: 30px; }
+
+.form-error { margin-top: 10px; margin-bottom: 10px; border: 1px solid #fc1b00; padding: 5px; background: #fcf5f0; color: #864143;}
+.form-error-no-margin { border: 1px solid #fc1b00; padding: 5px; background: #fcf5f0; color: #864143;}
+.errorField { border: 1px solid #fc1b00 !important; }
+
+
+.user_role_button { border: 1px solid #1e8ed0; font-weight: 600; border-radius: 4px; padding: 5px; font-size: 11px; margin: 1px; margin-bottom: 2px; vertical-align: top; display: inline-block;}
+.user_role_button:hover { background: #e3efff; }
+.user_role_button.admin { border: 1px solid #1bbc42 !important; color: #1bbc42; }
+.user_role_button.project { border: 1px solid #1e8ed0 !important; color: #1e8ed0; }
+.user_role_button.client { border: 1px solid #e46825 !important; color: #e46825;}
+.user_role_button.banned { border: 1px solid #e46825 !important; color: #eb271c;}
+table.dataTable { width: 100% !important; }
+
+.user_avatar { display: inline-block; width: 25px; height: 25px; margin-left: 10px; border-radius: 13px;}
+.user_bit { height: 53px;}
+.user_bit > a { padding: 15px !important; display: inline-block !important; color: #FFF !important; height: 100%;  }
+.user_bit ul li a { color: #000 !important; height: auto !important; width: 100%;}
+.user_bit ul li a:hover { color: #FFF !important; margin: 0px; height: auto !important; }
+
+.light-label { color: #364c73;}
+.invoice-heading { margin: 0px; margin-bottom: 20px; }
+.invoice-item { border-radius: 4px; border: 1px solid #ACACAC; padding: 20px; margin-top: 10px; background: #F9F9F9;}
+.invoice-tab { font-size: 18px !important; }
+
+.db-header-nomargin { margin-bottom: 0px; }
+.small-text { font-size: 11px !important; }
+.invoice-theme { display: inline-block; border-radius: 4px; padding: 10px; border: 1px solid #DDD; margin: 10px; text-align: center; }
+.invoice-theme-active { font-weight: bold; border: 1px solid #1381b1; }
+.project-icon-small { width: 30px; }
+.center-pdf-logo { text-align: center; }
+.pdf-project-heading { text-align: center; }
+
+.navbar-darktext { color: #000 !important; letter-spacing: 1px; }
