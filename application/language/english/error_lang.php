@@ -226,8 +226,15 @@ $lang['error_215'] = "Branch Code cannot be empty!";
 $lang['error_216'] = "Branch Name cannot be empty!";
 $lang['error_217'] = "Branch Room Total cannot be empty!";
 $lang['error_218'] = "Invalid Branch!";
-$lang['error_219'] = "";
-$lang['error_2120'] = "";
-
-
-?>
+$lang['error_219'] = "Room Numeric code cannot be empty!";
+$lang['error_220'] = "Room Code cannot be empty!";
+$lang['error_221'] = "Room Branch cannot be empty!";
+$lang['error_222'] = "Room Seat total cannot be ampty!";
+$lang['error_223'] = "Invalid Room";
+$lang['error_224'] = "";
+$lang['error_225'] = "";
+$lang['error_226'] = "";
+$lang['error_227'] = "";
+$lang['error_228'] = "";
+$lang['error_229'] = "";
+$lang['error_230'] = "";

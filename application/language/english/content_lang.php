@@ -1056,6 +1056,18 @@ $lang['ctn_989'] = "Add Branch";
 $lang['ctn_990'] = "Class Branches";
 $lang['ctn_991'] = 'Update Branch';
 $lang['ctn_992'] = 'Rooms';
-
-
-?>
+$lang['ctn_993'] = 'Numeric';
+$lang['ctn_994'] = 'Room Code';
+$lang['ctn_995'] = 'Branch';
+$lang['ctn_996'] = 'Total seats';
+$lang['ctn_997'] = 'Add Room';
+$lang['ctn_998'] = 'Update Room';
+$lang['ctn_999'] = 'Class Room';
+$lang['ctn_1000'] = '';
+$lang['ctn_1001'] = '';
+$lang['ctn_1002'] = '';
+$lang['ctn_1003'] = '';
+$lang['ctn_1004'] = '';
+$lang['ctn_1005'] = '';
+$lang['ctn_1006'] = '';
+$lang['ctn_1007'] = '';

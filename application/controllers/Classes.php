@@ -3113,6 +3113,7 @@ class Classes extends CI_Controller {
         redirect(site_url("classes/class_students/" . $student->classid));
     }
     
+    /***************************BRANCH STAFF STARTS HERE***********************/
     /**
 
      * Method to get all branches
@@ -3306,7 +3307,231 @@ class Classes extends CI_Controller {
         $this->session->set_flashdata("globalmsg", lang("success_157"));
         redirect(site_url("classes/branches"));
     }
+    /*****************************BRANCH STAFF ENDS HERE***********************/
+    
+    /*****************************ROOM STAFF STARTS HERE***********************/
+    
+    /**
 
+     * Method to get all branches
+     * @author shagy
+     * @return view list of branches
+     */
+    public function rooms(){
+        //check permissions
+        if(!$this->common->has_permissions(array("admin", "class_manager"), $this->user)){
+            $this->template->error(lang("error_2"));
+        }
+        
+        $branches = $this->classes_model->get_branches()->result();
+        
+        $this->template->loadData("activeLink", array("classes" => array("rooms" => 1)));
+
+        $this->template->loadContent("classes/rooms.php", array(
+            "branches" => $branches
+                )
+        );
+    }
+    
+    /**
+
+     * Method to draw table with branches
+     * @author shagy
+     * @return branch table data
+     */
+    public function room_page(){
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $this->load->library("datatables");
+
+        $this->datatables->set_default_order("room.room_id", "asc");
+
+        // Set page ordering options that can be used
+        $this->datatables->ordering(
+                array(
+                    1 => array(
+                        "room.numeric_code" => 0
+                    ),
+                    2 => array(
+                        "room.code" => 0
+                    ),
+                )
+        );
+        
+        $this->datatables->set_total_rows(
+                $this->classes_model
+                        ->get_rooms_total()
+        );
+        $rooms = $this->classes_model->get_rooms_dt($this->datatables);
+
+
+        foreach ($rooms->result() as $r) {
+            $this->datatables->data[] = array(
+                $r->numeric_code,
+                $r->code,
+                $r->branch_name,
+                $r->seat_total,
+                '<a href="' . site_url("classes/edit_room/" . $r->room_id) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("classes/delete_room/" . $r->room_id . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>'
+            );
+        }
+
+        echo json_encode($this->datatables->process());
+    }
+    
+    /**
+
+     * Method to add room data
+     * @author Shagy <shagy@ttweb.org>
+     * @return view Redirects to rooms page /
+     */
+    public function add_room_pro() {
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        
+        $numeric_code = intval($this->common->nohtml($this->input->post("numeric_code")));
+        $code = $this->common->nohtml($this->input->post("code"));
+        $branch_id = intval($this->common->nohtml($this->input->post("branch_id")));
+        $seat_total = intval($this->common->nohtml($this->input->post("seat_total")));
+
+        if (empty($numeric_code)) {
+            $this->template->error(lang("error_219"));
+        }
+        
+        if (empty($code)) {
+            $this->template->error(lang("error_220"));
+        }
+
+        if (empty($branch_id)) {
+            $this->template->error(lang("error_221"));
+        }
+        
+        if (empty($seat_total)) {
+            $this->template->error(lang("error_222"));
+        }
+
+
+        $roomid = $this->classes_model->add_room(array(
+            "numeric_code" => $numeric_code,
+            "code"         => $code,
+            "branch_id"    => $branch_id,
+            "seat_total"   => $seat_total
+                )
+        );
+        
+        $this->session->set_flashdata("globalmsg", lang("success_158"));
+        redirect(site_url("classes/rooms"));
+    }
+    
+    /**
+
+     * Method to load room view to be edited
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $room_id     /
+     * @return view Returns view of room to be edited
+     */
+    public function edit_room($room_id) {
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $id = intval($room_id);
+        $room = $this->classes_model->get_room($id);
+        if ($room->num_rows() == 0) {
+            $this->template->error(lang("error_223"));
+        }
+
+        $room = $room->row();
+        
+        $branches = $this->classes_model->get_branches()->result();
+
+        $this->template->loadData("activeLink", array("classes" => array("rooms" => 1)));
+
+
+        $this->template->loadContent("classes/edit_room.php", array(
+            "room" => $room,
+            "branches" => $branches
+                )
+        );
+    }
+    
+    /**
+
+     * Method to edit room data
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $room_id     /
+     */
+    public function edit_room_pro($room_id) {
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $id = intval($room_id);
+        $room = $this->classes_model->get_room($id);
+        if ($room->num_rows() == 0) {
+            $this->template->error(lang("error_223"));
+        }
+
+        $numeric_code = intval($this->common->nohtml($this->input->post("numeric_code")));
+        $code = $this->common->nohtml($this->input->post("code"));
+        $branch_id = intval($this->common->nohtml($this->input->post("branch_id")));
+        $seat_total = intval($this->common->nohtml($this->input->post("seat_total")));
+
+        if (empty($numeric_code)) {
+            $this->template->error(lang("error_219"));
+        }
+        
+        if (empty($code)) {
+            $this->template->error(lang("error_220"));
+        }
+
+        if (empty($branch_id)) {
+            $this->template->error(lang("error_221"));
+        }
+        
+        if (empty($seat_total)) {
+            $this->template->error(lang("error_222"));
+        }
+
+
+        $this->classes_model->update_room($id, array(
+            "numeric_code" => $numeric_code,
+            "code"         => $code,
+            "branch_id"    => $branch_id,
+            "seat_total"   => $seat_total
+                )
+        );
+        
+        $this->session->set_flashdata("globalmsg", lang("success_160"));
+        redirect(site_url("classes/rooms"));
+    }
+    
+    /**
+
+     * Method to delete room data
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $room_id     /
+     * @param string $hash
+     */
+    public function delete_room($room_id, $hash) {
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        if ($hash != $this->security->get_csrf_hash()) {
+            $this->template->error(lang("error_6"));
+        }
+        $id = intval($room_id);
+        $branch = $this->classes_model->get_room($id);
+        if ($branch->num_rows() == 0) {
+            $this->template->error(lang("error_223"));
+        }
+
+        $this->classes_model->delete_room($id);
+        
+        $this->session->set_flashdata("globalmsg", lang("success_161"));
+        redirect(site_url("classes/rooms"));
+    }
+/*****************************ROOM STAFF ENDS HERE*****************************/
+    
     public function categories() {
         if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
             $this->template->error(lang("error_2"));

@@ -111,6 +111,18 @@ class Classes_Model extends CI_Model {
 
     /**
 
+     * Method to get branches
+     * @author Shagy <shagy@ttweb.org>
+     * @return array Returns array of data
+     */
+    public function get_branches() {
+        return $this->db
+                        ->select("branch.branch_id, branch.name")
+                        ->get("branch");
+    }
+    
+    /**
+
      * Method to get branch data
      * @author Shagy <shagy@ttweb.org>
      * @param int $branch_id     /
@@ -139,6 +151,87 @@ class Classes_Model extends CI_Model {
      */
     public function delete_branch($branch_id) {
         $this->db->where("branch_id", intval($branch_id))->delete("branch");
+    }
+    
+    /**
+
+     * Method to get data for DataTable
+     * @author shagy
+     * @param type $datatable
+     * @return array         /
+     */
+    public function get_rooms_dt($datatable) {
+        $datatable->db_order();
+
+        $datatable->db_search(array(
+            "room.code"
+                )
+        );
+
+        return $this->db->select("room.room_id, room.branch_id,
+                                 room.numeric_code, room.code, room.seat_total, 
+                                 branch.name as branch_name")
+                        ->join("branch", "1 = 1")
+                        ->limit($datatable->length, $datatable->start)
+                        ->get("room");
+    }
+
+    /**
+
+     * Method to get total rows of room table
+     * @author shagy
+     * @return int         /
+     */
+    public function get_rooms_total() {
+        $s = $this->db->select("COUNT(*) as num")->get("room");
+        $r = $s->row();
+        if (isset($r->num))
+            return $r->num;
+        return 0;
+    }
+    
+    /**
+
+     * Method to get room data
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $room_id     /
+     * @return array Returns array of data for given room_id
+     */
+    public function get_room($room_id) {
+        return $this->db->where("room_id", intval($room_id))->get("room");
+    }
+    
+    /**
+
+     * Method to add room data
+     * @author Shagy <shagy@ttweb.org>
+     * @param array $data     /
+     * @return int Returns last entered room id
+     */
+    public function add_room($data) {
+        $this->db->insert("room", $data);
+        return $this->db->insert_id();
+    }
+    
+    /**
+
+     * Method to update room data
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $room_id     /
+     * @param array $data
+     */
+    public function update_room($room_id, $data) {
+        $this->db->where("room_id", intval($room_id))->update("room", $data);
+    }
+    
+    /**
+
+     * Method to delete room data
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $room_id     /
+     */
+    public function delete_room($room_id) {
+        $this->db->where("room_id", intval($room_id))->delete("room");
     }
 
     public function add_class($data) {
