@@ -3893,12 +3893,12 @@ class Classes extends CI_Controller {
         }
 
         if (!empty($hrs) && !empty($start_date)) {
-            $after_week = round($hrs / 6);
+            $after_week = (floor($hrs / 6) * 7) - 1;
+            $day = $hrs % 6;
+            $interval = 'P' . ($after_week + $day) .'D';
             $date = new DateTime($start_date);
-            $date->add(new DateInterval('P' . $after_week . 'W'));
+            $date->add(new DateInterval($interval));
             $end_date = $date->format('Y-m-d');
-            //$ed = DateTime::createFromFormat($this->settings->info->date_format, $end_date);
-            //$end_date = $ed->format('Y-m-d');
         } else {
             $this->template->error(lang("error_214"));
         }
@@ -4025,9 +4025,11 @@ class Classes extends CI_Controller {
         }
 
         if (!empty($hrs) && !empty($start_date)) {
-            $after_week = round($hrs / 6);
+            $after_week = (floor($hrs / 6) * 7) - 1;
+            $day = $hrs % 6;
+            $interval = 'P' . ($after_week + $day) .'D';
             $date = new DateTime($start_date);
-            $date->add(new DateInterval('P' . $after_week . 'W'));
+            $date->add(new DateInterval($interval));
             $end_date = $date->format('Y-m-d');
             //$ed = DateTime::createFromFormat($this->settings->info->date_format, $end_date);
             //$end_date = $ed->format('Y-m-d');

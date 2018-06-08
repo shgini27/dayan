@@ -31,7 +31,8 @@
             <div class="form-group">
                 <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_535") ?></label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control datetimepicker" name="start_date" id="start_date" value="<?php echo $category->start_date ?>">
+                    <input type="text" class="form-control datetimepicker" name="start_date" 
+                           id="start_date" value="<?php $sd = DateTime::createFromFormat("Y-m-d", $category->start_date);echo $sd->format('d/m/Y'); ?>">
                 </div>
             </div>
             <div class="form-group">
