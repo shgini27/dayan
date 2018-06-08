@@ -292,7 +292,7 @@ class Classes extends CI_Controller {
         $count = $this->classes_model->get_student_count($id);
 
         //Add events
-        $cat = $this->classes_model->get_category($categoryid)->row();
+        $cat = $category->row();
         $teachers = $this->classes_model->get_class_teachers2($id);
         $description = 'Teacher(s): ';
         $counter = 1;
@@ -307,13 +307,13 @@ class Classes extends CI_Controller {
         if (trim($class_days) === 'odd') {
             $days = array(1, 3, 5);
         } elseif (trim($class_days) === 'even') {
-            $days = array(2, 3, 6);
+            $days = array(2, 4, 6);
         }
         $room_code = $room->row();
+        $this->classes_model->delete_class_lesson_events($id);
+        $ctr = 0;
         foreach ($days as $day) {
             $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
-
-            $this->classes_model->delete_class_lesson_events($id);
             
             $color = '1CAAF3';
             foreach ($dates as $date) {
@@ -330,7 +330,7 @@ class Classes extends CI_Controller {
                 if ($events->num_rows() > 0) {
                     $this->template->error(lang("error_200") . " " . lang("ctn_1000") . ": $room_code->code ($start_date --- $end_date)");
                 }
-
+                log_message('debug', json_encode($start_date));
                 $this->classes_model->add_class_event(array(
                     "title" => $name,
                     "description" => $description,
@@ -578,12 +578,13 @@ class Classes extends CI_Controller {
         if (trim($class_days) === 'odd') {
             $days = array(1, 3, 5);
         } elseif (trim($class_days) === 'even') {
-            $days = array(2, 3, 6);
+            $days = array(2, 4, 6);
         }
+        
         $room_code = $room->row();
         foreach ($days as $day) {
             $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
-
+            
             foreach ($dates as $date) {
 
                 $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
