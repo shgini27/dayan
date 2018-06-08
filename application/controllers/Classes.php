@@ -109,10 +109,28 @@ class Classes extends CI_Controller {
                 $options .= ' <a href="' . site_url("classes/edit_class/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("classes/delete_class/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
             }
 
+            $today = new DateTime(); // Today
+            $contractDateBegin = new DateTime($r->cat_start_date);
+            $contractDateEnd = new DateTime($r->cat_end_date);
+
+            if (
+                    $today->getTimestamp() > $contractDateBegin->getTimestamp() &&
+                    $today->getTimestamp() < $contractDateEnd->getTimestamp()) {
+
+                $style = 'style="color: greenyellow;"';
+            } elseif ($today->getTimestamp() < $contractDateBegin->getTimestamp()) {
+                $style = 'style="color: yellow;"';
+            } else {
+                $style = 'style="color: red;"';
+            }
+
             $this->datatables->data[] = array(
+                '<div class="text-center"><i class="glyphicon glyphicon-stop" ' . $style . '></i></div>',
                 $r->name,
                 $r->subject_name,
                 $r->cat_name,
+                $r->branch_name,
+                $r->room_code,
                 $max,
                 $options
             );
@@ -167,12 +185,21 @@ class Classes extends CI_Controller {
         }
 
         $categories = $this->classes_model->get_categories();
+        $branches = $this->classes_model->get_branches();
+        $rooms = $this->classes_model->get_branch_room($class->branch_id);
         $subjects = $this->subjects_model->get_all_subjects();
+
+        $this->template->loadExternal(
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/wickedpicker/dist/wickedpicker.min.css">'
+                . '<script src="' . base_url() . 'scripts/libraries/wickedpicker/dist/wickedpicker.min.js"></script>'
+        );
 
         $this->template->loadContent("classes/edit_class.php", array(
             "class" => $class,
             "categories" => $categories,
-            "subjects" => $subjects
+            "subjects" => $subjects,
+            "branches" => $branches,
+            "rooms" => $rooms
                 )
         );
     }
@@ -210,6 +237,12 @@ class Classes extends CI_Controller {
         $subjectid = intval($this->input->post("subjectid"));
         $categoryid = intval($this->input->post("categoryid"));
 
+        $branch_id = intval($this->input->post("branch_id"));
+        $room_id = intval($this->input->post("room_id"));
+        $class_days = $this->common->nohtml($this->input->post("class_days"));
+        $start_hour = $this->common->nohtml($this->input->post("start_hour"));
+        $end_hour = $this->common->nohtml($this->input->post("end_hour"));
+
         $allow_signups = intval($this->input->post("allow_signups"));
         $max_students = intval($this->input->post("max_students"));
 
@@ -223,18 +256,106 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_94"));
         }
 
+        $branch = $this->classes_model->get_branch($branch_id);
+        if ($branch->num_rows() == 0) {
+            $this->template->error(lang("error_218"));
+        }
+
+        $room = $this->classes_model->get_room($room_id);
+        if ($room->num_rows() == 0) {
+            $this->template->error(lang("error_223"));
+        }
+
         if (empty($name)) {
             $this->template->error(lang("error_95"));
         }
 
+        if (empty($class_days)) {
+            $this->template->error(lang("error_226"));
+        }
+
+        if (!empty($start_hour)) {
+            $start_hour = DateTime::createFromFormat("H:i:s", str_replace(' ', '', $start_hour) . ":00");
+            $start_hour = $start_hour->format("H:i:s");
+        } else {
+            $this->template->error(lang("error_224"));
+        }
+
+        if (!empty($end_hour)) {
+            $end_hour = DateTime::createFromFormat("H:i:s", str_replace(' ', '', $end_hour) . ":00");
+            $end_hour = $end_hour->format("H:i:s");
+        } else {
+            $this->template->error(lang("error_225"));
+        }
+
         // Student count
         $count = $this->classes_model->get_student_count($id);
+
+        //Add events
+        $cat = $this->classes_model->get_category($categoryid)->row();
+        $teachers = $this->classes_model->get_class_teachers2($id);
+        $description = 'Teacher(s): ';
+        $counter = 1;
+        foreach ($teachers->result() as $teacher) {
+            $description .= $teacher->username;
+            if ($counter !== $teachers->num_rows() && $counter !== 1) {
+                $description .= ', ';
+            }
+            $counter++;
+        }
+        
+        if (trim($class_days) === 'odd') {
+            $days = array(1, 3, 5);
+        } elseif (trim($class_days) === 'even') {
+            $days = array(2, 3, 6);
+        }
+        $room_code = $room->row();
+        foreach ($days as $day) {
+            $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
+
+            $this->classes_model->delete_class_lesson_events($id);
+            
+            $color = '1CAAF3';
+            foreach ($dates as $date) {
+
+                $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
+                $start_date = $sd->format('Y-m-d H:i:s');
+
+                $ed = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $end_hour);
+                $end_date = $ed->format('Y-m-d H:i:s');
+
+                //check if rooms are available
+                $events = $this->classes_model->get_room_events($start_date, $end_date, $room_code->code, true);
+
+                if ($events->num_rows() > 0) {
+                    $this->template->error(lang("error_200") . " " . lang("ctn_1000") . ": $room_code->code ($start_date --- $end_date)");
+                }
+
+                $this->classes_model->add_class_event(array(
+                    "title" => $name,
+                    "description" => $description,
+                    "start" => $start_date,
+                    "end" => $end_date,
+                    "userid" => $this->user->info->ID,
+                    "classid" => $id,
+                    "room" => $room_code->code,
+                    "color" => $color,
+                    "lesson_flag" => 1
+                        )
+                );
+            }
+        }
 
         // update Class
         $this->classes_model->update_class($id, array(
             "name" => $name,
             "description" => $desc,
             "categoryid" => $categoryid,
+            "branch_id" => $branch_id,
+            "room_id" => $room_id,
+            "class_days" => $class_days,
+            "start_hour" => $start_hour,
+            "end_hour" => $end_hour,
             "subjectid" => $subjectid,
             "students" => $count,
             "allow_signups" => $allow_signups,
@@ -308,9 +429,13 @@ class Classes extends CI_Controller {
                 '<link href="' . base_url() . 'scripts/libraries/chosen/chosen.min.css" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="' . base_url() .
                 'scripts/libraries/chosen/chosen.jquery.min.js"></script>'
+                . '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/wickedpicker/dist/wickedpicker.min.css">'
+                . '<script src="' . base_url() . 'scripts/libraries/wickedpicker/dist/wickedpicker.min.js"></script>'
         );
 
         $categories = $this->classes_model->get_categories();
+        $branches = $this->classes_model->get_branches();
+        $rooms = $this->classes_model->get_rooms();
         $subjects = $this->subjects_model->get_all_subjects();
         $groups = $this->students_model->get_all_groups();
 
@@ -319,6 +444,8 @@ class Classes extends CI_Controller {
 
         $this->template->loadContent("classes/add.php", array(
             "categories" => $categories,
+            "branches" => $branches,
+            "rooms" => $rooms,
             "subjects" => $subjects,
             "groups" => $groups,
             "students" => $students,
@@ -336,6 +463,12 @@ class Classes extends CI_Controller {
         $content = $this->lib_filter->go($this->input->post("content"));
         $subjectid = intval($this->input->post("subjectid"));
         $categoryid = intval($this->input->post("categoryid"));
+
+        $branch_id = intval($this->input->post("branch_id"));
+        $room_id = intval($this->input->post("room_id"));
+        $class_days = $this->common->nohtml($this->input->post("class_days"));
+        $start_hour = $this->common->nohtml($this->input->post("start_hour"));
+        $end_hour = $this->common->nohtml($this->input->post("end_hour"));
 
         $teachers = $this->input->post("teachers");
         $students = $this->input->post("students");
@@ -355,8 +488,36 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_94"));
         }
 
+        $branch = $this->classes_model->get_branch($branch_id);
+        if ($branch->num_rows() == 0) {
+            $this->template->error(lang("error_218"));
+        }
+
+        $room = $this->classes_model->get_room($room_id);
+        if ($room->num_rows() == 0) {
+            $this->template->error(lang("error_223"));
+        }
+
         if (empty($name)) {
             $this->template->error(lang("error_95"));
+        }
+
+        if (empty($class_days)) {
+            $this->template->error(lang("error_226"));
+        }
+
+        if (!empty($start_hour)) {
+            $start_hour = DateTime::createFromFormat("H:i:s", str_replace(' ', '', $start_hour) . ":00");
+            $start_hour = $start_hour->format("H:i:s");
+        } else {
+            $this->template->error(lang("error_224"));
+        }
+
+        if (!empty($end_hour)) {
+            $end_hour = DateTime::createFromFormat("H:i:s", str_replace(' ', '', $end_hour) . ":00");
+            $end_hour = $end_hour->format("H:i:s");
+        } else {
+            $this->template->error(lang("error_225"));
         }
 
         $students_toadd = array();
@@ -384,27 +545,72 @@ class Classes extends CI_Controller {
 
         // Check teachers
         $teachers_toadd = array();
+        $description = '';
+        $counter = 1;
         if ($teachers) {
+            $description = 'Teacher(s): ';
             foreach ($teachers as $username) {
                 $username = $this->common->nohtml($username);
+                $flg = false;
                 if (!empty($username)) {
-                    $user = $this->user_model->get_user_by_username($username);
-                    if ($user->num_rows() == 0) {
+                    $user_data = $this->user_model->get_user_by_username($username);
+                    if ($user_data->num_rows() == 0) {
                         $this->template->error(lang("error_100") . $username);
                     }
-                    $user = $user->row();
+                    $user = $user_data->row();
                     $teachers_toadd[] = $user->ID;
+                    $description .= $user->username;
+                    $flg = true;
                 }
+
+                if ($counter !== $user_data->num_rows() && $counter !== 1 && $flg) {
+                    $description .= ', ';
+                }
+                $counter++;
             }
         }
 
         $students_toadd = array_unique($students_toadd);
+
+        //Add events
+        $cat = $category->row();
+
+        if (trim($class_days) === 'odd') {
+            $days = array(1, 3, 5);
+        } elseif (trim($class_days) === 'even') {
+            $days = array(2, 3, 6);
+        }
+        $room_code = $room->row();
+        foreach ($days as $day) {
+            $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
+
+            foreach ($dates as $date) {
+
+                $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
+                $start_date = $sd->format('Y-m-d H:i:s');
+
+                $ed = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $end_hour);
+                $end_date = $ed->format('Y-m-d H:i:s');
+
+                //check if rooms are available
+                $events = $this->classes_model->get_room_events($start_date, $end_date, $room_code->code, true);
+
+                if ($events->num_rows() > 0) {
+                    $this->template->error(lang("error_200") . " " . lang("ctn_1000") . ": $room_code->code ($start_date --- $end_date)");
+                }
+            }
+        }
 
         // Add Class
         $classid = $this->classes_model->add_class(array(
             "name" => $name,
             "description" => $desc,
             "categoryid" => $categoryid,
+            "branch_id" => $branch_id,
+            "room_id" => $room_id,
+            "class_days" => $class_days,
+            "start_hour" => $start_hour,
+            "end_hour" => $end_hour,
             "subjectid" => $subjectid,
             "students" => count($students_toadd),
             "allow_signups" => $allow_signups,
@@ -412,6 +618,34 @@ class Classes extends CI_Controller {
             "content" => $content
                 )
         );
+
+        //Add events
+        $color = '1CAAF3';
+        foreach ($days as $day) {
+            $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
+
+            foreach ($dates as $date) {
+
+                $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
+                $start_date = $sd->format('Y-m-d H:i:s');
+
+                $ed = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $end_hour);
+                $end_date = $ed->format('Y-m-d H:i:s');
+
+                $this->classes_model->add_class_event(array(
+                    "title" => $name,
+                    "description" => $description,
+                    "start" => $start_date,
+                    "end" => $end_date,
+                    "userid" => $this->user->info->ID,
+                    "classid" => $classid,
+                    "room" => $room_code->code,
+                    "color" => $color,
+                    "lesson_flag" => 1
+                        )
+                );
+            }
+        }
 
         // Add Students
         foreach ($teachers_toadd as $userid) {
@@ -472,6 +706,36 @@ class Classes extends CI_Controller {
 
         $this->session->set_flashdata("globalmsg", lang("success_61"));
         redirect(site_url("classes"));
+    }
+
+    /**
+
+     * Method to get dates of specific day between two dates
+     * @param type $start_date
+     * @param type $end_date
+     * @param type $day_number
+     * @return array   Array of dates  /
+     */
+    private function getDateForSpecificDayBetweenDates($start_date, $end_date, $day_number) {
+        $date_array = array();
+        $end_date = strtotime($end_date);
+
+        $days = array(
+            '1' => 'Monday',
+            '2' => 'Tuesday',
+            '3' => 'Wednesday',
+            '4' => 'Thursday',
+            '5' => 'Friday',
+            '6' => 'Saturday',
+            '7' => 'Sunday'
+        );
+        $i_start = strtotime($days[$day_number], strtotime($start_date));
+
+        for ($i = $i_start; $i <= $end_date; $i = strtotime('+1 week', $i)) {
+            $date_array[] = date('Y-m-d', $i);
+        }
+
+        return $date_array;
     }
 
     public function view($id) {
@@ -3112,34 +3376,35 @@ class Classes extends CI_Controller {
         $this->session->set_flashdata("globalmsg", lang("success_76"));
         redirect(site_url("classes/class_students/" . $student->classid));
     }
-    
-    /***************************BRANCH STAFF STARTS HERE***********************/
+
+    /*     * *************************BRANCH STAFF STARTS HERE********************** */
+
     /**
 
      * Method to get all branches
      * @author shagy
      * @return view list of branches
      */
-    public function branches(){
+    public function branches() {
         //check permissions
-        if(!$this->common->has_permissions(array("admin", "class_manager"), $this->user)){
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
-        
+
         $this->template->loadData("activeLink", array("classes" => array("branches" => 1)));
 
         $this->template->loadContent("classes/branches.php", array(
                 )
         );
     }
-    
+
     /**
 
      * Method to draw table with branches
      * @author shagy
      * @return branch table data
      */
-    public function branch_page(){
+    public function branch_page() {
         if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
@@ -3168,7 +3433,7 @@ class Classes extends CI_Controller {
 
         echo json_encode($this->datatables->process());
     }
-    
+
     /**
 
      * Method to load branch view to be edited
@@ -3196,7 +3461,7 @@ class Classes extends CI_Controller {
                 )
         );
     }
-    
+
     /**
 
      * Method to edit branch data
@@ -3207,7 +3472,7 @@ class Classes extends CI_Controller {
         if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
-        
+
         $code = $this->common->nohtml($this->input->post("code"));
         $name = $this->common->nohtml($this->input->post("name"));
         $room_total = intval($this->common->nohtml($this->input->post("room_total")));
@@ -3215,7 +3480,7 @@ class Classes extends CI_Controller {
         if (empty($code)) {
             $this->template->error(lang("error_215"));
         }
-        
+
         if (empty($name)) {
             $this->template->error(lang("error_216"));
         }
@@ -3231,11 +3496,11 @@ class Classes extends CI_Controller {
             "room_total" => $room_total
                 )
         );
-        
+
         $this->session->set_flashdata("globalmsg", lang("success_158"));
         redirect(site_url("classes/branches"));
     }
-    
+
     /**
 
      * Method to edit branch data
@@ -3261,7 +3526,7 @@ class Classes extends CI_Controller {
         if (empty($code)) {
             $this->template->error(lang("error_215"));
         }
-        
+
         if (empty($name)) {
             $this->template->error(lang("error_216"));
         }
@@ -3277,11 +3542,11 @@ class Classes extends CI_Controller {
             "room_total" => $room_total
                 )
         );
-        
+
         $this->session->set_flashdata("globalmsg", lang("success_156"));
         redirect(site_url("classes/branches"));
     }
-    
+
     /**
 
      * Method to delete branch data
@@ -3303,28 +3568,29 @@ class Classes extends CI_Controller {
         }
 
         $this->classes_model->delete_branch($id);
-        
+
         $this->session->set_flashdata("globalmsg", lang("success_157"));
         redirect(site_url("classes/branches"));
     }
-    /*****************************BRANCH STAFF ENDS HERE***********************/
-    
-    /*****************************ROOM STAFF STARTS HERE***********************/
-    
+
+    /*     * ***************************BRANCH STAFF ENDS HERE********************** */
+
+    /*     * ***************************ROOM STAFF STARTS HERE********************** */
+
     /**
 
      * Method to get all branches
      * @author shagy
      * @return view list of branches
      */
-    public function rooms(){
+    public function rooms() {
         //check permissions
-        if(!$this->common->has_permissions(array("admin", "class_manager"), $this->user)){
+        if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
-        
+
         $branches = $this->classes_model->get_branches()->result();
-        
+
         $this->template->loadData("activeLink", array("classes" => array("rooms" => 1)));
 
         $this->template->loadContent("classes/rooms.php", array(
@@ -3332,14 +3598,14 @@ class Classes extends CI_Controller {
                 )
         );
     }
-    
+
     /**
 
      * Method to draw table with branches
      * @author shagy
      * @return branch table data
      */
-    public function room_page(){
+    public function room_page() {
         if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
@@ -3358,7 +3624,7 @@ class Classes extends CI_Controller {
                     ),
                 )
         );
-        
+
         $this->datatables->set_total_rows(
                 $this->classes_model
                         ->get_rooms_total()
@@ -3378,7 +3644,7 @@ class Classes extends CI_Controller {
 
         echo json_encode($this->datatables->process());
     }
-    
+
     /**
 
      * Method to add room data
@@ -3389,7 +3655,7 @@ class Classes extends CI_Controller {
         if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
-        
+
         $numeric_code = intval($this->common->nohtml($this->input->post("numeric_code")));
         $code = $this->common->nohtml($this->input->post("code"));
         $branch_id = intval($this->common->nohtml($this->input->post("branch_id")));
@@ -3398,7 +3664,7 @@ class Classes extends CI_Controller {
         if (empty($numeric_code)) {
             $this->template->error(lang("error_219"));
         }
-        
+
         if (empty($code)) {
             $this->template->error(lang("error_220"));
         }
@@ -3406,7 +3672,7 @@ class Classes extends CI_Controller {
         if (empty($branch_id)) {
             $this->template->error(lang("error_221"));
         }
-        
+
         if (empty($seat_total)) {
             $this->template->error(lang("error_222"));
         }
@@ -3414,16 +3680,16 @@ class Classes extends CI_Controller {
 
         $roomid = $this->classes_model->add_room(array(
             "numeric_code" => $numeric_code,
-            "code"         => $code,
-            "branch_id"    => $branch_id,
-            "seat_total"   => $seat_total
+            "code" => $code,
+            "branch_id" => $branch_id,
+            "seat_total" => $seat_total
                 )
         );
-        
+
         $this->session->set_flashdata("globalmsg", lang("success_158"));
         redirect(site_url("classes/rooms"));
     }
-    
+
     /**
 
      * Method to load room view to be edited
@@ -3442,7 +3708,7 @@ class Classes extends CI_Controller {
         }
 
         $room = $room->row();
-        
+
         $branches = $this->classes_model->get_branches()->result();
 
         $this->template->loadData("activeLink", array("classes" => array("rooms" => 1)));
@@ -3454,7 +3720,7 @@ class Classes extends CI_Controller {
                 )
         );
     }
-    
+
     /**
 
      * Method to edit room data
@@ -3479,7 +3745,7 @@ class Classes extends CI_Controller {
         if (empty($numeric_code)) {
             $this->template->error(lang("error_219"));
         }
-        
+
         if (empty($code)) {
             $this->template->error(lang("error_220"));
         }
@@ -3487,7 +3753,7 @@ class Classes extends CI_Controller {
         if (empty($branch_id)) {
             $this->template->error(lang("error_221"));
         }
-        
+
         if (empty($seat_total)) {
             $this->template->error(lang("error_222"));
         }
@@ -3495,16 +3761,16 @@ class Classes extends CI_Controller {
 
         $this->classes_model->update_room($id, array(
             "numeric_code" => $numeric_code,
-            "code"         => $code,
-            "branch_id"    => $branch_id,
-            "seat_total"   => $seat_total
+            "code" => $code,
+            "branch_id" => $branch_id,
+            "seat_total" => $seat_total
                 )
         );
-        
+
         $this->session->set_flashdata("globalmsg", lang("success_160"));
         redirect(site_url("classes/rooms"));
     }
-    
+
     /**
 
      * Method to delete room data
@@ -3526,12 +3792,36 @@ class Classes extends CI_Controller {
         }
 
         $this->classes_model->delete_room($id);
-        
+
         $this->session->set_flashdata("globalmsg", lang("success_161"));
         redirect(site_url("classes/rooms"));
     }
-/*****************************ROOM STAFF ENDS HERE*****************************/
-    
+
+    /**
+
+     * Method to get rooms by branch     /
+     * @author Shagy <shagy@ttweb.org>
+     * @return json encoded
+     */
+    public function get_room_by_branch() {
+        $json = array();
+        $branch_id = intval($this->common->nohtml($this->input->post("branch_id")));
+
+        $rooms = $this->classes_model->get_branch_room($branch_id);
+        $html = '<select name="room_id" class="form-control">';
+        $html .= '<option value="">' . lang('ctn_1001') . '</option>';
+        foreach ($rooms->result() as $r) {
+            $html .= '<option value="' . $r->room_id . '">' . $r->code . '</option>';
+        }
+        $html .= '</select>';
+        $json['html'] = $html;
+
+
+        echo json_encode($json);
+    }
+
+    /*     * ***************************ROOM STAFF ENDS HERE**************************** */
+
     public function categories() {
         if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
@@ -3688,7 +3978,7 @@ class Classes extends CI_Controller {
         $name = $this->common->nohtml($this->input->post("name"));
         $number = intval($this->common->nohtml($this->input->post("number")));
         $desc = $this->lib_filter->go($this->input->post("description"));
-        $start_date = $this->lib_filter->go($this->input->post("start_date"));
+        $start_date = $this->common->nohtml($this->input->post("start_date"));
         $hrs = intval($this->common->nohtml($this->input->post("hrs")));
 
 
@@ -3727,7 +4017,7 @@ class Classes extends CI_Controller {
         }
 
         if (!empty($start_date)) {
-            $sd = DateTime::createFromFormat('Y-m-d', $start_date);
+            $sd = DateTime::createFromFormat($this->settings->info->date_format, $start_date);
             $start_date = $sd->format('Y-m-d');
         } else {
             $this->template->error(lang("error_211"));
@@ -3794,8 +4084,17 @@ class Classes extends CI_Controller {
 
 
         foreach ($cats->result() as $r) {
-            if (strtotime($r->end_date) > strtotime('now')) {
+            $today = new DateTime(); // Today
+            $contractDateBegin = new DateTime($r->start_date);
+            $contractDateEnd = new DateTime($r->end_date);
+
+            if (
+                    $today->getTimestamp() > $contractDateBegin->getTimestamp() &&
+                    $today->getTimestamp() < $contractDateEnd->getTimestamp()) {
+
                 $style = 'style="color: greenyellow;"';
+            } elseif ($today->getTimestamp() < $contractDateBegin->getTimestamp()) {
+                $style = 'style="color: yellow;"';
             } else {
                 $style = 'style="color: red;"';
             }

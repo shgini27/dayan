@@ -171,7 +171,7 @@ class Classes_Model extends CI_Model {
         return $this->db->select("room.room_id, room.branch_id,
                                  room.numeric_code, room.code, room.seat_total, 
                                  branch.name as branch_name")
-                        ->join("branch", "1 = 1")
+                        ->join("branch", "room.branch_id = branch.branch_id")
                         ->limit($datatable->length, $datatable->start)
                         ->get("room");
     }
@@ -192,6 +192,19 @@ class Classes_Model extends CI_Model {
     
     /**
 
+     * Method to get branches
+     * @author Shagy <shagy@ttweb.org>
+     * @return array Returns array of data
+     */
+    public function get_rooms() {
+        return $this->db
+                        ->select("room.room_id, room.code, branch.name as branch_name")
+                        ->join("branch", "room.branch_id = branch.branch_id")
+                        ->get("room");
+    }
+    
+    /**
+
      * Method to get room data
      * @author Shagy <shagy@ttweb.org>
      * @param int $room_id     /
@@ -199,6 +212,17 @@ class Classes_Model extends CI_Model {
      */
     public function get_room($room_id) {
         return $this->db->where("room_id", intval($room_id))->get("room");
+    }
+    
+    /**
+
+     * Method to get rooms by branch
+     * @author Shagy <shagy@ttweb.org>
+     * @param int $branch_id     /
+     * @return array Returns array of data for given branch_id
+     */
+    public function get_branch_room($branch_id) {
+        return $this->db->where("branch_id", intval($branch_id))->get("room");
     }
     
     /**
@@ -274,13 +298,17 @@ class Classes_Model extends CI_Model {
         );
 
         return $this->db
-                        ->select("classes.ID, classes.name, classes.description,
+                        ->select("classes.ID, classes.name, classes.description, classes.room_id,
 				classes.subjectid, classes.categoryid, classes.students,
-				classes.max_students, classes.allow_signups,
-				subjects.name as subject_name,
-				class_categories.name as cat_name")
+				classes.max_students, classes.allow_signups, classes.branch_id,
+				subjects.name as subject_name, branch.name as branch_name,
+                                class_categories.end_date as cat_end_date, 
+                                class_categories.start_date as cat_start_date,
+				class_categories.name as cat_name, room.code as room_code")
                         ->join("subjects", "subjects.ID = classes.subjectid")
                         ->join("class_categories", "class_categories.ID = classes.categoryid")
+                        ->join("branch", "branch.branch_id = classes.branch_id")
+                        ->join("room", "room.room_id = classes.room_id")
                         ->limit($datatable->length, $datatable->start)
                         ->get("classes");
     }
@@ -309,13 +337,16 @@ class Classes_Model extends CI_Model {
         return $this->db
                         ->where("class_students.userid", $userid)
                         ->select("classes.ID, classes.name, classes.description,
-				classes.subjectid, classes.categoryid, classes.students,
+				classes.subjectid, classes.categoryid, classes.branch_id, 
+                                classes.students, classes.room_id,
 				classes.max_students, classes.allow_signups,
-				subjects.name as subject_name,
-				class_categories.name as cat_name")
+				subjects.name as subject_name, branch.name as branch_name,
+				class_categories.name as cat_name, room.code as room_code")
                         ->join("classes", "classes.ID = class_students.classid")
                         ->join("subjects", "subjects.ID = classes.subjectid")
                         ->join("class_categories", "class_categories.ID = classes.categoryid")
+                        ->join("branch", "branch.branch_id = classes.branch_id")
+                        ->join("room", "room.room_id = classes.room_id")
                         ->group_by("class_students.classid")
                         ->limit($datatable->length, $datatable->start)
                         ->get("class_students");
@@ -404,6 +435,15 @@ class Classes_Model extends CI_Model {
 				users.first_name, users.last_name, users.email")
                         ->join("users", "users.ID = class_students.userid")
                         ->limit($datatable->length, $datatable->start)
+                        ->get("class_students");
+    }
+    
+    public function get_class_teachers2($classid) {
+        return $this->db
+                        ->where("class_students.teacher_flag", 1)
+                        ->where("class_students.classid", $classid)
+                        ->select("users.username")
+                        ->join("users", "users.ID = class_students.userid")
                         ->get("class_students");
     }
 
@@ -731,12 +771,28 @@ class Classes_Model extends CI_Model {
                         ->get("calendar_events");
     }
 
-    public function get_room_events($start, $end, $room) {
-        return $this->db
+    public function get_room_events($start, $end, $room, $flag = false) {
+        if($flag){
+            $lesson_flag = 1;
+            return $this->db
+                        ->where("room", $room)
+                        ->where("lesson_flag", $lesson_flag)
+                        ->where("start >=", $start)
+                        ->where("end <=", $end)
+                        ->get("calendar_events");
+        }else{
+            return $this->db
                         ->where("room", $room)
                         ->where("start >=", $start)
                         ->where("end <=", $end)
                         ->get("calendar_events");
+        }
+    }
+    
+    public function delete_class_lesson_events($classid, $lesson = 1) {
+        $this->db->where("classid", $classid)
+                ->where("lesson_flag", $lesson)
+                ->delete("calendar_events");
     }
 
     public function add_class_event($data) {
@@ -750,9 +806,15 @@ class Classes_Model extends CI_Model {
     public function update_class_event($id, $data) {
         $this->db->where("ID", $id)->update("calendar_events", $data);
     }
-
+    
     public function delete_class_event($id) {
         $this->db->where("ID", $id)->delete("calendar_events");
+    }
+    
+    public function delete_class_events($ids) {
+        foreach($ids as $id){
+            $this->db->where("ID", $id)->delete("calendar_events");
+        }
     }
 
     public function get_user_classes($userid) {

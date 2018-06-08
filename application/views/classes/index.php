@@ -32,7 +32,16 @@
 <div class="table-responsive">
 <table id="cat-table" class="table table-bordered table-striped table-hover">
 <thead>
-<tr class="table-header"><td><?php echo lang("ctn_532") ?></td><td><?php echo lang("ctn_476") ?></td><td><?php echo lang("ctn_477") ?></td><td><?php echo lang("ctn_481") ?></td><td><?php echo lang("ctn_52") ?></td></tr>
+<tr class="table-header">
+    <td><?php echo lang("ctn_984") ?></td>
+    <td><?php echo lang("ctn_532") ?></td>
+    <td><?php echo lang("ctn_476") ?></td>
+    <td><?php echo lang("ctn_477") ?></td>
+    <td><?php echo lang("ctn_995") ?></td>
+    <td><?php echo lang("ctn_1000") ?></td>
+    <td><?php echo lang("ctn_481") ?></td>
+    <td><?php echo lang("ctn_52") ?></td>
+</tr>
 </thead>
 <tbody>
 </tbody>
@@ -64,6 +73,9 @@ $(document).ready(function() {
         	
         ],
         "columns": [
+        { "orderable": false },
+        null,
+        null,
         null,
         null,
         null,
