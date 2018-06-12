@@ -18,3 +18,9 @@ $hook['pre_controller'] = array(
             'filepath' => 'hooks',
             'params'   => array()
             );
+$hook['post_system'] = array(
+        'class' => 'QueryLogHook',
+        'function' => 'log_queries',
+        'filename' => 'QueryLogHook.php',
+        'filepath' => 'hooks'
+    );

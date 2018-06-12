@@ -258,6 +258,49 @@ class Classes_Model extends CI_Model {
         $this->db->where("room_id", intval($room_id))->delete("room");
     }
 
+    //check if teacher has other classes
+        //SELECT * FROM class_students cs 
+        //left join users u on(u.ID = cs.userid) 
+        //left join class_categories cc on(cc.ID = cs.classid) 
+        //left join classes c on(c.ID = cs.classid) 
+        //WHERE userid = 2 and classid != 2 and cc.end_date >= NOW() 
+        //and cs.teacher_flag = 1 and c.start_hour != '11:00' and c.end_hour != '13:00'
+        
+//SELECT * FROM `class_students` 
+//JOIN `users` ON `users`.`ID` = `class_students`.`userid` 
+//JOIN `class_categories` ON `class_categories`.`ID` = `class_students`.`classid` 
+//JOIN `classes` ON(classes.ID = class_students.classid) 
+//WHERE `class_students`.`userid` = '2' 
+//AND `classes`.`ID` != 1 
+//AND `class_students`.`teacher_flag` = 1 
+//AND `class_categories`.`end_date` >= 'NOW()' 
+//AND `classes`.`class_days` != 'odd'
+//BETWEEN '09:00:00' AND '11:00:00'
+    
+    /**
+
+     * Method to check if teacher has another class at this point
+     * @param int $user_id
+     * @param int $class_id
+     * @param string $start
+     * @param string $end     /
+     */
+    public function check_teachers($user_id, $end_date, $class_id, $day, $start, $end){
+        //$now = date("Y-m-d");
+        return $this->db
+                            ->join("users", "users.ID = class_students.userid", "LEFT")
+                            ->join("class_categories", "class_categories.ID = class_students.classid", "LEFT")
+                            ->join("classes", "classes.ID = class_students.classid", "LEFT")
+                            ->where("class_students.userid", $user_id)
+                            ->where("class_students.classid !=", $class_id)
+                            ->where("class_students.teacher_flag", 1)
+                            ->where("class_categories.end_date >=", $end_date)
+                            ->where("classes.class_days", $day)
+                            ->where("classes.start_hour", $start)
+                            ->where("classes.end_hour", $end)
+                            ->get("class_students");
+    }
+    
     public function add_class($data) {
         $this->db->insert("classes", $data);
         return $this->db->insert_id();
@@ -265,6 +308,8 @@ class Classes_Model extends CI_Model {
 
     public function delete_class($id) {
         $this->db->where("ID", $id)->delete("classes");
+        $this->db->where("class_students.classid", $id)
+                 ->delete("class_students");
     }
 
     public function get_class($id) {
@@ -302,7 +347,7 @@ class Classes_Model extends CI_Model {
 				classes.subjectid, classes.categoryid, classes.students,
 				classes.max_students, classes.allow_signups, classes.branch_id,
 				subjects.name as subject_name, branch.name as branch_name,
-                                class_categories.end_date as cat_end_date, 
+                                class_categories.end_date as cat_end_date, class_categories.hrs,
                                 class_categories.start_date as cat_start_date,
 				class_categories.name as cat_name, room.code as room_code")
                         ->join("subjects", "subjects.ID = classes.subjectid")
@@ -310,6 +355,14 @@ class Classes_Model extends CI_Model {
                         ->join("branch", "branch.branch_id = classes.branch_id")
                         ->join("room", "room.room_id = classes.room_id")
                         ->limit($datatable->length, $datatable->start)
+                        ->get("classes");
+    }
+    
+    public function get_all_classes() {
+        return $this->db
+                        ->select("classes.ID, classes.name, classes.description, classes.room_id,
+				classes.subjectid, classes.categoryid, classes.students,
+				classes.max_students, classes.branch_id,")
                         ->get("classes");
     }
 
@@ -336,11 +389,13 @@ class Classes_Model extends CI_Model {
 
         return $this->db
                         ->where("class_students.userid", $userid)
-                        ->select("classes.ID, classes.name, classes.description,
+                        ->select("classes.ID, classes.name, classes.description, classes.room_id,
 				classes.subjectid, classes.categoryid, classes.branch_id, 
                                 classes.students, classes.room_id,
 				classes.max_students, classes.allow_signups,
 				subjects.name as subject_name, branch.name as branch_name,
+                                class_categories.end_date as cat_end_date, class_categories.hrs,
+                                class_categories.start_date as cat_start_date,
 				class_categories.name as cat_name, room.code as room_code")
                         ->join("classes", "classes.ID = class_students.classid")
                         ->join("subjects", "subjects.ID = classes.subjectid")

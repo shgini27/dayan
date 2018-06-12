@@ -77,6 +77,7 @@
                       <li class="<?php if(isset($activeLink['classes']['cats'])) echo "active" ?>"><a href="<?php echo site_url("classes/categories") ?>"> <?php echo lang("ctn_710") ?></a></li>
                       <li class="<?php if(isset($activeLink['classes']['branches'])) echo "active" ?>"><a href="<?php echo site_url("classes/branches") ?>"> <?php echo lang("ctn_985") ?></a></li>
                       <li class="<?php if(isset($activeLink['classes']['rooms'])) echo "active" ?>"><a href="<?php echo site_url("classes/rooms") ?>"> <?php echo lang("ctn_992") ?></a></li>
+                      <li class="<?php if(isset($activeLink['classes']['all_timetable'])) echo "active" ?>"><a href="<?php echo site_url("classes/overall_events") ?>"> <?php echo lang("ctn_1007") ?></a></li>
                     <?php endif; ?>
                   </ul>
                 </div>

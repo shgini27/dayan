@@ -107,7 +107,7 @@ $(document).ready(function() {
         
       ],
       eventRender: function(event, element) {
-            element.attr('title', event.room);
+            element.attr('title', event.description + ' Room: ' + event.room);
             element.attr('data-toggle', "tooltip");
             element.attr('data-placement', "bottom");
             element.tooltip();

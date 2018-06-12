@@ -59,13 +59,19 @@
                     <div class="form-group">
                         <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_537") ?></label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="room">
+                            <select name="room" class="form-control">
+                                <option value=""><?php echo lang('ctn_1001'); ?></option>
+                                <?php foreach ($rooms->result() as $r) : ?>
+                                    <option value="<?php echo $r->code ?>" ><?php echo $r->code . ' - ' . $r->branch_name ;?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <!-- <input type="text" class="form-control" name="room"> -->
                         </div>
                     </div>
                     <div class="form-group ui-front">
                         <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_538") ?></label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control jscolor" name="color" value="1caaf3">
+                            <input type="text" class="form-control jscolor" name="color" value="b453f3">
                         </div>
                     </div>
                 </div>
@@ -120,7 +126,11 @@
                 <div class="form-group">
                     <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_537") ?></label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="room" id="event_room">
+                        <select name="room" class="form-control" id="event_room">
+                            <?php foreach ($rooms->result() as $r) : ?>
+                                <option value="<?php echo $r->code ?>"><?php echo $r->code . ' - ' . $r->branch_name ;?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group ui-front">
@@ -178,7 +188,7 @@
                 }
             ],
             eventRender: function (event, element) {
-                element.attr('title', event.room + ' shagy');
+                element.attr('title', event.description + ' Room: ' + event.room);
                 element.attr('data-toggle', "tooltip");
                 element.attr('data-placement', "bottom");
                 element.tooltip();
@@ -201,6 +211,9 @@
             },
             timeFormat: 'HH:mm',
             eventClick: function (event, jsEvent, view) {
+                if (event.lesson_flag === '1') {
+                    return false;
+                }
                 $('#event_name').val(event.title);
                 $('#event_desc').val(event.description);
                 $('#event_room').val(event.room);

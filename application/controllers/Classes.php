@@ -128,6 +128,7 @@ class Classes extends CI_Controller {
                 '<div class="text-center"><i class="glyphicon glyphicon-stop" ' . $style . '></i></div>',
                 $r->name,
                 $r->subject_name,
+                $r->hrs,
                 $r->cat_name,
                 $r->branch_name,
                 $r->room_code,
@@ -153,6 +154,7 @@ class Classes extends CI_Controller {
         }
 
         $this->classes_model->delete_class($id);
+        $this->classes_model->delete_class_lesson_events($id);
         $this->session->set_flashdata("globalmsg", lang("success_58"));
         redirect(site_url("classes"));
     }
@@ -303,19 +305,20 @@ class Classes extends CI_Controller {
             }
             $counter++;
         }
-        
+
         if (trim($class_days) === 'odd') {
             $days = array(1, 3, 5);
+            $color = '1CAAF3';
         } elseif (trim($class_days) === 'even') {
             $days = array(2, 4, 6);
+            $color = '26FF2F';
         }
+
         $room_code = $room->row();
         $this->classes_model->delete_class_lesson_events($id);
-        $ctr = 0;
         foreach ($days as $day) {
             $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
-            
-            $color = '1CAAF3';
+
             foreach ($dates as $date) {
 
                 $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
@@ -330,7 +333,7 @@ class Classes extends CI_Controller {
                 if ($events->num_rows() > 0) {
                     $this->template->error(lang("error_200") . " " . lang("ctn_1000") . ": $room_code->code ($start_date --- $end_date)");
                 }
-                log_message('debug', json_encode($start_date));
+
                 $this->classes_model->add_class_event(array(
                     "title" => $name,
                     "description" => $description,
@@ -544,6 +547,8 @@ class Classes extends CI_Controller {
         }
 
         // Check teachers
+        $cat = $category->row();
+
         $teachers_toadd = array();
         $description = '';
         $counter = 1;
@@ -557,8 +562,17 @@ class Classes extends CI_Controller {
                     if ($user_data->num_rows() == 0) {
                         $this->template->error(lang("error_100") . $username);
                     }
+
                     $user = $user_data->row();
+
+                    $t = $this->classes_model->check_teachers($user->ID, 0, $cat->end_date, $class_days, $start_hour, $end_hour);
+
+                    if ($t->num_rows() > 0) {
+                        $this->template->error($username . ' ' . lang("error_227"));
+                    }
+
                     $teachers_toadd[] = $user->ID;
+
                     $description .= $user->username;
                     $flg = true;
                 }
@@ -573,18 +587,19 @@ class Classes extends CI_Controller {
         $students_toadd = array_unique($students_toadd);
 
         //Add events
-        $cat = $category->row();
 
         if (trim($class_days) === 'odd') {
             $days = array(1, 3, 5);
+            $color = '1CAAF3';
         } elseif (trim($class_days) === 'even') {
             $days = array(2, 4, 6);
+            $color = '26FF2F';
         }
-        
+
         $room_code = $room->row();
         foreach ($days as $day) {
             $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
-            
+
             foreach ($dates as $date) {
 
                 $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
@@ -621,7 +636,6 @@ class Classes extends CI_Controller {
         );
 
         //Add events
-        $color = '1CAAF3';
         foreach ($days as $day) {
             $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
 
@@ -3166,7 +3180,16 @@ class Classes extends CI_Controller {
         }
         $user = $user->row();
         $userid = $user->ID;
+        
+        $category = $this->classes_model->get_category($class->categoryid);
+        $cat = $category->row();
 
+        $t = $this->classes_model->check_teachers($user->ID, $id, $cat->end_date, $class->class_days, $class->start_hour, $class->end_hour);
+
+        if ($t->num_rows() > 0) {
+            $this->template->error($username . ' ' . lang("error_227"));
+        }
+        
         // Check user role
         $user_role = $this->user_model->get_users_user_role($user->user_role);
         if ($user_role->num_rows() == 0) {
@@ -3276,6 +3299,18 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_115"));
         }
 
+        // Check student if attend other class(es)
+        // SELECT * FROM class_students cs 
+        // left join users u on(u.ID = cs.userid) 
+        // left join class_categories cc on(cc.ID = cs.classid) 
+        // WHERE userid = $userid and classid != $id and cc.start_date >= NOW()
+        //check if teacher has other classes
+        //SELECT * FROM class_students cs 
+        //left join users u on(u.ID = cs.userid) 
+        //left join class_categories cc on(cc.ID = cs.classid) 
+        //left join classes c on(c.ID = cs.classid) 
+        //WHERE userid = 2 and classid != 2 and cc.end_date >= NOW() 
+        //and cs.teacher_flag = 1 and c.start_hour != '11:00' and c.end_hour != '13:00'
         // Add
         $this->classes_model->add_student(array(
             "classid" => $id,
@@ -3895,7 +3930,7 @@ class Classes extends CI_Controller {
         if (!empty($hrs) && !empty($start_date)) {
             $after_week = (floor($hrs / 6) * 7) - 1;
             $day = $hrs % 6;
-            $interval = 'P' . ($after_week + $day) .'D';
+            $interval = 'P' . ($after_week + $day) . 'D';
             $date = new DateTime($start_date);
             $date->add(new DateInterval($interval));
             $end_date = $date->format('Y-m-d');
@@ -4027,7 +4062,7 @@ class Classes extends CI_Controller {
         if (!empty($hrs) && !empty($start_date)) {
             $after_week = (floor($hrs / 6) * 7) - 1;
             $day = $hrs % 6;
-            $interval = 'P' . ($after_week + $day) .'D';
+            $interval = 'P' . ($after_week + $day) . 'D';
             $date = new DateTime($start_date);
             $date->add(new DateInterval($interval));
             $end_date = $date->format('Y-m-d');
@@ -4373,6 +4408,8 @@ class Classes extends CI_Controller {
 
         $class = $class->row();
 
+        $rooms = $this->classes_model->get_rooms();
+
         $this->template->loadExternal(
                 '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.css" />
 			<script src="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.full.min.js"></script>
@@ -4403,6 +4440,7 @@ class Classes extends CI_Controller {
 
         $this->template->loadContent("classes/timetable.php", array(
             "class" => $class,
+            "rooms" => $rooms,
             "member_flag" => $member_flag,
             "teacher_flag" => $teacher_flag
                 )
@@ -4446,12 +4484,36 @@ class Classes extends CI_Controller {
                 "color" => "#" . $r->color,
                 "classid" => $classid,
                 "class_name" => $class_name,
-                "room" => $r->room
+                "room" => $r->room,
+                "lesson_flag" => $r->lesson_flag
             );
         }
 
         echo json_encode(array("events" => $data_events));
         exit();
+    }
+
+    /**
+
+     * Method to handle overall timetable action event   /
+     */
+    public function overall_events() {
+        $classes = $this->classes_model->get_all_classes()->result();
+
+        $this->template->loadExternal(
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/full/fullcalendar.min.css" />
+                <link rel="stylesheet" href="' . base_url() . 'scripts/libraries/full/fullcalendar.print.min.css" media="print" type="text/css" />
+		<script src="' . base_url() . 'scripts/libraries/full/lib/moment.min.js"></script>
+		<script src="' . base_url() . 'scripts/libraries/full/fullcalendar.min.js"></script>
+                <script src="' . base_url() . 'scripts/libraries/full/gcal.min.js"></script>
+                <script src="' . base_url() . 'scripts/libraries/full/locale-all.js"></script>
+                <script src="' . base_url() . 'scripts/libraries/jscolor.min.js"></script>'
+        );
+
+        $this->template->loadContent("classes/all_events.php", array(
+            "classes" => $classes
+                )
+        );
     }
 
     public function add_class_event($id) {

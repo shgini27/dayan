@@ -36,6 +36,7 @@
     <td><?php echo lang("ctn_984") ?></td>
     <td><?php echo lang("ctn_532") ?></td>
     <td><?php echo lang("ctn_476") ?></td>
+    <td><?php echo lang("ctn_982") ?></td>
     <td><?php echo lang("ctn_477") ?></td>
     <td><?php echo lang("ctn_995") ?></td>
     <td><?php echo lang("ctn_1000") ?></td>
@@ -76,6 +77,7 @@ $(document).ready(function() {
         { "orderable": false },
         null,
         null,
+        { "orderable": false },
         null,
         null,
         null,
