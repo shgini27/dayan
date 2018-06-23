@@ -445,6 +445,20 @@ class Common
             ), true
         );
     }
+    
+    public function get_parent_registration_fields($hook, $redirect, $member, $user_roles, $custom_fields, $flags = array()) 
+    {
+        $CI =& get_instance();
+        return $CI->load->view("snippets/parent_form.php", array(
+            "hook" => $hook,
+            "redirect" => $redirect,
+            "member" => $member,
+            "user_roles" => $user_roles,
+            "fields" => $custom_fields,
+            "flags" => $flags
+            ), true
+        );
+    }
 
 }
 

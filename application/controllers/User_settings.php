@@ -41,10 +41,10 @@ class User_Settings extends CI_Controller
 		$aboutme = $this->common->nohtml($this->input->post("aboutme"));
 
 		$address_1 = $this->common->nohtml($this->input->post("address_1"));
-		$address_2 = $this->common->nohtml($this->input->post("address_2"));
+		$mobile_phone = $this->common->nohtml($this->input->post("mobile_phone"));
 		$city = $this->common->nohtml($this->input->post("city"));
 		$state = $this->common->nohtml($this->input->post("state"));
-		$zipcode = $this->common->nohtml($this->input->post("zipcode"));
+		$phone = $this->common->nohtml($this->input->post("phone"));
 		$country = $this->common->nohtml($this->input->post("country"));
 
 		$this->load->helper('email');
@@ -212,10 +212,10 @@ class User_Settings extends CI_Controller
 			}
 
 			$address_1 = $this->common->nohtml($this->input->post("address_1"));
-		$address_2 = $this->common->nohtml($this->input->post("address_2"));
+		$mobile_phone = $this->common->nohtml($this->input->post("mobile_phone"));
 		$city = $this->common->nohtml($this->input->post("city"));
 		$state = $this->common->nohtml($this->input->post("state"));
-		$zipcode = $this->common->nohtml($this->input->post("zipcode"));
+		$phone = $this->common->nohtml($this->input->post("phone"));
 		$country = $this->common->nohtml($this->input->post("country"));
 
 
@@ -227,10 +227,10 @@ class User_Settings extends CI_Controller
 			"avatar" => $image,
 			"aboutme" => $aboutme,
 			"address_line_1" => $address_1,
-			"address_line_2" => $address_2,
+			"mobile_phone" => $mobile_phone,
 			"city" => $city,
 			"state" => $state,
-			"zip" => $zipcode,
+			"phone" => $phone,
 			"country" => $country
 			)
 		);
@@ -334,10 +334,10 @@ class User_Settings extends CI_Controller
 		$email = $this->common->nohtml($this->input->post("email"));
 
 		$address_line_1 = $this->common->nohtml($this->input->post("address_line_1"));
-		$address_line_2 = $this->common->nohtml($this->input->post("address_line_2"));
+		$mobile_phone = $this->common->nohtml($this->input->post("mobile_phone"));
 		$city = $this->common->nohtml($this->input->post("city"));
 		$state = $this->common->nohtml($this->input->post("state"));
-		$zip = $this->common->nohtml($this->input->post("zip"));
+		$phone = $this->common->nohtml($this->input->post("phone"));
 		$country = $this->common->nohtml($this->input->post("country"));
 
 		$first_name = $this->common->nohtml($this->input->post("first_name"));
@@ -352,10 +352,10 @@ class User_Settings extends CI_Controller
 			"checkout2_account_number" => $checkout2_account_number,
 			"checkout2_secret_key" => $checkout2_secret_key,
 			"address_line_1" => $address_line_1,
-			"address_line_2" => $address_line_2,
+			"mobile_phone" => $mobile_phone,
 			"city" => $city,
 			"state" => $state,
-			"zip" => $zip,
+			"phone" => $phone,
 			"country" => $country,
 			"first_name" => $first_name,
 			"last_name" => $last_name

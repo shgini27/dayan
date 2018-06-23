@@ -58,6 +58,7 @@
            <?php if($this->settings->info->students_section && $this->common->has_permissions(array("admin", "student_group_manager", "student_group_viewer", "student_manager", "student_viewer"), $this->user)) : ?>
             <?php if($this->common->has_permissions(array("admin", "student_manager", "student_viewer"), $this->user)) : ?>
             <option value='<?php echo site_url("students") ?>'><?php echo lang("ctn_713") ?></option>
+            <option value='<?php echo site_url("students/dropped_students") ?>'><?php echo lang("ctn_1009") ?></option>
             <?php endif; ?>
             <?php if($this->common->has_permissions(array("admin", "student_group_manager", "student_group_viewer"), $this->user)) : ?>
             <option value='<?php echo site_url("students/groups") ?>'><?php echo lang("ctn_714") ?></option>

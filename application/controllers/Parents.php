@@ -203,7 +203,7 @@ class Parents extends CI_Controller
 		$fields = $this->user_model->get_custom_fields(array());
 
 		$this->template->loadContent("parents/add.php", array(
-			"form" => $this->common->get_user_registration_fields(
+			"form" => $this->common->get_parent_registration_fields(
 				"add_parent", // Hook
 				"parents", // Redirect
 				null,  // user object
@@ -245,7 +245,7 @@ class Parents extends CI_Controller
 			), $id);
 
 		$this->template->loadContent("parents/edit_parent.php", array(
-			"form" => $this->common->get_user_registration_fields(
+			"form" => $this->common->get_parent_registration_fields(
 				"edit_parent",
 				"parents",
 				$parent, 

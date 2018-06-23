@@ -282,10 +282,21 @@ class User_Model extends CI_Model
 		return $this->db
 			->select("custom_fields.ID, custom_fields.name, custom_fields.type,
 				custom_fields.required, custom_fields.help_text,
-				custom_fields.options,
+				custom_fields.options, user_custom_fields.userid,
 				user_custom_fields.value")
 			->join("user_custom_fields", "user_custom_fields.fieldid = custom_fields.ID
 			 AND user_custom_fields.userid = " . $userid, "LEFT OUTER")
+			->get("custom_fields");
+
+	}
+        
+        public function get_student_genger($userid) 
+	{
+		return $this->db
+			->select("custom_fields.name, user_custom_fields.value")
+			->join("user_custom_fields", "user_custom_fields.fieldid = custom_fields.ID", "LEFT")
+                        ->where("user_custom_fields.userid", $userid)
+                        ->where("user_custom_fields.fieldid", 2)
 			->get("custom_fields");
 
 	}
@@ -365,6 +376,20 @@ class User_Model extends CI_Model
     public function get_all_users() 
     {
     	return $this->db->get("users");
+    }
+    
+    public function get_users_birthday(){
+        //$now = date("Y-m-d");
+        $month = date("n");
+        $day = date("d");
+        //$date = new DateTime($now);
+        //$date->add(new DateInterval("P3D"));
+        //$pass_3_day = $date->format("Y-m-d");
+        
+        return $this->db->select("users.ID, users.username, users.first_name, users.last_name, users.avatar, users.birth_date, users.online_timestamp")
+                ->where("MONTH(users.birth_date)", $month)
+                ->where_in("DAY(users.birth_date)", [$day , ($day + 1), ($day + 2), ($day + 3), ($day + 4)])
+                ->get("users");
     }
 
     public function get_notifications($userid) 

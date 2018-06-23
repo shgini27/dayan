@@ -55,7 +55,7 @@ class Classes_Model extends CI_Model {
         //`class_categories` cc on(c.categoryid = cc.ID) left join `subjects` s 
         //on(s.ID = c.subjectid) WHERE cc.ID = 2 GROUP by s.name
         return $this->db
-                        ->select("subjects.name, class_categories.start_date, class_categories.end_date")
+                        ->select("subjects.name, class_categories.start_date, class_categories.end_date, class_categories.hrs")
                         ->where("class_categories.ID", $category_id)
                         ->join("class_categories", "classes.categoryid = class_categories.ID")
                         ->join("subjects", "subjects.ID = classes.subjectid")
@@ -96,7 +96,7 @@ class Classes_Model extends CI_Model {
             return $r->num;
         return 0;
     }
-    
+
     /**
 
      * Method to add branch data
@@ -120,7 +120,7 @@ class Classes_Model extends CI_Model {
                         ->select("branch.branch_id, branch.name")
                         ->get("branch");
     }
-    
+
     /**
 
      * Method to get branch data
@@ -131,7 +131,7 @@ class Classes_Model extends CI_Model {
     public function get_branch($branch_id) {
         return $this->db->where("branch_id", intval($branch_id))->get("branch");
     }
-    
+
     /**
 
      * Method to update branch data
@@ -142,7 +142,7 @@ class Classes_Model extends CI_Model {
     public function update_branch($branch_id, $data) {
         $this->db->where("branch_id", intval($branch_id))->update("branch", $data);
     }
-    
+
     /**
 
      * Method to delete branch data
@@ -152,7 +152,7 @@ class Classes_Model extends CI_Model {
     public function delete_branch($branch_id) {
         $this->db->where("branch_id", intval($branch_id))->delete("branch");
     }
-    
+
     /**
 
      * Method to get data for DataTable
@@ -189,7 +189,7 @@ class Classes_Model extends CI_Model {
             return $r->num;
         return 0;
     }
-    
+
     /**
 
      * Method to get branches
@@ -202,7 +202,7 @@ class Classes_Model extends CI_Model {
                         ->join("branch", "room.branch_id = branch.branch_id")
                         ->get("room");
     }
-    
+
     /**
 
      * Method to get room data
@@ -213,7 +213,7 @@ class Classes_Model extends CI_Model {
     public function get_room($room_id) {
         return $this->db->where("room_id", intval($room_id))->get("room");
     }
-    
+
     /**
 
      * Method to get rooms by branch
@@ -224,7 +224,7 @@ class Classes_Model extends CI_Model {
     public function get_branch_room($branch_id) {
         return $this->db->where("branch_id", intval($branch_id))->get("room");
     }
-    
+
     /**
 
      * Method to add room data
@@ -236,7 +236,7 @@ class Classes_Model extends CI_Model {
         $this->db->insert("room", $data);
         return $this->db->insert_id();
     }
-    
+
     /**
 
      * Method to update room data
@@ -247,7 +247,7 @@ class Classes_Model extends CI_Model {
     public function update_room($room_id, $data) {
         $this->db->where("room_id", intval($room_id))->update("room", $data);
     }
-    
+
     /**
 
      * Method to delete room data
@@ -259,13 +259,12 @@ class Classes_Model extends CI_Model {
     }
 
     //check if teacher has other classes
-        //SELECT * FROM class_students cs 
-        //left join users u on(u.ID = cs.userid) 
-        //left join class_categories cc on(cc.ID = cs.classid) 
-        //left join classes c on(c.ID = cs.classid) 
-        //WHERE userid = 2 and classid != 2 and cc.end_date >= NOW() 
-        //and cs.teacher_flag = 1 and c.start_hour != '11:00' and c.end_hour != '13:00'
-        
+    //SELECT * FROM class_students cs 
+    //left join users u on(u.ID = cs.userid) 
+    //left join class_categories cc on(cc.ID = cs.classid) 
+    //left join classes c on(c.ID = cs.classid) 
+    //WHERE userid = 2 and classid != 2 and cc.end_date >= NOW() 
+    //and cs.teacher_flag = 1 and c.start_hour != '11:00' and c.end_hour != '13:00'
 //SELECT * FROM `class_students` 
 //JOIN `users` ON `users`.`ID` = `class_students`.`userid` 
 //JOIN `class_categories` ON `class_categories`.`ID` = `class_students`.`classid` 
@@ -276,7 +275,7 @@ class Classes_Model extends CI_Model {
 //AND `class_categories`.`end_date` >= 'NOW()' 
 //AND `classes`.`class_days` != 'odd'
 //BETWEEN '09:00:00' AND '11:00:00'
-    
+
     /**
 
      * Method to check if teacher has another class at this point
@@ -285,22 +284,22 @@ class Classes_Model extends CI_Model {
      * @param string $start
      * @param string $end     /
      */
-    public function check_teachers($user_id, $end_date, $class_id, $day, $start, $end){
+    public function check_teachers($user_id, $end_date, $class_id, $day, $start, $end) {
         //$now = date("Y-m-d");
         return $this->db
-                            ->join("users", "users.ID = class_students.userid", "LEFT")
-                            ->join("class_categories", "class_categories.ID = class_students.classid", "LEFT")
-                            ->join("classes", "classes.ID = class_students.classid", "LEFT")
-                            ->where("class_students.userid", $user_id)
-                            ->where("class_students.classid !=", $class_id)
-                            ->where("class_students.teacher_flag", 1)
-                            ->where("class_categories.end_date >=", $end_date)
-                            ->where("classes.class_days", $day)
-                            ->where("classes.start_hour", $start)
-                            ->where("classes.end_hour", $end)
-                            ->get("class_students");
+                        ->join("users", "users.ID = class_students.userid", "LEFT")
+                        ->join("class_categories", "class_categories.ID = class_students.classid", "LEFT")
+                        ->join("classes", "classes.ID = class_students.classid", "LEFT")
+                        ->where("class_students.userid", $user_id)
+                        ->where("class_students.classid !=", $class_id)
+                        ->where("class_students.teacher_flag", 1)
+                        ->where("class_categories.end_date >=", $end_date)
+                        ->where("classes.class_days", $day)
+                        ->where("classes.start_hour", $start)
+                        ->where("classes.end_hour", $end)
+                        ->get("class_students");
     }
-    
+
     public function add_class($data) {
         $this->db->insert("classes", $data);
         return $this->db->insert_id();
@@ -309,19 +308,30 @@ class Classes_Model extends CI_Model {
     public function delete_class($id) {
         $this->db->where("ID", $id)->delete("classes");
         $this->db->where("class_students.classid", $id)
-                 ->delete("class_students");
+                ->delete("class_students");
     }
 
     public function get_class($id) {
         return $this->db->where("ID", $id)->get("classes");
     }
+    
+    /*public function get_subject($id) {
+        return $this->db->where("ID", $id)->get("classes");
+    }*/
 
     public function update_class($id, $data) {
         $this->db->where("ID", $id)->update("classes", $data);
     }
 
-    public function add_student($data) {
+    public function add_student($data, $branch_code="") {
         $this->db->insert("class_students", $data);
+        
+        $student_id = $this->db->insert_id();
+        $agree_no = $branch_code . "-" . $student_id;
+        
+        $data_update = ["agreement_number" => $agree_no];
+        
+        $this->db->where("ID", $student_id)->update("class_students", $data_update);
     }
 
     public function get_classes_total() {
@@ -358,6 +368,21 @@ class Classes_Model extends CI_Model {
                         ->get("classes");
     }
     
+    /**
+
+     * Method to get classes by its category
+     * @param type $category_id
+     * @return object     /
+     */
+    public function get_classes_by_category($category_id){
+        return $this->db
+                ->select("classes.ID, classes.name, classes.categoryid, classes.subjectid,
+                            classes.students, subjects.name as subject_name")
+                ->join("subjects", "subjects.ID = classes.subjectid", "LEFT")
+                ->where("classes.categoryid", $category_id)
+                ->get("classes");
+    }
+
     public function get_all_classes() {
         return $this->db
                         ->select("classes.ID, classes.name, classes.description, classes.room_id,
@@ -420,9 +445,9 @@ class Classes_Model extends CI_Model {
         return $this->db
                         ->where("class_students.classid", $classid)
                         ->where("class_students.teacher_flag", 0)
-                        ->select("class_students.ID, class_students.teacher_flag,
+                        ->select("class_students.ID, class_students.teacher_flag, users.ID as user_id,
 				users.username, users.avatar, users.online_timestamp,
-				users.first_name, users.last_name, users.email")
+				users.first_name, users.last_name, users.email, class_students.agreement_number")
                         ->join("users", "users.ID = class_students.userid")
                         ->limit($datatable->length, $datatable->start)
                         ->get("class_students");
@@ -434,7 +459,7 @@ class Classes_Model extends CI_Model {
                         ->select("users.ID as userid, users.username, users.email,
 				users.email_notification, users.avatar, users.first_name,
 				users.last_name, users.online_timestamp,
-				class_students.teacher_flag")
+				class_students.teacher_flag, class_students.agreement_number")
                         ->join("users", "users.ID = class_students.userid")
                         ->get("class_students");
     }
@@ -445,11 +470,35 @@ class Classes_Model extends CI_Model {
                         ->where("class_students.teacher_flag", 0)
                         ->select("users.ID as userid, users.username, users.email,
 				users.email_notification, users.avatar, users.first_name,
-				users.last_name, users.online_timestamp,
-				class_students.teacher_flag")
+				users.last_name, users.fathers_name, users.online_timestamp,
+				class_students.teacher_flag, class_students.agreement_number")
                         ->join("users", "users.ID = class_students.userid")
                         ->get("class_students");
     }
+    
+    public function get_student_attendances($class_id, $student_id){
+        //SELECT users.first_name, users.last_name, attendance_sheets.time_date, 
+        //attendance_sheet_entries.present, attendance_sheet_entries.absent, 
+        //attendance_sheet_entries.late, attendance_sheet_entries.notes, 
+        //calendar_events.title, calendar_events.start, calendar_events.end, 
+        //calendar_events.room FROM `attendance_sheets` 
+        //left join attendance_sheet_entries on(attendance_sheet_entries.attendanceid = attendance_sheets.ID) 
+        //LEFT join calendar_events on(calendar_events.ID = attendance_sheets.eventid) 
+        //left join users on(users.ID = attendance_sheets.teacherid) 
+        //WHERE attendance_sheets.classid = 1 and attendance_sheet_entries.userid = 3
+        return $this->db
+                        ->where("attendance_sheets.classid", $class_id)
+                        ->where("attendance_sheet_entries.userid", $student_id)
+                        ->select("users.first_name, users.last_name, attendance_sheets.time_date,
+				attendance_sheet_entries.present, attendance_sheet_entries.absent,
+				attendance_sheet_entries.late, attendance_sheet_entries.notes,
+				calendar_events.title, calendar_events.start, calendar_events.end, calendar_events.room")
+                        ->join("attendance_sheet_entries", "attendance_sheet_entries.attendanceid = attendance_sheets.ID", "LEFT")
+                        ->join("calendar_events", "calendar_events.ID = attendance_sheets.eventid", "LEFT")
+                        ->join("users", "users.ID = attendance_sheets.teacherid", "LEFT")
+                        ->get("attendance_sheets");
+    }
+    
 
     public function get_student_count($classid) {
         $s = $this->db->where("classid", $classid)
@@ -461,6 +510,83 @@ class Classes_Model extends CI_Model {
         return 0;
     }
 
+    /**
+
+     * Method to get count of todays student
+     * @return int Total students count     /
+     */
+    public function get_total_students_count() {
+        //SELECT COUNT(*) as total_students FROM class_students cs LEFT JOIN classes c ON(c.ID = cs.classid) LEFT JOIN class_categories cc ON(cc.ID = c.categoryid) WHERE cc.end_date >= NOW() AND teacher_flag = 0 AND c.class_days = 'odd'
+
+        $now = date("Y-m-d");
+        $day_of_week = date('w');
+        $day = 'odd';
+        
+        if (($day_of_week % 2) === 0) {
+            $day = 'even';
+        }
+        
+        $s = $this->db
+                        ->join("classes", "classes.ID = class_students.classid", "LEFT")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
+                        ->where("classes.class_days", $day)
+                        ->where("class_categories.end_date >=", $now)
+                        ->where("teacher_flag", 0)
+                        ->select("COUNT(*) as total_students")->get("class_students");
+        $r = $s->row();
+        if (isset($r->total_students)) {
+            return $r->total_students;
+        }
+        return 0;
+    }
+
+    /**
+
+     * Method to get students that are missing todays class
+     * @param array $class_id
+     * @return int  Total students count of missing todays class   /
+     */
+    public function get_total_missing_students_count(array $class_id){
+        //SELECT * FROM `attendance_sheets` ash LEFT JOIN attendance_sheet_entries ase ON(ase.attendanceid = ash.ID)
+        $now = date("Y-m-d");
+        $s = $this->db
+                        ->join("classes", "classes.ID = attendance_sheets.classid", "LEFT")
+                        ->join("attendance_sheet_entries", "attendance_sheet_entries.attendanceid = attendance_sheets.ID", "LEFT")
+                        ->where("attendance_sheet_entries.absent", 1)
+                        ->where("attendance_sheets.time_date", $now)
+                        ->where_in("attendance_sheets.classid", $class_id)
+                        ->select("COUNT(*) as total_missing_students")->get("attendance_sheets");
+        $r = $s->row();
+        if (isset($r->total_missing_students)) {
+            return $r->total_missing_students;
+        }
+        return 0;
+    }
+    
+    
+    public function get_todays_classes(){
+        //SELECT * FROM classes c LEFT JOIN class_categories cc ON(cc.ID = c.categoryid) WHERE cc.start_date <= NOW() AND cc.end_date >= NOW()
+    
+        $now = date("Y-m-d");
+        $day_of_week = date('w');
+        $day = 'odd';
+        
+        if (($day_of_week % 2) === 0) {
+            $day = 'even';
+        }
+        
+        return $this->db
+                        ->select("classes.ID, classes.name, classes.class_days, 
+                                classes.categoryid, class_categories.start_date, 
+                                class_categories.end_date, classes.students")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
+                        ->where("class_categories.start_date <=", $now)
+                        ->where("class_categories.end_date >=", $now)
+                        ->where("classes.class_days", $day)
+                        ->get("classes");
+    }
+    
+    
     public function get_class_teachers_all($classid) {
         return $this->db
                         ->where("class_students.teacher_flag", 1)
@@ -492,7 +618,7 @@ class Classes_Model extends CI_Model {
                         ->limit($datatable->length, $datatable->start)
                         ->get("class_students");
     }
-    
+
     public function get_class_teachers2($classid) {
         return $this->db
                         ->where("class_students.teacher_flag", 1)
@@ -516,9 +642,8 @@ class Classes_Model extends CI_Model {
         return $this->db
                         ->where("class_students.ID", $id)
                         ->select("class_students.ID, class_students.classid,
-				class_students.userid,
-				classes.name,
-				users.username, users.first_name, users.last_name")
+				class_students.userid, class_students.agreement_number, users.fathers_name,
+				classes.name, users.username, users.first_name, users.last_name")
                         ->join("classes", "classes.ID = class_students.classid")
                         ->join("users", "users.ID = class_students.userid")
                         ->get("class_students");
@@ -526,6 +651,11 @@ class Classes_Model extends CI_Model {
 
     public function delete_student($id) {
         $this->db->where("ID", $id)->delete("class_students");
+    }
+
+    public function add_dropped_student($data) {
+        $this->db->insert("dropped_student", $data);
+        return $this->db->insert_id();
     }
 
     public function get_class_student_user($userid, $classid) {
@@ -818,32 +948,33 @@ class Classes_Model extends CI_Model {
                         ->get("class_assignments");
     }
 
-    public function get_class_events($start, $end, $classid) {
+    public function get_class_events($start, $end, $classid, $events = []) {
         return $this->db
                         ->where("classid", $classid)
                         ->where("start >=", $start)
                         ->where("end <=", $end)
+                        ->where_not_in("ID", $events)
                         ->get("calendar_events");
     }
 
     public function get_room_events($start, $end, $room, $flag = false) {
-        if($flag){
+        if ($flag) {
             $lesson_flag = 1;
             return $this->db
-                        ->where("room", $room)
-                        ->where("lesson_flag", $lesson_flag)
-                        ->where("start >=", $start)
-                        ->where("end <=", $end)
-                        ->get("calendar_events");
-        }else{
+                            ->where("room", $room)
+                            ->where("lesson_flag", $lesson_flag)
+                            ->where("start >=", $start)
+                            ->where("end <=", $end)
+                            ->get("calendar_events");
+        } else {
             return $this->db
-                        ->where("room", $room)
-                        ->where("start >=", $start)
-                        ->where("end <=", $end)
-                        ->get("calendar_events");
+                            ->where("room", $room)
+                            ->where("start >=", $start)
+                            ->where("end <=", $end)
+                            ->get("calendar_events");
         }
     }
-    
+
     public function delete_class_lesson_events($classid, $lesson = 1) {
         $this->db->where("classid", $classid)
                 ->where("lesson_flag", $lesson)
@@ -861,13 +992,13 @@ class Classes_Model extends CI_Model {
     public function update_class_event($id, $data) {
         $this->db->where("ID", $id)->update("calendar_events", $data);
     }
-    
+
     public function delete_class_event($id) {
         $this->db->where("ID", $id)->delete("calendar_events");
     }
-    
+
     public function delete_class_events($ids) {
-        foreach($ids as $id){
+        foreach ($ids as $id) {
             $this->db->where("ID", $id)->delete("calendar_events");
         }
     }
@@ -944,6 +1075,15 @@ class Classes_Model extends CI_Model {
             return $r->num;
         return 0;
     }
+    
+    public function get_class_assignments_count($class_id) {
+        $s = $this->db->where("classid", $class_id)->select("COUNT(*) as num")
+                ->get("class_assignments");
+        $r = $s->row();
+        if (isset($r->num))
+            return $r->num;
+        return 0;
+    }
 
     public function get_class_attendance($id, $datatable) {
         $datatable->db_order();
@@ -980,6 +1120,20 @@ class Classes_Model extends CI_Model {
                         ->join("classes", "classes.ID = attendance_sheets.classid")
                         ->get("attendance_sheets");
     }
+    
+    public function get_attendance_sheet_by_class($class_id) {
+        return $this->db
+                        ->where("attendance_sheets.classid", $class_id)
+                        ->select("attendance_sheets.ID, attendance_sheets.attendance_date,
+				attendance_sheets.attendance, attendance_sheets.classid,
+				attendance_sheets.eventid,
+				users.username, users.avatar, users.online_timestamp,
+				users.first_name, users.last_name,
+				classes.name")
+                        ->join("users", "users.ID = attendance_sheets.teacherid")
+                        ->join("classes", "classes.ID = attendance_sheets.classid")
+                        ->get("attendance_sheets");
+    }
 
     public function update_attendance_sheet($id, $data) {
         $this->db->where("ID", $id)->update("attendance_sheets", $data);
@@ -996,6 +1150,7 @@ class Classes_Model extends CI_Model {
     public function get_attendance_sheet_entries($id, $attendanceid) {
         return $this->db
                         ->where("class_students.classid", $id)
+                        ->where("class_students.teacher_flag", 0)
                         ->select("users.ID as userid, users.username, users.email,
 				users.email_notification, users.avatar, users.first_name,
 				users.last_name, users.online_timestamp,
@@ -1067,6 +1222,16 @@ class Classes_Model extends CI_Model {
                         ->select("class_grades.ID, class_grades.grade, class_grades.min_score,
 				class_grades.max_score, class_grades.classid")
                         ->get("class_grades");
+    }
+    
+    public function get_student_total_grade($user_id){
+        
+        return $this->db
+                ->select("user_assignments.ID, user_assignments.assignmentid, user_assignments.userid, class_assignments.type,
+                        user_assignments.mark, class_assignments.classid, class_assignments.weighting, class_assignments.max_mark")
+                ->join("class_assignments", "class_assignments.ID = user_assignments.assignmentid", "LEFT")
+                ->where("user_assignments.userid", $user_id)
+                ->get("user_assignments");
     }
 
     public function get_all_user_classes($userid) {

@@ -64,13 +64,13 @@
             <input type="text" class="form-control" id="name-in" name="last_name" value="<?php echo $member->last_name ?>">
         </div>
 </div>
-<div class="form-group">
+<!-- <div class="form-group">
 
         <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_350") ?></label>
         <div class="col-md-9">
             <input type="text" class="form-control" id="name-in" name="credits" value="<?php echo $member->points ?>">
         </div>
-</div>
+</div> -->
 <div class="form-group">
         <label for="inputEmail3" class="col-sm-3 label-heading"><?php echo lang("ctn_31") ?></label>
         <div class="col-sm-9">
@@ -125,9 +125,9 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_421") ?></label>
+        <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_1021") ?></label>
         <div class="col-md-9">
-          <input type="text" name="address_2" class="form-control" value="<?php echo $member->address_line_2 ?>">
+          <input type="text" name="mobile_phone" class="form-control" value="<?php echo $member->mobile_phone ?>">
         </div>
     </div>
     <div class="form-group">
@@ -143,9 +143,9 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_424") ?></label>
+        <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_1022") ?></label>
         <div class="col-md-9">
-          <input type="text" name="zipcode" class="form-control" value="<?php echo $member->zip ?>">
+          <input type="text" name="phone" class="form-control" value="<?php echo $member->phone ?>">
         </div>
     </div>
     <div class="form-group">

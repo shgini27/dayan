@@ -111,6 +111,7 @@
                     <ul class="inner-sidebar-links">
                         <?php if($this->common->has_permissions(array("admin", "student_manager", "student_viewer"), $this->user)) : ?>
                         <li class="<?php if(isset($activeLink['students']['general'])) echo "active" ?>"><a href="<?php echo site_url("students") ?>"> <?php echo lang("ctn_713") ?></a></li>
+                        <li class="<?php if(isset($activeLink['students']['dropped'])) echo "active" ?>"><a href="<?php echo site_url("students/dropped_students") ?>"> <?php echo lang("ctn_1009") ?></a></li>
                       <?php endif; ?>
                       <?php if($this->common->has_permissions(array("admin", "student_group_manager", "student_group_viewer"), $this->user)) : ?>
                         <li class="<?php if(isset($activeLink['students']['groups'])) echo "active" ?>"><a href="<?php echo site_url("students/groups") ?>"> <?php echo lang("ctn_714") ?></a></li>

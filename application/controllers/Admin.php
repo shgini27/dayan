@@ -1653,10 +1653,10 @@ class Admin extends CI_Controller
 		$active = intval($this->input->post("active"));
 
 		$address_1 = $this->common->nohtml($this->input->post("address_1"));
-		$address_2 = $this->common->nohtml($this->input->post("address_2"));
+		$mobile_phone = $this->common->nohtml($this->input->post("mobile_phone"));
 		$city = $this->common->nohtml($this->input->post("city"));
 		$state = $this->common->nohtml($this->input->post("state"));
-		$zipcode = $this->common->nohtml($this->input->post("zipcode"));
+		$phone = $this->common->nohtml($this->input->post("phone"));
 		$country = $this->common->nohtml($this->input->post("country"));
 
 
@@ -1864,10 +1864,10 @@ class Admin extends CI_Controller
 				"points" => $points,
 				"active" => $active,
 				"address_line_1" => $address_1,
-				"address_line_2" => $address_2,
+				"mobile_phone" => $mobile_phone,
 				"city" => $city,
 				"state" => $state,
-				"zip" => $zipcode,
+				"phone" => $phone,
 				"country" => $country
 				)
 		);

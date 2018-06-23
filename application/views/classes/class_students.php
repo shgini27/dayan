@@ -39,7 +39,7 @@
 <div class="table-responsive">
 <table id="student-table" class="table table-striped table-hover table-bordered">
 <thead>
-<tr class="table-header"><td><?php echo lang("ctn_339") ?></td><td><?php echo lang("ctn_24") ?></td><td><?php echo lang("ctn_52") ?></td></tr>
+<tr class="table-header"><td><?php echo lang("ctn_339") ?></td><td><?php echo lang("ctn_24") ?></td><td><?php echo lang("ctn_1019") ?></td><td><?php echo lang("ctn_52") ?></td></tr>
 </thead>
 <tbody>
 </tbody>
@@ -113,6 +113,7 @@ $(document).ready(function() {
         	[0, "desc"]
         ],
         "columns": [
+        null,
         null,
         null,
         { "orderable" : false }

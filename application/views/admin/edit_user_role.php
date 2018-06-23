@@ -32,7 +32,7 @@
 <div class="col-md-6">
 <strong><?php echo lang("ctn_408") ?></strong><br /><br />
 
-<ul id="items" style="width: 100%; min-height: 100px;"">
+<ul id="items" style="width: 100%; min-height: 100px;">
 <?php foreach($permissions as $p) : ?>
     <?php if(!$p['selected']) : ?>
 <li class="user_role_button <?php echo $p['class'] ?>" title="<?php echo $p['desc'] ?>" data-id="<?php echo $p['id'] ?>" data-placement="bottom" data-toggle="tooltip"><?php echo $p['name'] ?></li>
@@ -73,8 +73,8 @@
 $(document).ready(function() {
 
     // Permissions
-    var el = document.getElementById('items');
-    var sortable = Sortable.create(el, {
+    var permissions = document.getElementById('items');
+    var sortable = Sortable.create(permissions, {
         group : { 
             name: "permissions",
             put : ['active_permissions']
@@ -82,7 +82,7 @@ $(document).ready(function() {
         sort : false,
         animation: 100
     });
-
+        
     // Active Permissions
     var active_permissions = document.getElementById('active_items');
     var ap = Sortable.create(active_permissions, {
@@ -91,8 +91,7 @@ $(document).ready(function() {
             put: ['permissions']
         },
         animation: 100,
-        sort : false,
-
+        sort : false
     });
 
      $("#user_roles").submit(function(e) {

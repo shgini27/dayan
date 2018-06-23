@@ -107,6 +107,15 @@
         </div>
         <!-- FORM ENDS-->
         <?php echo form_close() ?>
+        
+        <?php echo form_open(site_url("documents/test_exel"), array("class" => "form-horizontal", "id" => "excel_form")) ?>
+                    
+                    <div class="col-xs-12">
+                        <button type="submit" id="excel_document" class="btn btn-info pull-right">
+                            <i class="fa fa-download"></i> Download excel file
+                        </button>
+                    </div>
+                    <?php echo form_close() ?>
 
     </div>
     <script type="text/javascript"><!--
@@ -120,6 +129,13 @@
                 return false;
             }
         }
+        $(document).ready(function(){
+            $("excel_document").click(function(){
+                $("excel_form").submit(function(){
+                    alert("Submitted");
+                });
+            });
+        });
         //--></script>
     <!-- DOCUMENT STYLE ENDS -->
 </div>

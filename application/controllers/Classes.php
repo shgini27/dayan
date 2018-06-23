@@ -105,6 +105,7 @@ class Classes extends CI_Controller {
             }
 
             $options = '<a href="' . site_url("classes/view/" . $r->ID) . '" class="btn btn-primary btn-xs">' . lang("ctn_552") . '</a>';
+            $options .= ' <a href="' . site_url("documents/download_attendance/" . $r->ID) . '" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_494") . '"><span class="glyphicon glyphicon-download"></span></a>';
             if ($this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
                 $options .= ' <a href="' . site_url("classes/edit_class/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("classes/delete_class/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
             }
@@ -692,11 +693,13 @@ class Classes extends CI_Controller {
         }
 
         // Add Students
+        $brnch = $branch->row();
+        $branch_code = $brnch->code;
         foreach ($students_toadd as $userid) {
             $this->classes_model->add_student(array(
                 "classid" => $classid,
                 "userid" => $userid
-                    )
+                    ), $branch_code
             );
 
             $user = $this->user_model->get_user($userid);
@@ -2507,8 +2510,11 @@ class Classes extends CI_Controller {
         $startdt = new DateTime('now'); // setup a local datetime
         $startdt->add(DateInterval::createFromDateString('360 days'));
         $format2 = $startdt->format('Y-m-d H:i:s');
+        
+        //$attend_ids[] = $attendance->eventid;
 
-        $events = $this->classes_model->get_class_events($format, $format2, $attendance->classid);
+        //$events = $this->classes_model->get_class_events($format, $format2, $attendance->classid, $attend_ids);
+        $events = $this->classes_model->get_class_event($attendance->eventid);
 
         $this->template->loadContent("classes/edit_attendance.php", array(
             "students" => $students,
@@ -2707,8 +2713,15 @@ class Classes extends CI_Controller {
         $startdt = new DateTime('now'); // setup a local datetime
         $startdt->add(DateInterval::createFromDateString('30 days'));
         $format2 = $startdt->format('Y-m-d H:i:s');
+        
+        $attends = $this->classes_model->get_attendance_sheet_by_class($id);
+        if($attends->num_rows() > 0){
+            foreach($attends->result() as $attend){
+                $attend_ids[] = $attend->eventid;
+            }
+        }
 
-        $events = $this->classes_model->get_class_events($format, $format2, $id);
+        $events = $this->classes_model->get_class_events($format, $format2, $id, $attend_ids);
 
         $this->template->loadContent("classes/add_attendance.php", array(
             "class" => $class,
@@ -2935,6 +2948,9 @@ class Classes extends CI_Controller {
                     ),
                     1 => array(
                         "users.email" => 0
+                    ),
+                    2 => array(
+                        "class_students.agreement_number" => 0
                     )
                 )
         );
@@ -2952,11 +2968,14 @@ class Classes extends CI_Controller {
             if ($this->common->has_permissions(array("admin", "class_manager"), $this->user) || ($this->settings->info->teacher_class_manage && $teacher_flag)) {
                 $options .= '<a href="' . site_url("classes/student_assignments/" . $r->ID) . '" class="btn btn-info btn-xs">' . lang("ctn_577") . '</a> ';
             }
-            $options .= '<a href="' . site_url("classes/delete_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
+            $options .= '<a href="' . site_url("documents/download_agreement/" . $r->ID) . '" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1020") . '"><span class="glyphicon glyphicon-download"></span></a>';
+            $options .= ' <a href="' . site_url("documents/download_student_attendance/" . $r->ID) . '" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_494") . '"><span class="glyphicon glyphicon-download"></span></a>';
+            $options .= ' <a href="' . site_url("classes/delete_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
 
             $this->datatables->data[] = array(
                 $this->common->get_user_display(array("username" => $r->username, "avatar" => $r->avatar, "online_timestamp" => $r->online_timestamp, "first_name" => $r->first_name, "last_name" => $r->last_name)),
                 $r->email,
+                $r->agreement_number,
                 $options
             );
         }
@@ -3011,9 +3030,28 @@ class Classes extends CI_Controller {
                 $this->template->error(lang("error_2"));
             }
         }
+        
+        $grades = $this->classes_model->get_student_total_grade($memberr->userid);
+        $total_grade = 0;
+        foreach($grades->result() as $grade){
+            $x = ($grade->mark * $grade->weighting) / $grade->max_mark;
+            $total_grade += $x;
+        }
+        
+        $letter_grades = $this->classes_model->get_class_grades_all($memberr->classid);
+        foreach ($letter_grades->result() as $r) {
+            $grades_arr[] = array(
+                "min_score" => $r->min_score,
+                "max_score" => $r->max_score,
+                "grade" => $r->grade
+            );
+        }
+        $total_letter_grade = $this->calculate_grade($total_grade, 100, $grades_arr);
 
         $this->template->loadContent("classes/student_assignments.php", array(
             "class" => $class,
+            "total_grade" => $total_grade,
+            "total_letter_grade" => $total_letter_grade,
             "member_flag" => $member_flag,
             "teacher_flag" => $teacher_flag,
             "student" => $memberr
@@ -3312,10 +3350,12 @@ class Classes extends CI_Controller {
         //WHERE userid = 2 and classid != 2 and cc.end_date >= NOW() 
         //and cs.teacher_flag = 1 and c.start_hour != '11:00' and c.end_hour != '13:00'
         // Add
+        $branch = $this->classes_model->get_branch($class->branch_id)->row();
+        $branch_code = $branch->code;
         $this->classes_model->add_student(array(
             "classid" => $id,
             "userid" => $userid
-                )
+                ), $branch_code
         );
 
         $user = $this->user_model->get_user($userid);
@@ -3381,6 +3421,15 @@ class Classes extends CI_Controller {
 
         // Delete
         $this->classes_model->delete_student($id);
+        
+        $data = array(
+            "user_id" => $student->userid,
+            "class_id" => $student->classid,
+            "flag_teacher" => 0,
+            "agreement_number" => $student->agreement_number
+        );
+        
+        $this->classes_model->add_dropped_student($data);
 
         $user = $this->user_model->get_user($student->userid);
         if ($user->num_rows() > 0) {
@@ -3673,7 +3722,7 @@ class Classes extends CI_Controller {
                 $r->numeric_code,
                 $r->code,
                 $r->branch_name,
-                $r->seat_total,
+                //$r->seat_total,
                 '<a href="' . site_url("classes/edit_room/" . $r->room_id) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("classes/delete_room/" . $r->room_id . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>'
             );
         }
@@ -3695,7 +3744,7 @@ class Classes extends CI_Controller {
         $numeric_code = intval($this->common->nohtml($this->input->post("numeric_code")));
         $code = $this->common->nohtml($this->input->post("code"));
         $branch_id = intval($this->common->nohtml($this->input->post("branch_id")));
-        $seat_total = intval($this->common->nohtml($this->input->post("seat_total")));
+        //$seat_total = intval($this->common->nohtml($this->input->post("seat_total")));
 
         if (empty($numeric_code)) {
             $this->template->error(lang("error_219"));
@@ -3709,16 +3758,16 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_221"));
         }
 
-        if (empty($seat_total)) {
+        /*if (empty($seat_total)) {
             $this->template->error(lang("error_222"));
-        }
+        }*/
 
 
         $roomid = $this->classes_model->add_room(array(
             "numeric_code" => $numeric_code,
             "code" => $code,
             "branch_id" => $branch_id,
-            "seat_total" => $seat_total
+            //"seat_total" => $seat_total
                 )
         );
 
@@ -3776,7 +3825,7 @@ class Classes extends CI_Controller {
         $numeric_code = intval($this->common->nohtml($this->input->post("numeric_code")));
         $code = $this->common->nohtml($this->input->post("code"));
         $branch_id = intval($this->common->nohtml($this->input->post("branch_id")));
-        $seat_total = intval($this->common->nohtml($this->input->post("seat_total")));
+        //$seat_total = intval($this->common->nohtml($this->input->post("seat_total")));
 
         if (empty($numeric_code)) {
             $this->template->error(lang("error_219"));
@@ -3790,16 +3839,16 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_221"));
         }
 
-        if (empty($seat_total)) {
+        /*if (empty($seat_total)) {
             $this->template->error(lang("error_222"));
-        }
+        }*/
 
 
         $this->classes_model->update_room($id, array(
             "numeric_code" => $numeric_code,
             "code" => $code,
             "branch_id" => $branch_id,
-            "seat_total" => $seat_total
+            //"seat_total" => $seat_total
                 )
         );
 
@@ -4145,152 +4194,13 @@ class Classes extends CI_Controller {
                 $r->hrs,
                 $r->start_date,
                 $r->end_date,
-                '<a href="' . site_url("classes/edit_cat/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("classes/delete_cat/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a> <a href="' . site_url("classes/download_order/" . $r->ID) . '" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_983") . '"><span class="glyphicon glyphicon-download"></span></a>'
+                '<a href="' . site_url("classes/edit_cat/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("classes/delete_cat/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a> <a href="' . site_url("documents/download_order/" . $r->ID . "/general") . '" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1015") . '"><span class="glyphicon glyphicon-download"></span></a> <a href="' . site_url("documents/download_order/" . $r->ID . "/certificate") . '" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1017") . '"><span class="glyphicon glyphicon-download"></span></a> <a href="' . site_url("documents/close_category/" . $r->ID) . '" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1016") . '"><span class="glyphicon glyphicon-download"></span></a>'
             );
         }
 
         //log_message("debug", json_encode($this->datatables->process()));
 
         echo json_encode($this->datatables->process());
-    }
-
-    /**
-
-     * Method to Download file for related category
-     * @param type $category_id  id for category   
-     * @return	.docx file
-     */
-    public function download_order($category_id) {
-        $cat_data = $this->classes_model->get_category_data($category_id);
-
-        if ($cat_data->num_rows() > 0) {
-            $counter = 1;
-            $subjects = '';
-            $period = '';
-            foreach ($cat_data->result() as $data) {
-                $subjects .= $data->name;
-
-                $start_date = new DateTime($data->start_date);
-                $end_date = new DateTime($data->end_date);
-
-                if ($counter === ($cat_data->num_rows() - 1)) {
-                    $subjects .= ' we ';
-                    $period .= $start_date->format('d-m-Y') . ' - ' . $end_date->format('d-m-Y');
-                } elseif ($cat_data->num_rows() !== 1) {
-                    $subjects .= ', ';
-                } else {
-                    $period .= $start_date->format('d-m-Y') . ' - ' . $end_date->format('d-m-Y');
-                }
-
-                $counter ++;
-            }
-
-            $this->draw_word_document($subjects, $period);
-        }
-        exit;
-    }
-
-    private function draw_word_document() {
-        $filename = 'buyruk.docx';
-
-        $image_logo = base_url() . 'uploads/school_logo.jpg';
-
-        $phpWord = new \PhpOffice\PhpWord\PhpWord();
-
-        // Adding an empty Section to the document...
-        $section = $phpWord->addSection();
-        $section_style = $section->getStyle();
-        $position = $section_style->getPageSizeW() - $section_style->getMarginRight() - $section_style->getMarginLeft();
-        $phpWord->addParagraphStyle("leftRight", array("tabs" => array(
-                new \PhpOffice\PhpWord\Style\Tab("right", $position)
-        )));
-
-        // Add first page header
-        $header = $section->addHeader();
-        $header->firstPage();
-        $table = $header->addTable();
-        $table->addRow();
-        $cell = $table->addCell(4500);
-        $textrun = $cell->addTextRun();
-        //$header->addWatermark($image_logo, array('marginTop' => 200, 'marginLeft' => 55));
-        $table->addCell(4500)->addImage($image_logo, array('width' => 150, 'height' => 75, 'align' => 'right'));
-        $this->printSeparator($section);
-
-        $section->addTextBreak(1);
-        // Define styles
-        $section->addText(
-                "BUÝRUK", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'center']
-        );
-
-        $section->addTextBreak(1);
-
-        $section->addText(
-                "Täze okuw tapgyryny açmak hakynda", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'right']
-        );
-        $section->addTextBreak(2);
-
-        // Adding Text element with font customized using named font style...
-        $fontStyleName = 'oneUserDefinedStyle';
-        $phpWord->addFontStyle(
-                $fontStyleName, array('name' => 'Cambria (Headings)', 'size' => 14)
-        );
-        $section->addText(
-                '“Daýan” HK-nyň okuw merkeziniň ' . $subjects . ' boýunça 1-nji tapgyryny talabalaýyk '
-                . 'gurnamak maksady bilen hem-de diňleýjiler bilen baglaşylan '
-                . 'şertnamalar esasynda,', ['name' => 'Cambria (Headings)', 'size' => 14], ['alignment' => 'both'], [
-            'space' => ['before' => 360, 'after' => 280],
-            'indentation' => ['left' => 540, 'right' => 120]
-                ]
-        );
-
-        $section->addTextBreak(1);
-
-        $paragraphStyleName = 'P-Style';
-        $phpWord->addParagraphStyle($paragraphStyleName, array('spaceAfter' => 95));
-
-        $predefinedMultilevelStyle = array('listType' => \PhpOffice\PhpWord\Style\ListItem::TYPE_NUMBER_NESTED);
-
-        $section->addText(
-                "buýurýaryn:", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'center']
-        );
-        $section->addTextBreak(1);
-
-        $section->addListItem('“Daýan” HK-da, ' . trim($period) . ' aralygyndaky geçiriljek dersleriň başlamagyny gurnamaly.', 0, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
-        $section->addListItem(trim($period) . ' seneleri aralygynda okan diňleýjileriň jemi sanyny görkezýän maglumaty, olaryň sanawyny, dürli sebäplere görä okuwyny dowam edip bilmeýänleriň sanawyny, şahadatnamany almaga hukuk gazananlaryň sanawyny we olaryň synag netijeleriniň sanawyny tapgyryň soňunda bukjada birleşdirmeli we dikip möhürlemeli.', 0, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
-        $section->addTextBreak(3);
-
-        $section->addText(
-                "“Daýan” hususy kärhanasynyň direktory\tRejepgulyýew E.A.", ['name' => 'Cambria (Headings)', 'size' => 14], "leftRight");
-        $section->addTextBreak(1);
-
-        //download the created content
-        $this->download($phpWord, $filename);
-    }
-
-    private function download(PhpOffice\PhpWord\PhpWord $word, $filename) {
-
-        // Saving the document as WORD 2007 file...
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($word, 'Word2007');
-        $objWriter->save($filename);
-
-
-        // send results to browser to download
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . $filename);
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($filename));
-        flush();
-        readfile($filename);
-        unlink($filename); // deletes the temporary file
-    }
-
-    private function printSeparator(Section $section) {
-        $lineStyle = array('weight' => 2, 'width' => 450, 'height' => 1, 'align' => 'center');
-        $section->addLine($lineStyle);
     }
 
     public function your_assignments() {
@@ -4471,8 +4381,9 @@ class Classes extends CI_Controller {
         // Global calendar
         $class_name = $class->name;
 
+        $event_ids[] = 0;
 
-        $events = $this->classes_model->get_class_events($format, $format2, $classid);
+        $events = $this->classes_model->get_class_events($format, $format2, $classid, $event_ids);
         $data_events = array();
         foreach ($events->result() as $r) {
             $data_events[] = array(

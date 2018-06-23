@@ -645,6 +645,7 @@ class Invoices extends CI_Controller
 		$status = intval($this->input->post("status"));
 		$currencyid = intval($this->input->post("currencyid"));
 		$due_date = $this->common->nohtml($this->input->post("due_date"));
+                $remind = $this->common->nohtml($this->input->post("remind"));
 		
 		$template = intval($this->input->post("template"));
 		$paying_accountid = intval($this->input->post("paying_accountid"));
@@ -868,6 +869,7 @@ class Invoices extends CI_Controller
 				$lang = $this->common->nohtml($_COOKIE["language"]);
 			}
 
+                        log_message("debug", $lang);
 			// Send Email
 			$email_template = $this->home_model->get_email_template_hook("invoice_reminder", $lang);
 			if($email_template->num_rows() == 0) {

@@ -1,0 +1,123 @@
+1) BookStoreApp short Description
+
+	This app was used for ordering book from book store. So Users can download this app, register and use for ordering books. 
+So when user is registered at first time he/she will have chance to order free books (1-10 books, depends). When you open app the first 
+page will ask you to login or register depending on users status. After loggin in, user will redirected to category page, where all 
+categories is displayed. User will choose the category then list of books will displayed. (title, short description, image, rating, 
+price and add to cart button). User can click to item to be able to read long description. If user decides to order this book he/she 
+can add it to cart and continue looking around for another books too. When user decides to get order, he/she will go to cart and checkout the cart.
+Book store will contact you after.
+P.S. lack of our online banking system book store will contact cutomer, otherwise I would integrate with bank to make payment thru app, 
+so payment will be accepted while checkout. But our banks doesn't allow to collect cutomer card details. If you want to use online payment system,
+we will be redirected to banks online payment gateway, and user will continue from there. After completed payment process bank will redirect you 
+back to given url with payment status. (Kind of old school) This way is not too usefull with apps, at least in my opinion.
+
+
+
+
+/************************** APP STRUCTURE **********************************/
+app
+	- manifests
+		AndroidManifest.xml
+	
+	- java
+		- org.ttweb.bookstoreapp
+			- activities
+				MainActivity.java
+				BookActivity.java
+				RegisterActivity.java
+				CategoryActivity.java
+				CartActivity.java
+				CheckoutActivity.java
+			- adapters
+				RecyclerViewAdapter.java
+			- helpers
+				SQLiteHandler.java
+				SessionManager.java
+			- models
+				Book.java
+				Category.java
+				User.java
+				Cart.java
+		
+		- org.ttweb.bookstoreapp (androidTest)
+		- org.ttweb.bookstoreapp (test)
+		
+	- res
+		- drawable
+			ic_launcher_background.xml
+			ic_launcher_foreground.xml
+			ic_star_black_24dp.xml
+			ic_profile_black_24dp.xml
+			ic_email_black_24dp.xml
+			ic_group_add_blak_24dp.xml
+			ic_phone_android_black_24dp.xml
+			loading_shape.xml
+			rating_backgorund.xml
+			gradient_backgound.xml
+			button_style.xml
+			
+		- layout
+			activity_main.xml
+			book_row_item.xml
+			activity_book.xml
+			activity_register.xml
+			activity_category.xml
+			activity_checkout.xml
+			
+		- mipmap
+		- values
+			colors.xml
+			strings.xml
+			styles.xml
+
+
+Used Technologies:
+	- Android Studio IDE
+	- Glide Library (This library to load and cahch images)
+	- Volley Library (This library used for HTTP requests for the webservice)
+	- RecyclerView Library (This library used to hold view, so you can scroll up and down list of books)
+	- CardView Library (This one used for in profile part to show customer data in cardview)
+	- SQLite (Storing user data in local)
+	- SharedPreferences (This was used to store user status if logged in or not)
+	
+WebService
+	- MySQL {To store all needed datas.}
+	- PHP programming language {to handle requests from app and to respond with JSON data type.}
+	- Nginx {web server}
+
+Admin Panel for administration of store. Updating books or geting notificatios from customer etc.
+
+/**********************************************************************************************/
+2) I have made similar app for flower store. So everything was similar just different product and store.
+
+3) ScoreApp
+In this one you can see local sport gaem statuses, when game was played which team won or comming games. So kind of information desk.
+User should register and login with his/her credentials. After loggin in user can see all the information about sport.
+
+Used Technologies:
+	- Android Studio IDE
+	- Volley Library (This library used for HTTP requests for the webservice)
+	- RecyclerView Library (This library used to hold view)
+	- CardView Library (This one used for in profile part to show customer data in cardview)
+	- SQLite (Storing user data in local)
+	- SharedPreferences (This was used to store user status if logged in or not)
+	
+WebService
+	local channels webservice. I was getting updated data as JSON
+	
+4) Simple App
+Owner of furnuture store wanted to keep track of all orders from branches. So he had 3 branches in different cities and main one in capital.
+When branches made orders to main branch like furnutures for their store using their ERP Program, he wanted see them all in that app.
+Information like branch name, order type and quantity.
+
+Used Technologies:
+	- Android Studio IDE
+	- Volley Library 
+	- RecyclerView Library 
+
+WebService
+	php (to handle requests from app)
+	mysql (their data was stored)
+	
+	

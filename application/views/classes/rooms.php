@@ -31,7 +31,7 @@
                     <td><?php echo lang("ctn_993") ?></td>
                     <td><?php echo lang("ctn_994") ?></td>
                     <td><?php echo lang("ctn_995") ?></td>
-                    <td><?php echo lang("ctn_996") ?></td>
+                    <!-- <td><?php echo lang("ctn_996") ?></td> -->
                     <td><?php echo lang("ctn_52") ?></td>
                 </tr>
             </thead>
@@ -76,12 +76,12 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_996") ?></label>
                     <div class="col-md-8 ui-front">
                         <input type="number" class="form-control" name="seat_total" min="1" value="">
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo lang("ctn_60") ?></button>
@@ -117,7 +117,7 @@
                 null,
                 null,
                 {"orderable": false},
-                {"orderable": false},
+                //{"orderable": false},
                 {"orderable": false}
             ],
             "ajax": {

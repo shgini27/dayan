@@ -5,14 +5,14 @@
         <input type="hidden" name="redirect" value="<?php echo $redirect ?>">
         <input type="hidden" name="hook" value="<?php echo $hook ?>">
         <div class="form-group">
-            <label for="email-in" class="col-md-3 label-heading">* <?php echo lang("ctn_24") ?></label>
+            <label for="email-in" class="col-md-3 label-heading"><?php echo lang("ctn_24") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <input type="email" class="form-control" id="email-in" name="email" value="<?php if (isset($member->email)) echo $member->email ?>">
             </div>
         </div>
         <div class="form-group">
 
-            <label for="username-in" class="col-md-3 label-heading">* <?php echo lang("ctn_25") ?></label>
+            <label for="username-in" class="col-md-3 label-heading"><?php echo lang("ctn_25") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <input type="text" class="form-control" id="username" name="username" value="<?php if (isset($member->username)) echo $member->username ?>">
                 <div id="username_check"></div>
@@ -30,7 +30,7 @@
         <?php if (!isset($flags['new_user'])) : ?>
             <div class="form-group">
 
-                <label for="password-in" class="col-md-3 label-heading">* <?php echo lang("ctn_27") ?></label>
+                <label for="password-in" class="col-md-3 label-heading"><?php echo lang("ctn_27") ?><span class="required"> *</span></label>
                 <div class="col-md-9">
                     <input type="password" class="form-control" id="password-in" name="password" value="">
                     <span class="help-text"><?php echo lang("ctn_28") ?></span>
@@ -38,42 +38,42 @@
             </div>
         <?php else : ?>
             <div class="form-group">
-                <label for="password-in" class="col-md-3 label-heading">* <?php echo lang("ctn_87") ?></label>
+                <label for="password-in" class="col-md-3 label-heading"><?php echo lang("ctn_87") ?><span class="required"> *</span></label>
                 <div class="col-md-9">
                     <input type="password" class="form-control" id="password-in" name="password" value="">
                 </div>
             </div>
             <div class="form-group">
-                <label for="password-in" class="col-md-3 label-heading">* <?php echo lang("ctn_88") ?></label>
+                <label for="password2-in" class="col-md-3 label-heading"><?php echo lang("ctn_88") ?><span class="required"> *</span></label>
                 <div class="col-md-9">
-                    <input type="password" class="form-control" id="password-in" name="password2" value="">
+                    <input type="password" class="form-control" id="password2-in" name="password2" value="">
                 </div>
             </div>
         <?php endif; ?>
 
         <div class="form-group">
 
-            <label for="name-in" class="col-md-3 label-heading">* <?php echo lang("ctn_29") ?></label>
+            <label for="first-name-in" class="col-md-3 label-heading"><?php echo lang("ctn_29") ?><span class="required"> *</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" id="name-in" name="first_name" value="<?php if (isset($member->first_name)) echo $member->first_name ?>">
+                <input type="text" class="form-control" id="first-name-in" name="first_name" value="<?php if (isset($member->first_name)) echo $member->first_name ?>">
             </div>
         </div>
         <div class="form-group">
 
-            <label for="name-in" class="col-md-3 label-heading">* <?php echo lang("ctn_30") ?></label>
+            <label for="last-name-in" class="col-md-3 label-heading"><?php echo lang("ctn_30") ?><span class="required"> *</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" id="name-in" name="last_name" value="<?php if (isset($member->last_name)) echo $member->last_name ?>">
+                <input type="text" class="form-control" id="last-name-in" name="last_name" value="<?php if (isset($member->last_name)) echo $member->last_name ?>">
             </div>
         </div>
         <div class="form-group">
 
-            <label for="name-in" class="col-md-3 label-heading">* <?php echo lang("ctn_977") ?></label>
+            <label for="fathers-name-in" class="col-md-3 label-heading"><?php echo lang("ctn_977") ?><span class="required"> *</span></label>
             <div class="col-md-9">
-                <input type="text" class="form-control" id="name-in" name="fathers_name" value="<?php if (isset($member->fathers_name)) echo $member->fathers_name ?>">
+                <input type="text" class="form-control" id="fathers-name-in" name="fathers_name" value="<?php if (isset($member->fathers_name)) echo $member->fathers_name ?>">
             </div>
         </div>
         <div class="form-group ui-front">
-            <label for="p-in" class="col-md-3 label-heading">* <?php echo lang("ctn_510") ?></label>
+            <label for="p-in" class="col-md-3 label-heading"><?php echo lang("ctn_1018") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <input type="text" name="birth_date" class="form-control datepicker" 
                        value="<?php if (isset($member->birth_date)) echo date('d/m/Y',strtotime($member->birth_date)); ?>">
@@ -96,7 +96,7 @@
         <?php if (isset($member)) : ?>
             <div class="form-group">
 
-                <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_36") ?></label>
+                <label for="ip-in" class="col-md-3 label-heading"><?php echo lang("ctn_36") ?></label>
                 <div class="col-md-9">
                     <?php echo lang("ctn_37") ?> : <?php echo $member->IP ?> <br />
                     <?php echo lang("ctn_38") ?> : <?php echo date($this->settings->info->date_format, $member->joined) ?><br />
@@ -107,7 +107,7 @@
         <?php if (isset($flags['activate_user']) && $flags['activate_user']) : ?>
             <div class="form-group">
 
-                <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_331") ?></label>
+                <label for="active-in" class="col-md-3 label-heading"><?php echo lang("ctn_331") ?></label>
                 <div class="col-md-9">
                     <select name="active" class="form-control">
                         <option value="0"><?php echo lang("ctn_332") ?></option>
@@ -121,7 +121,7 @@
             </div>
 <?php endif; ?>
         <div class="form-group">
-            <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_322") ?></label>
+            <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_322") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <select name="user_role" class="form-control">
                     <option value="0" selected><?php echo lang("ctn_46") ?></option>
@@ -133,37 +133,37 @@
         </div>
         <h4><?php echo lang("ctn_419") ?></h4>
         <div class="form-group">
-            <label for="inputEmail3" class="col-md-3 label-heading">* <?php echo lang("ctn_420") ?></label>
+            <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_420") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <input type="text" name="address_1" class="form-control" value="<?php if (isset($member->address_line_1)) echo $member->address_line_1 ?>">
             </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-md-3 label-heading">* <?php echo lang("ctn_421") ?></label>
+            <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_1021") ?><span class="required"> *</span></label>
             <div class="col-md-9">
-                <input type="text" name="address_2" class="form-control" value="<?php if (isset($member->address_line_2)) echo $member->address_line_2 ?>">
+                <input type="text" name="mobile_phone" class="form-control" value="<?php if (isset($member->mobile_phone)) echo $member->mobile_phone ?>">
             </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-md-3 label-heading">* <?php echo lang("ctn_422") ?></label>
+            <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_422") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <input type="text" name="city" class="form-control" value="<?php if (isset($member->city)) echo $member->city ?>">
             </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-md-3 label-heading">* <?php echo lang("ctn_423") ?></label>
+            <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_423") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <input type="text" name="state" class="form-control" value="<?php if (isset($member->state)) echo $member->state ?>">
             </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_424") ?></label>
+            <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_1022") ?><span class="required"> *</span></label>
             <div class="col-md-9">
-                <input type="text" name="zipcode" class="form-control" value="<?php if (isset($member->zip)) echo $member->zip ?>">
+                <input type="text" name="phone" class="form-control" value="<?php if (isset($member->phone)) echo $member->phone ?>">
             </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-md-3 label-heading">* <?php echo lang("ctn_425") ?></label>
+            <label for="inputEmail3" class="col-md-3 label-heading"><?php echo lang("ctn_425") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <input type="text" name="country" class="form-control" value="<?php if (isset($member->country)) echo $member->country ?>">
             </div>
@@ -172,10 +172,10 @@
                 <?php foreach ($fields->result() as $r) : ?>
             <div class="form-group">
 
-                <label for="name-in" class="col-md-3 label-heading"><?php echo $r->name ?> <?php if ($r->required) : ?>*<?php endif; ?></label>
+                <label for="name-in-<?php echo $r->ID ?>" class="col-md-3 label-heading"><?php echo $r->name ?> <?php if ($r->required) : ?><span class="required">*</span><?php endif; ?></label>
                 <div class="col-md-9">
                     <?php if ($r->type == 0) : ?>
-                        <input type="text" class="form-control" id="name-in" name="cf_<?php echo $r->ID ?>" value="<?php if (isset($r->value)) echo $r->value ?>">
+                        <input type="text" class="form-control" id="name-in-<?php echo $r->ID ?>" name="cf_<?php echo $r->ID ?>" value="<?php if (isset($r->value)) echo $r->value ?>">
                     <?php elseif ($r->type == 1) : ?>
                         <textarea name="cf_<?php echo $r->ID ?>" rows="8" class="form-control"><?php if (isset($r->value)) echo $r->value ?></textarea>
                     <?php elseif ($r->type == 2) : ?>
@@ -214,7 +214,7 @@
                 </div>
             </div>
 <?php endforeach; ?>
-        <p><?php echo lang("ctn_351") ?></p>
+        <p><span class="required">*</span><?php echo lang("ctn_351") ?></p>
         <input type="submit" class="btn btn-primary form-control" value="<?php if (isset($flags['new_user'])) : ?>Add<?php else : ?><?php echo lang("ctn_13") ?><?php endif; ?>" />
 <?php echo form_close() ?>
     </div>

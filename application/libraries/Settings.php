@@ -15,7 +15,7 @@ class Settings
 			upload_path_relative, upload_path, site_logo, register,
 			 disable_captcha, date_format, avatar_upload, file_types,
 			 twitter_consumer_key, twitter_consumer_secret, disable_social_login
-			 , facebook_app_id, facebook_app_secret, google_client_id,
+			 ,facebook_app_id, facebook_app_secret, google_client_id,
 			 google_client_secret, file_size, paypal_email, paypal_currency,
 			 payment_enabled, payment_symbol, global_premium, install,
 			 login_protect, activate_account, default_user_role,

@@ -17,13 +17,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_994") ?></label>
+                <label for="code-in" class="col-md-4 label-heading"><?php echo lang("ctn_994") ?></label>
                 <div class="col-md-8 ui-front">
                     <input type="text" class="form-control" name="code" value="<?php echo $room->code ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_995") ?></label>
+                <label for="branch-in" class="col-md-4 label-heading"><?php echo lang("ctn_995") ?></label>
                 <div class="col-md-8 ui-front">
                     <select name='branch_id' class="form-control">
                         <?php if (isset($branches)) : ?>
@@ -38,12 +38,12 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_996") ?></label>
                 <div class="col-md-8 ui-front">
                     <input type="number" class="form-control" name="seat_total" min="1" value="<?php echo $room->seat_total ?>">
                 </div>
-            </div>
+            </div> -->
             <input type="submit" class="btn btn-primary form-control" value="<?php echo lang("ctn_998") ?>">
             <?php echo form_close() ?>
 

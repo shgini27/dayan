@@ -35,11 +35,27 @@
 <div class="table-responsive">
 <table id="cat-table" class="table table-bordered table-striped table-hover">
 <thead>
-<tr class="table-header"><td><?php echo lang("ctn_509") ?></td><td><?php echo lang("ctn_510") ?></td><td><?php echo lang("ctn_532") ?></td><td><?php echo lang("ctn_549") ?></td><td>Mark</td><td><?php echo lang("ctn_595") ?></td><td><?php echo lang("ctn_52") ?></td></tr>
+<tr class="table-header">
+    <td><?php echo lang("ctn_509") ?></td>
+    <td><?php echo lang("ctn_510") ?></td>
+    <td><?php echo lang("ctn_532") ?></td>
+    <td><?php echo lang("ctn_549") ?></td>
+    <td>Mark</td>
+    <td><?php echo lang("ctn_595") ?></td>
+    <td><?php echo lang("ctn_52") ?></td>
+</tr>
 </thead>
 <tbody>
 </tbody>
 </table>
+    <table class="table table-bordered table-striped table-hover">
+        <tbody>
+            <tr>
+                <td class="text-right"><b><?php echo lang("ctn_1014"); ?>:</b></td>
+                <td class="text-left"><b><?php echo $total_grade . " ($total_letter_grade)"; ?></b></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 

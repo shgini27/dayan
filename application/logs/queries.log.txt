@@ -1,172 +1,321 @@
-SELECT GET_LOCK('24047941558d4e010a99dfb84c34177d', 300) AS ci_session_lock
+SELECT GET_LOCK('96c8df7c6b62f0072ddbba2438691de4', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = '9n0md9qtlgigi4v3eej2j7kftus8bsj3'
+WHERE `id` = 'mhd3bjcmkk0acf6vsdl4oakqkalp07kd'
+UPDATE `ci_sessions` SET `timestamp` = 1529790413, `data` = '__ci_last_regenerate|i:1529790413;'
+WHERE `id` = 'mhd3bjcmkk0acf6vsdl4oakqkalp07kd'
+SELECT RELEASE_LOCK('96c8df7c6b62f0072ddbba2438691de4') AS ci_session_lock
+SELECT GET_LOCK('fb8b54e8c48d23abae441584b086e35f', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = '66b3htv4rjt1hkmchea57lfk5vnuo126'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `class_categories`
-SELECT `branch`.`branch_id`, `branch`.`name`
-FROM `branch`
-SELECT `room`.`room_id`, `room`.`code`, `branch`.`name` as `branch_name`
-FROM `room`
-JOIN `branch` ON `room`.`branch_id` = `branch`.`branch_id`
-SELECT *
-FROM `subjects`
-SELECT *
-FROM `student_groups`
-SELECT `users`.`ID`, `users`.`username`
-FROM `users`
-JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `user_roles`.`student` = 1
-SELECT `users`.`ID`, `users`.`username`
-FROM `users`
-JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `user_roles`.`teacher` = 1
-===[took:0]
-
-SELECT GET_LOCK('24047941558d4e010a99dfb84c34177d', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = '9n0md9qtlgigi4v3eej2j7kftus8bsj3'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
-FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `room`
-WHERE `branch_id` = 2
-===[took:0.001]
-
-SELECT GET_LOCK('24047941558d4e010a99dfb84c34177d', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = '9n0md9qtlgigi4v3eej2j7kftus8bsj3'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
-FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `room`
-WHERE `branch_id` = 1
-===[took:0.001]
-
-SELECT GET_LOCK('e97e1d0a6ca53add643ed02a72deee56', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = 'q1clhrboklro7s2dq8tjjq9lpnm4vanm'
-UPDATE `ci_sessions` SET `timestamp` = 1528797970, `data` = '__ci_last_regenerate|i:1528797970;'
-WHERE `id` = 'q1clhrboklro7s2dq8tjjq9lpnm4vanm'
-SELECT RELEASE_LOCK('e97e1d0a6ca53add643ed02a72deee56') AS ci_session_lock
-SELECT GET_LOCK('ce1412f94d7c20ebe4cec043f092748a', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = 'hjnvka5gimnblq5r8oacdhrb760r8u4b'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
-FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-UPDATE `users` SET `online_timestamp` = 1528797970
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+UPDATE `users` SET `online_timestamp` = 1529790413
 WHERE `ID` = '1'
-SELECT *
-FROM `class_categories`
-SELECT `branch`.`branch_id`, `branch`.`name`
-FROM `branch`
-SELECT `room`.`room_id`, `room`.`code`, `branch`.`name` as `branch_name`
-FROM `room`
-JOIN `branch` ON `room`.`branch_id` = `branch`.`branch_id`
-SELECT *
-FROM `subjects`
-SELECT *
-FROM `student_groups`
-SELECT `users`.`ID`, `users`.`username`
+===[took:0.002]
+
+SELECT GET_LOCK('fb8b54e8c48d23abae441584b086e35f', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = '66b3htv4rjt1hkmchea57lfk5vnuo126'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
-JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `user_roles`.`student` = 1
-SELECT `users`.`ID`, `users`.`username`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+===[took:0.001]
+
+SELECT GET_LOCK('fb8b54e8c48d23abae441584b086e35f', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = '66b3htv4rjt1hkmchea57lfk5vnuo126'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+FROM `users`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT *
+FROM `home_stats`
+SELECT COUNT(*) as num
 FROM `users`
 JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `user_roles`.`teacher` = 1
-===[took:0]
+SELECT COUNT(*) as num
+FROM `users`
+JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `user_roles`.`student` = 1
+SELECT COUNT(*) as num
+FROM `classes`
+UPDATE `home_stats` SET `students` = '2', `teachers` = '1', `classes` = '6'
+WHERE `ID` = 1
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 1
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 2
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 3
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 4
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 5
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 6
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 7
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 8
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 9
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 10
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 11
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` > 0
+AND `finance`.`month` = 12
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 1
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 2
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 3
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 4
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 5
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 6
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 7
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 8
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 9
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 10
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 11
+AND `finance`.`year` = '2018'
+SELECT SUM(finance.amount) as total
+FROM `finance`
+JOIN `users` ON `users`.`ID` = `finance`.`userid`
+JOIN `finance_categories` ON `finance_categories`.`ID` = `finance`.`categoryid`
+WHERE `finance`.`amount` < 0
+AND `finance`.`month` = 12
+AND `finance`.`year` = '2018'
+SELECT COUNT(*) as num
+FROM `users`
+WHERE `online_timestamp` > 1529789674
+SELECT `users`.`ID` as `userid`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `announcements`.`title`, `announcements`.`timestamp`, `announcements`.`ID`
+FROM `announcements`
+JOIN `users` ON `users`.`ID` = `announcements`.`userid`
+ORDER BY `announcements`.`ID` DESC
+ LIMIT 4
+SELECT `class_assignments`.`title`, `class_assignments`.`ID`, `class_assignments`.`due_date`, `class_assignments`.`type`, `user_assignments`.`mark`, `user_assignments`.`timestamp`, `classes`.`name`, `classes`.`ID` as `classid`
+FROM `class_assignments`
+JOIN `classes` ON `classes`.`ID` = `class_assignments`.`classid`
+LEFT OUTER JOIN `class_students` ON `class_students`.`classid` = `class_assignments`.`classid`
+LEFT OUTER JOIN `user_assignments` ON `user_assignments`.`assignmentid` = `class_assignments`.`ID` AND `user_assignments`.`userid` =1
+WHERE   (
+`class_students`.`userid` = '1'
+ )
+ORDER BY `class_assignments`.`due_date`
+ LIMIT 4
+SELECT `class_students`.`ID`, `class_students`.`classid`, `class_students`.`userid`, `class_students`.`teacher_flag`, `classes`.`name`, `subjects`.`name` as `subject`
+FROM `class_students`
+JOIN `classes` ON `classes`.`ID` = `class_students`.`classid`
+JOIN `subjects` ON `subjects`.`ID` = `classes`.`subjectid`
+WHERE `class_students`.`userid` = '1'
+SELECT `classes`.`ID`, `classes`.`name`, `classes`.`description`, `classes`.`room_id`, `classes`.`subjectid`, `classes`.`categoryid`, `classes`.`students`, `classes`.`max_students`, `classes`.`branch_id`
+FROM `classes`
+SELECT COUNT(*) as total_students
+FROM `class_students`
+LEFT JOIN `classes` ON `classes`.`ID` = `class_students`.`classid`
+LEFT JOIN `class_categories` ON `class_categories`.`ID` = `classes`.`categoryid`
+WHERE `classes`.`class_days` = 'even'
+AND `class_categories`.`end_date` >= '2018-06-23'
+AND `teacher_flag` = 0
+SELECT `classes`.`ID`, `classes`.`name`, `classes`.`class_days`, `classes`.`categoryid`, `class_categories`.`start_date`, `class_categories`.`end_date`, `classes`.`students`
+FROM `classes`
+LEFT JOIN `class_categories` ON `class_categories`.`ID` = `classes`.`categoryid`
+WHERE `class_categories`.`start_date` <= '2018-06-23'
+AND `class_categories`.`end_date` >= '2018-06-23'
+AND `classes`.`class_days` = 'even'
+SELECT COUNT(*) as total_missing_students
+FROM `attendance_sheets`
+LEFT JOIN `classes` ON `classes`.`ID` = `attendance_sheets`.`classid`
+LEFT JOIN `attendance_sheet_entries` ON `attendance_sheet_entries`.`attendanceid` = `attendance_sheets`.`ID`
+WHERE `attendance_sheet_entries`.`absent` = 1
+AND `attendance_sheets`.`time_date` = '2018-06-23'
+AND `attendance_sheets`.`classid` IN('3', '8')
+SELECT `users`.`ID`, `users`.`username`, `users`.`first_name`, `users`.`last_name`, `users`.`avatar`, `users`.`birth_date`, `users`.`online_timestamp`
+FROM `users`
+WHERE MONTH(users.birth_date) = '6'
+AND DAY(users.birth_date) IN('23', 24, 25, 26, 27)
+SELECT `invoices`.`ID`, `invoices`.`invoice_id`, `invoices`.`title`, `invoices`.`notes`, `invoices`.`due_date`, `invoices`.`timestamp`, `invoices`.`userid`, `invoices`.`clientid`, `invoices`.`total`, `invoices`.`tax_name_1`, `invoices`.`tax_rate_1`, `invoices`.`tax_name_2`, `invoices`.`tax_rate_2`, `invoices`.`status`, `invoices`.`hash`, `users`.`username` as `client_username`, `users`.`avatar` as `client_avatar`, `users`.`online_timestamp` as `client_online_timestamp`, `users`.`first_name` as `client_first_name`, `users`.`last_name` as `client_last_name`, `currencies`.`name` as `currencyname`, `currencies`.`symbol`, `currencies`.`code`
+FROM `invoices`
+JOIN `users` ON `users`.`ID` = `invoices`.`clientid`
+JOIN `currencies` ON `currencies`.`ID` = `invoices`.`currencyid`
+WHERE `invoices`.`clientid` = '1'
+AND `invoices`.`template` = 0
+ORDER BY `invoices`.`ID` DESC
+ LIMIT 4
+===[took:0.002]
 
-SELECT GET_LOCK('ce1412f94d7c20ebe4cec043f092748a', 300) AS ci_session_lock
+SELECT GET_LOCK('fb8b54e8c48d23abae441584b086e35f', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'hjnvka5gimnblq5r8oacdhrb760r8u4b'
+WHERE `id` = '66b3htv4rjt1hkmchea57lfk5vnuo126'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `room`
-WHERE `branch_id` = 0
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
 ===[took:0.001]
 
-SELECT GET_LOCK('ce1412f94d7c20ebe4cec043f092748a', 300) AS ci_session_lock
+SELECT GET_LOCK('fb8b54e8c48d23abae441584b086e35f', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'hjnvka5gimnblq5r8oacdhrb760r8u4b'
+WHERE `id` = '66b3htv4rjt1hkmchea57lfk5vnuo126'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `room`
-WHERE `branch_id` = 1
-===[took:0.001]
-
-SELECT GET_LOCK('ce1412f94d7c20ebe4cec043f092748a', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = 'hjnvka5gimnblq5r8oacdhrb760r8u4b'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
-FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-===[took:0.001]
-
-SELECT GET_LOCK('ce1412f94d7c20ebe4cec043f092748a', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = 'hjnvka5gimnblq5r8oacdhrb760r8u4b'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
-FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+UPDATE `users` SET `online_timestamp` = 1529790714
+WHERE `ID` = '1'
 SELECT COUNT(*) as num
 FROM `classes`
 SELECT `classes`.`ID`, `classes`.`name`, `classes`.`description`, `classes`.`room_id`, `classes`.`subjectid`, `classes`.`categoryid`, `classes`.`students`, `classes`.`max_students`, `classes`.`allow_signups`, `classes`.`branch_id`, `subjects`.`name` as `subject_name`, `branch`.`name` as `branch_name`, `class_categories`.`end_date` as `cat_end_date`, `class_categories`.`hrs`, `class_categories`.`start_date` as `cat_start_date`, `class_categories`.`name` as `cat_name`, `room`.`code` as `room_code`
@@ -177,398 +326,509 @@ JOIN `branch` ON `branch`.`branch_id` = `classes`.`branch_id`
 JOIN `room` ON `room`.`room_id` = `classes`.`room_id`
 ORDER BY `classes`.`ID` ASC
  LIMIT 15
+===[took:0.011]
+
+SELECT GET_LOCK('fb8b54e8c48d23abae441584b086e35f', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = '66b3htv4rjt1hkmchea57lfk5vnuo126'
+UPDATE `ci_sessions` SET `timestamp` = 1529790716, `data` = '__ci_last_regenerate|i:1529790716;'
+WHERE `id` = '66b3htv4rjt1hkmchea57lfk5vnuo126'
+SELECT RELEASE_LOCK('fb8b54e8c48d23abae441584b086e35f') AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+FROM `users`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT *
+FROM `classes`
+WHERE `ID` = 1
+SELECT *
+FROM `class_students`
+WHERE `userid` = '1'
+AND `classid` = 1
+SELECT *
+FROM `class_announcements`
+WHERE `classid` = 1
+ORDER BY `ID` DESC
+ LIMIT 5
+SELECT *
+FROM `class_assignments`
+WHERE `classid` = 1
+ORDER BY `class_assignments`.`due_date`
+ LIMIT 5
+SELECT `library_books`.`title`, `library_books`.`ID` as `bookid`, `library_books`.`image`, `library_books`.`author`, `class_books`.`ID`
+FROM `class_books`
+JOIN `library_books` ON `library_books`.`ID` = `class_books`.`bookid`
+WHERE `class_books`.`classid` = 1
+SELECT `files`.`file_name`, `files`.`ID` as `fileid`, `files`.`file_type`, `files`.`file_size`, `files`.`upload_file_name`, `class_files`.`ID`
+FROM `class_files`
+JOIN `files` ON `files`.`ID` = `class_files`.`fileid`
+WHERE `class_files`.`classid` = 1
+===[took:0.007]
+
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+FROM `users`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT *
+FROM `classes`
+WHERE `ID` = 1
+SELECT *
+FROM `class_students`
+WHERE `userid` = '1'
+AND `classid` = 1
+SELECT COUNT(*) as num
+FROM `class_students`
+WHERE `classid` = 1
+AND `teacher_flag` = 1
+SELECT `class_students`.`ID`, `class_students`.`teacher_flag`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`email`
+FROM `class_students`
+JOIN `users` ON `users`.`ID` = `class_students`.`userid`
+WHERE `class_students`.`teacher_flag` = 1
+AND `class_students`.`classid` = 1
+ORDER BY `users`.`username` DESC
+ LIMIT 15
+===[took:0.001]
+
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+FROM `users`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT *
+FROM `classes`
+WHERE `ID` = 1
+SELECT *
+FROM `class_students`
+WHERE `userid` = '1'
+AND `classid` = 1
+===[took:0]
+
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+FROM `users`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT *
+FROM `classes`
+WHERE `ID` = 1
+SELECT *
+FROM `class_students`
+WHERE `userid` = '1'
+AND `classid` = 1
+SELECT COUNT(*) as num
+FROM `class_students`
+WHERE `classid` = 1
+AND `teacher_flag` = 0
+SELECT `class_students`.`ID`, `class_students`.`teacher_flag`, `users`.`ID` as `user_id`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`email`, `class_students`.`agreement_number`
+FROM `class_students`
+JOIN `users` ON `users`.`ID` = `class_students`.`userid`
+WHERE `class_students`.`classid` = 1
+AND `class_students`.`teacher_flag` = 0
+ORDER BY `users`.`username` DESC
+ LIMIT 15
+===[took:0.001]
+
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+FROM `users`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT *
+FROM `classes`
+WHERE `ID` = 1
+SELECT `room`.`room_id`, `room`.`code`, `branch`.`name` as `branch_name`
+FROM `room`
+JOIN `branch` ON `room`.`branch_id` = `branch`.`branch_id`
+SELECT *
+FROM `class_students`
+WHERE `userid` = '1'
+AND `classid` = 1
 ===[took:0.003]
 
-SELECT GET_LOCK('ce1412f94d7c20ebe4cec043f092748a', 300) AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'hjnvka5gimnblq5r8oacdhrb760r8u4b'
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
 SELECT *
 FROM `classes`
-WHERE `ID` = 12
+WHERE `ID` = 1
 SELECT *
 FROM `class_students`
 WHERE `userid` = '1'
-AND `classid` = 12
-SELECT *
-FROM `class_announcements`
-WHERE `classid` = 12
-ORDER BY `ID` DESC
- LIMIT 5
-SELECT *
-FROM `class_assignments`
-WHERE `classid` = 12
-ORDER BY `class_assignments`.`due_date`
- LIMIT 5
-SELECT `library_books`.`title`, `library_books`.`ID` as `bookid`, `library_books`.`image`, `library_books`.`author`, `class_books`.`ID`
-FROM `class_books`
-JOIN `library_books` ON `library_books`.`ID` = `class_books`.`bookid`
-WHERE `class_books`.`classid` = 12
-SELECT `files`.`file_name`, `files`.`ID` as `fileid`, `files`.`file_type`, `files`.`file_size`, `files`.`upload_file_name`, `class_files`.`ID`
-FROM `class_files`
-JOIN `files` ON `files`.`ID` = `class_files`.`fileid`
-WHERE `class_files`.`classid` = 12
+AND `classid` = 1
 ===[took:0.001]
 
-SELECT GET_LOCK('ce1412f94d7c20ebe4cec043f092748a', 300) AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'hjnvka5gimnblq5r8oacdhrb760r8u4b'
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
-FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
 SELECT COUNT(*) as num
-FROM `class_students`
-WHERE `classid` = 12
-AND `teacher_flag` = 1
-SELECT `class_students`.`ID`, `class_students`.`teacher_flag`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`email`
-FROM `class_students`
-JOIN `users` ON `users`.`ID` = `class_students`.`userid`
-WHERE `class_students`.`teacher_flag` = 1
-AND `class_students`.`classid` = 12
-ORDER BY `users`.`username` DESC
+FROM `attendance_sheets`
+WHERE `classid` = 1
+SELECT `attendance_sheets`.`ID`, `attendance_sheets`.`attendance_date`, `attendance_sheets`.`attendance`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `calendar_events`.`title`, `calendar_events`.`ID` as `eventid`, `calendar_events`.`start`
+FROM `attendance_sheets`
+JOIN `users` ON `users`.`ID` = `attendance_sheets`.`teacherid`
+JOIN `calendar_events` ON `calendar_events`.`ID` = `attendance_sheets`.`eventid`
+WHERE `attendance_sheets`.`classid` = 1
+ORDER BY `calendar_events`.`title` DESC
  LIMIT 15
 ===[took:0.001]
 
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT *
+FROM `users`
+WHERE `username` = 'shagy'
+SELECT `user_groups`.`name`, `user_groups`.`ID` as `groupid`
+FROM `user_group_users`
+JOIN `user_groups` ON `user_groups`.`ID` = `user_group_users`.`groupid`
+WHERE `user_group_users`.`userid` = '2'
+SELECT `custom_fields`.`ID`, `custom_fields`.`name`, `custom_fields`.`type`, `custom_fields`.`required`, `custom_fields`.`help_text`, `custom_fields`.`options`, `user_custom_fields`.`userid`, `user_custom_fields`.`value`
+FROM `custom_fields`
+LEFT OUTER JOIN `user_custom_fields` ON `user_custom_fields`.`fieldid` = `custom_fields`.`ID` AND `user_custom_fields`.`userid` = 2
+===[took:0.003]
+
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+FROM `users`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
 ===[took:0.001]
 
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
 SELECT COUNT(*) as num
-FROM `classes`
-SELECT `classes`.`ID`, `classes`.`name`, `classes`.`description`, `classes`.`room_id`, `classes`.`subjectid`, `classes`.`categoryid`, `classes`.`students`, `classes`.`max_students`, `classes`.`allow_signups`, `classes`.`branch_id`, `subjects`.`name` as `subject_name`, `branch`.`name` as `branch_name`, `class_categories`.`end_date` as `cat_end_date`, `class_categories`.`hrs`, `class_categories`.`start_date` as `cat_start_date`, `class_categories`.`name` as `cat_name`, `room`.`code` as `room_code`
-FROM `classes`
-JOIN `subjects` ON `subjects`.`ID` = `classes`.`subjectid`
-JOIN `class_categories` ON `class_categories`.`ID` = `classes`.`categoryid`
-JOIN `branch` ON `branch`.`branch_id` = `classes`.`branch_id`
-JOIN `room` ON `room`.`room_id` = `classes`.`room_id`
-ORDER BY `classes`.`ID` ASC
+FROM `users`
+JOIN `user_roles` ON `users`.`user_role` = `user_roles`.`ID`
+WHERE `user_roles`.`student` = 1
+SELECT `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`ID`, `users`.`email`
+FROM `users`
+JOIN `user_roles` ON `users`.`user_role` = `user_roles`.`ID`
+WHERE `user_roles`.`student` = 1
+ORDER BY `users`.`username` ASC
  LIMIT 15
+===[took:0.001]
+
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
+SELECT `data`
+FROM `ci_sessions`
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
+SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
+FROM `site_settings`
+WHERE `ID` = 1
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+FROM `users`
+LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
+WHERE `users`.`email` = 'admin@dayan.ru'
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`ID`, `users`.`email`, `users`.`points`, `users`.`aboutme`, `users`.`joined`, `users`.`active`, `users`.`IP`, `users`.`password`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`state`, `users`.`city`, `users`.`country`, `users`.`phone`
+FROM `users`
+JOIN `user_roles` ON `users`.`user_role` = `user_roles`.`ID`
+WHERE `user_roles`.`student` = 1
+AND `users`.`ID` = 3
+SELECT `custom_fields`.`ID`, `custom_fields`.`name`, `custom_fields`.`type`, `custom_fields`.`required`, `custom_fields`.`help_text`, `custom_fields`.`options`, `user_custom_fields`.`userid`, `user_custom_fields`.`value`
+FROM `custom_fields`
+LEFT OUTER JOIN `user_custom_fields` ON `user_custom_fields`.`fieldid` = `custom_fields`.`ID` AND `user_custom_fields`.`userid` = 3
 ===[took:0.006]
 
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
-FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
-SELECT *
-FROM `class_announcements`
-WHERE `classid` = 12
-ORDER BY `ID` DESC
- LIMIT 5
-SELECT *
-FROM `class_assignments`
-WHERE `classid` = 12
-ORDER BY `class_assignments`.`due_date`
- LIMIT 5
-SELECT `library_books`.`title`, `library_books`.`ID` as `bookid`, `library_books`.`image`, `library_books`.`author`, `class_books`.`ID`
-FROM `class_books`
-JOIN `library_books` ON `library_books`.`ID` = `class_books`.`bookid`
-WHERE `class_books`.`classid` = 12
-SELECT `files`.`file_name`, `files`.`ID` as `fileid`, `files`.`file_type`, `files`.`file_size`, `files`.`upload_file_name`, `class_files`.`ID`
-FROM `class_files`
-JOIN `files` ON `files`.`ID` = `class_files`.`fileid`
-WHERE `class_files`.`classid` = 12
-===[took:0.001]
-
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`ID`, `users`.`email`, `users`.`points`, `users`.`aboutme`, `users`.`joined`, `users`.`active`, `users`.`IP`, `users`.`password`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`state`, `users`.`city`, `users`.`country`, `users`.`phone`
 FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
+JOIN `user_roles` ON `users`.`user_role` = `user_roles`.`ID`
+WHERE `user_roles`.`student` = 1
+AND `users`.`ID` = 3
+SELECT `custom_fields`.`ID`, `custom_fields`.`name`, `custom_fields`.`type`, `custom_fields`.`required`, `custom_fields`.`help_text`, `custom_fields`.`options`, `user_custom_fields`.`userid`, `user_custom_fields`.`value`
+FROM `custom_fields`
+LEFT OUTER JOIN `user_custom_fields` ON `user_custom_fields`.`fieldid` = `custom_fields`.`ID` AND `user_custom_fields`.`userid` = 3
+WHERE `custom_fields`.`report` = 1
+SELECT `classes`.`name`, `classes`.`ID`
 FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
-SELECT COUNT(*) as num
-FROM `class_students`
-WHERE `classid` = 12
-AND `teacher_flag` = 1
+JOIN `classes` ON `classes`.`ID` = `class_students`.`classid`
+WHERE `class_students`.`userid` = '3'
+SELECT *
+FROM `user_reports`
+WHERE `userid` = '3'
 SELECT `class_students`.`ID`, `class_students`.`teacher_flag`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`email`
 FROM `class_students`
 JOIN `users` ON `users`.`ID` = `class_students`.`userid`
 WHERE `class_students`.`teacher_flag` = 1
-AND `class_students`.`classid` = 12
-ORDER BY `users`.`username` DESC
- LIMIT 15
-===[took:0.001]
-
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
-FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
-FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
-SELECT *
-FROM `class_announcements`
-WHERE `classid` = 12
-ORDER BY `ID` DESC
- LIMIT 5
-SELECT *
+AND `class_students`.`classid` = '1'
+SELECT `classes`.`name`, `classes`.`ID` as `classid`, SUM(attendance_sheet_entries.present) as present, SUM(attendance_sheet_entries.absent) as absent, SUM(attendance_sheet_entries.holiday) as holiday, SUM(attendance_sheet_entries.late) as late
+FROM `attendance_sheet_entries`
+JOIN `attendance_sheets` ON `attendance_sheets`.`ID` = `attendance_sheet_entries`.`attendanceid`
+JOIN `classes` ON `classes`.`ID` = `attendance_sheets`.`classid`
+WHERE `attendance_sheet_entries`.`userid` = '3'
+AND `attendance_sheets`.`classid` = '1'
+GROUP BY `attendance_sheets`.`classid`
+SELECT `class_assignments`.`title`, `class_assignments`.`ID`, `class_assignments`.`due_date`, `class_assignments`.`type`, `class_assignments`.`weighting`, `class_assignments`.`max_mark`, `user_assignments`.`mark`, `user_assignments`.`timestamp`, `classes`.`name`, `classes`.`ID` as `classid`
 FROM `class_assignments`
-WHERE `classid` = 12
+JOIN `classes` ON `classes`.`ID` = `class_assignments`.`classid`
+LEFT OUTER JOIN `class_students` ON `class_students`.`classid` = `class_assignments`.`classid`
+LEFT OUTER JOIN `user_assignments` ON `user_assignments`.`assignmentid` = `class_assignments`.`ID` AND `user_assignments`.`userid` =3
+WHERE   (
+`class_students`.`userid` = '3'
+AND `class_assignments`.`classid` = '1'
+ )
 ORDER BY `class_assignments`.`due_date`
- LIMIT 5
-SELECT `library_books`.`title`, `library_books`.`ID` as `bookid`, `library_books`.`image`, `library_books`.`author`, `class_books`.`ID`
-FROM `class_books`
-JOIN `library_books` ON `library_books`.`ID` = `class_books`.`bookid`
-WHERE `class_books`.`classid` = 12
-SELECT `files`.`file_name`, `files`.`ID` as `fileid`, `files`.`file_type`, `files`.`file_size`, `files`.`upload_file_name`, `class_files`.`ID`
-FROM `class_files`
-JOIN `files` ON `files`.`ID` = `class_files`.`fileid`
-WHERE `class_files`.`classid` = 12
-===[took:0.001]
+SELECT `class_grades`.`ID`, `class_grades`.`grade`, `class_grades`.`min_score`, `class_grades`.`max_score`
+FROM `class_grades`
+WHERE `classid` = '1'
+===[took:0.004]
 
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`ID`, `users`.`email`, `users`.`points`, `users`.`aboutme`, `users`.`joined`, `users`.`active`, `users`.`IP`, `users`.`password`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`state`, `users`.`city`, `users`.`country`, `users`.`phone`
+FROM `users`
+JOIN `user_roles` ON `users`.`user_role` = `user_roles`.`ID`
+WHERE `user_roles`.`student` = 1
+AND `users`.`ID` = 3
+SELECT `custom_fields`.`ID`, `custom_fields`.`name`, `custom_fields`.`type`, `custom_fields`.`required`, `custom_fields`.`help_text`, `custom_fields`.`options`, `user_custom_fields`.`userid`, `user_custom_fields`.`value`
+FROM `custom_fields`
+LEFT OUTER JOIN `user_custom_fields` ON `user_custom_fields`.`fieldid` = `custom_fields`.`ID` AND `user_custom_fields`.`userid` = 3
+WHERE `custom_fields`.`report` = 1
+SELECT `classes`.`name`, `classes`.`ID`
 FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
-SELECT COUNT(*) as num
-FROM `class_students`
-WHERE `classid` = 12
-AND `teacher_flag` = 1
+JOIN `classes` ON `classes`.`ID` = `class_students`.`classid`
+WHERE `class_students`.`userid` = '3'
+SELECT *
+FROM `user_reports`
+WHERE `userid` = '3'
 SELECT `class_students`.`ID`, `class_students`.`teacher_flag`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`email`
 FROM `class_students`
 JOIN `users` ON `users`.`ID` = `class_students`.`userid`
 WHERE `class_students`.`teacher_flag` = 1
-AND `class_students`.`classid` = 12
-ORDER BY `users`.`username` DESC
- LIMIT 15
-===[took:0.001]
-
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
-FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
-FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
-SELECT *
-FROM `class_announcements`
-WHERE `classid` = 12
-ORDER BY `ID` DESC
- LIMIT 5
-SELECT *
+AND `class_students`.`classid` = '1'
+SELECT `classes`.`name`, `classes`.`ID` as `classid`, SUM(attendance_sheet_entries.present) as present, SUM(attendance_sheet_entries.absent) as absent, SUM(attendance_sheet_entries.holiday) as holiday, SUM(attendance_sheet_entries.late) as late
+FROM `attendance_sheet_entries`
+JOIN `attendance_sheets` ON `attendance_sheets`.`ID` = `attendance_sheet_entries`.`attendanceid`
+JOIN `classes` ON `classes`.`ID` = `attendance_sheets`.`classid`
+WHERE `attendance_sheet_entries`.`userid` = '3'
+AND `attendance_sheets`.`classid` = '1'
+GROUP BY `attendance_sheets`.`classid`
+SELECT `class_assignments`.`title`, `class_assignments`.`ID`, `class_assignments`.`due_date`, `class_assignments`.`type`, `class_assignments`.`weighting`, `class_assignments`.`max_mark`, `user_assignments`.`mark`, `user_assignments`.`timestamp`, `classes`.`name`, `classes`.`ID` as `classid`
 FROM `class_assignments`
-WHERE `classid` = 12
+JOIN `classes` ON `classes`.`ID` = `class_assignments`.`classid`
+LEFT OUTER JOIN `class_students` ON `class_students`.`classid` = `class_assignments`.`classid`
+LEFT OUTER JOIN `user_assignments` ON `user_assignments`.`assignmentid` = `class_assignments`.`ID` AND `user_assignments`.`userid` =3
+WHERE   (
+`class_students`.`userid` = '3'
+AND `class_assignments`.`classid` = '1'
+ )
 ORDER BY `class_assignments`.`due_date`
- LIMIT 5
-SELECT `library_books`.`title`, `library_books`.`ID` as `bookid`, `library_books`.`image`, `library_books`.`author`, `class_books`.`ID`
-FROM `class_books`
-JOIN `library_books` ON `library_books`.`ID` = `class_books`.`bookid`
-WHERE `class_books`.`classid` = 12
-SELECT `files`.`file_name`, `files`.`ID` as `fileid`, `files`.`file_type`, `files`.`file_size`, `files`.`upload_file_name`, `class_files`.`ID`
-FROM `class_files`
-JOIN `files` ON `files`.`ID` = `class_files`.`fileid`
-WHERE `class_files`.`classid` = 12
-===[took:0.001]
+SELECT `class_grades`.`ID`, `class_grades`.`grade`, `class_grades`.`min_score`, `class_grades`.`max_score`
+FROM `class_grades`
+WHERE `classid` = '1'
+===[took:0.003]
 
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`ID`, `users`.`email`, `users`.`points`, `users`.`aboutme`, `users`.`joined`, `users`.`active`, `users`.`IP`, `users`.`password`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`state`, `users`.`city`, `users`.`country`, `users`.`phone`
+FROM `users`
+JOIN `user_roles` ON `users`.`user_role` = `user_roles`.`ID`
+WHERE `user_roles`.`student` = 1
+AND `users`.`ID` = 3
+SELECT `custom_fields`.`ID`, `custom_fields`.`name`, `custom_fields`.`type`, `custom_fields`.`required`, `custom_fields`.`help_text`, `custom_fields`.`options`, `user_custom_fields`.`userid`, `user_custom_fields`.`value`
+FROM `custom_fields`
+LEFT OUTER JOIN `user_custom_fields` ON `user_custom_fields`.`fieldid` = `custom_fields`.`ID` AND `user_custom_fields`.`userid` = 3
+WHERE `custom_fields`.`report` = 1
+SELECT `classes`.`name`, `classes`.`ID`
 FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
-SELECT COUNT(*) as num
-FROM `class_students`
-WHERE `classid` = 12
-AND `teacher_flag` = 1
+JOIN `classes` ON `classes`.`ID` = `class_students`.`classid`
+WHERE `class_students`.`userid` = '3'
+SELECT *
+FROM `user_reports`
+WHERE `userid` = '3'
 SELECT `class_students`.`ID`, `class_students`.`teacher_flag`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`email`
 FROM `class_students`
 JOIN `users` ON `users`.`ID` = `class_students`.`userid`
 WHERE `class_students`.`teacher_flag` = 1
-AND `class_students`.`classid` = 12
-ORDER BY `users`.`username` DESC
- LIMIT 15
-===[took:0.001]
-
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
-SELECT `data`
-FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
-SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
-FROM `site_settings`
-WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
-FROM `users`
-LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
-WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
-FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
-SELECT *
-FROM `class_announcements`
-WHERE `classid` = 12
-ORDER BY `ID` DESC
- LIMIT 5
-SELECT *
+AND `class_students`.`classid` = '1'
+SELECT `classes`.`name`, `classes`.`ID` as `classid`, SUM(attendance_sheet_entries.present) as present, SUM(attendance_sheet_entries.absent) as absent, SUM(attendance_sheet_entries.holiday) as holiday, SUM(attendance_sheet_entries.late) as late
+FROM `attendance_sheet_entries`
+JOIN `attendance_sheets` ON `attendance_sheets`.`ID` = `attendance_sheet_entries`.`attendanceid`
+JOIN `classes` ON `classes`.`ID` = `attendance_sheets`.`classid`
+WHERE `attendance_sheet_entries`.`userid` = '3'
+AND `attendance_sheets`.`classid` = '1'
+GROUP BY `attendance_sheets`.`classid`
+SELECT `class_assignments`.`title`, `class_assignments`.`ID`, `class_assignments`.`due_date`, `class_assignments`.`type`, `class_assignments`.`weighting`, `class_assignments`.`max_mark`, `user_assignments`.`mark`, `user_assignments`.`timestamp`, `classes`.`name`, `classes`.`ID` as `classid`
 FROM `class_assignments`
-WHERE `classid` = 12
+JOIN `classes` ON `classes`.`ID` = `class_assignments`.`classid`
+LEFT OUTER JOIN `class_students` ON `class_students`.`classid` = `class_assignments`.`classid`
+LEFT OUTER JOIN `user_assignments` ON `user_assignments`.`assignmentid` = `class_assignments`.`ID` AND `user_assignments`.`userid` =3
+WHERE   (
+`class_students`.`userid` = '3'
+AND `class_assignments`.`classid` = '1'
+ )
 ORDER BY `class_assignments`.`due_date`
- LIMIT 5
-SELECT `library_books`.`title`, `library_books`.`ID` as `bookid`, `library_books`.`image`, `library_books`.`author`, `class_books`.`ID`
-FROM `class_books`
-JOIN `library_books` ON `library_books`.`ID` = `class_books`.`bookid`
-WHERE `class_books`.`classid` = 12
-SELECT `files`.`file_name`, `files`.`ID` as `fileid`, `files`.`file_type`, `files`.`file_size`, `files`.`upload_file_name`, `class_files`.`ID`
-FROM `class_files`
-JOIN `files` ON `files`.`ID` = `class_files`.`fileid`
-WHERE `class_files`.`classid` = 12
-===[took:0]
+SELECT `class_grades`.`ID`, `class_grades`.`grade`, `class_grades`.`min_score`, `class_grades`.`max_score`
+FROM `class_grades`
+WHERE `classid` = '1'
+===[took:0.003]
 
-SELECT GET_LOCK('151c6cd649418f273ebbd7f01f6999c9', 300) AS ci_session_lock
+SELECT GET_LOCK('80a7c7abb0ca2c3d4483e0e1d8df5779', 300) AS ci_session_lock
 SELECT `data`
 FROM `ci_sessions`
-WHERE `id` = 'cic3u4648o4qu6a37fmkvk352pb9n6ec'
+WHERE `id` = 'qf0hld01vhhhr3h1s7givpo6lnfv9krl'
 SELECT `site_name`, `site_desc`, `site_email`, `upload_path_relative`, `upload_path`, `site_logo`, `register`, `disable_captcha`, `date_format`, `avatar_upload`, `file_types`, `twitter_consumer_key`, `twitter_consumer_secret`, `disable_social_login`, `facebook_app_id`, `facebook_app_secret`, `google_client_id`, `google_client_secret`, `file_size`, `paypal_email`, `paypal_currency`, `payment_enabled`, `payment_symbol`, `global_premium`, `install`, `login_protect`, `activate_account`, `default_user_role`, `secure_login`, `stripe_secret_key`, `stripe_publish_key`, `google_recaptcha`, `google_recaptcha_secret`, `google_recaptcha_key`, `logo_option`, `layout`, `student_view_groups`, `teacher_group_manage`, `teacher_class_manage`, `teacher_class`, `date_picker_format`, `calendar_picker_format`, `reserve_books`, `fp_currency_symbol`, `cache_time`, `announcements_section`, `classes_section`, `subjects_section`, `students_section`, `files_section`, `finance_section`, `invoices_section`, `behaviour_section`, `library_section`, `reports_section`, `parent_section`, `hostel_section`, `documents_section`, `allow_student_profile`
 FROM `site_settings`
 WHERE `ID` = 1
-SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`address_line_2`, `users`.`city`, `users`.`state`, `users`.`zip`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
+SELECT `users`.`ID`, `users`.`username`, `users`.`email`, `users`.`first_name`, `users`.`last_name`, `users`.`online_timestamp`, `users`.`avatar`, `users`.`email_notification`, `users`.`aboutme`, `users`.`points`, `users`.`premium_time`, `users`.`active`, `users`.`activate_code`, `users`.`noti_count`, `users`.`email_count`, `users`.`user_role`, `user_roles`.`name` as `ur_name`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`city`, `users`.`state`, `users`.`phone`, `users`.`country`, `user_roles`.`admin`, `user_roles`.`admin_settings`, `user_roles`.`admin_members`, `user_roles`.`admin_payment`, `user_roles`.`banned`, `user_roles`.`teacher`, `user_roles`.`student`, `user_roles`.`subject_manager`, `user_roles`.`subject_viewer`, `user_roles`.`student_group_manager`, `user_roles`.`student_group_viewer`, `user_roles`.`class_manager`, `user_roles`.`class_viewer`, `user_roles`.`library_manager`, `user_roles`.`library_viewer`, `user_roles`.`student_manager`, `user_roles`.`student_viewer`, `user_roles`.`invoice_manager`, `user_roles`.`invoice_viewer`, `user_roles`.`behaviour_manager`, `user_roles`.`behaviour_viewer`, `user_roles`.`announcement_manager`, `user_roles`.`finance_manager`, `user_roles`.`finance_viewer`, `user_roles`.`files_manager`, `user_roles`.`files_viewer`, `user_roles`.`report_manager`, `user_roles`.`parent`, `user_roles`.`parent_manager`, `user_roles`.`ID` as `user_role_id`
 FROM `users`
 LEFT OUTER JOIN `user_roles` ON `user_roles`.`ID` = `users`.`user_role`
 WHERE `users`.`email` = 'admin@dayan.ru'
-AND `users`.`token` = '2969e2c498c985c4c9fa99fbc65458f9'
-SELECT *
-FROM `classes`
-WHERE `ID` = 12
-SELECT *
+AND `users`.`token` = '1db8c631c8e001e04e7872f561deac4c'
+SELECT `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`ID`, `users`.`email`, `users`.`points`, `users`.`aboutme`, `users`.`joined`, `users`.`active`, `users`.`IP`, `users`.`password`, `users`.`address_line_1`, `users`.`mobile_phone`, `users`.`state`, `users`.`city`, `users`.`country`, `users`.`phone`
+FROM `users`
+JOIN `user_roles` ON `users`.`user_role` = `user_roles`.`ID`
+WHERE `user_roles`.`student` = 1
+AND `users`.`ID` = 3
+SELECT `custom_fields`.`ID`, `custom_fields`.`name`, `custom_fields`.`type`, `custom_fields`.`required`, `custom_fields`.`help_text`, `custom_fields`.`options`, `user_custom_fields`.`userid`, `user_custom_fields`.`value`
+FROM `custom_fields`
+LEFT OUTER JOIN `user_custom_fields` ON `user_custom_fields`.`fieldid` = `custom_fields`.`ID` AND `user_custom_fields`.`userid` = 3
+WHERE `custom_fields`.`report` = 1
+SELECT `classes`.`name`, `classes`.`ID`
 FROM `class_students`
-WHERE `userid` = '1'
-AND `classid` = 12
-SELECT COUNT(*) as num
-FROM `class_students`
-WHERE `classid` = 12
-AND `teacher_flag` = 1
+JOIN `classes` ON `classes`.`ID` = `class_students`.`classid`
+WHERE `class_students`.`userid` = '3'
+SELECT *
+FROM `user_reports`
+WHERE `userid` = '3'
 SELECT `class_students`.`ID`, `class_students`.`teacher_flag`, `users`.`username`, `users`.`avatar`, `users`.`online_timestamp`, `users`.`first_name`, `users`.`last_name`, `users`.`email`
 FROM `class_students`
 JOIN `users` ON `users`.`ID` = `class_students`.`userid`
 WHERE `class_students`.`teacher_flag` = 1
-AND `class_students`.`classid` = 12
-ORDER BY `users`.`username` DESC
- LIMIT 15
-===[took:0.001]
+AND `class_students`.`classid` = '1'
+SELECT `classes`.`name`, `classes`.`ID` as `classid`, SUM(attendance_sheet_entries.present) as present, SUM(attendance_sheet_entries.absent) as absent, SUM(attendance_sheet_entries.holiday) as holiday, SUM(attendance_sheet_entries.late) as late
+FROM `attendance_sheet_entries`
+JOIN `attendance_sheets` ON `attendance_sheets`.`ID` = `attendance_sheet_entries`.`attendanceid`
+JOIN `classes` ON `classes`.`ID` = `attendance_sheets`.`classid`
+WHERE `attendance_sheet_entries`.`userid` = '3'
+AND `attendance_sheets`.`classid` = '1'
+GROUP BY `attendance_sheets`.`classid`
+SELECT `class_assignments`.`title`, `class_assignments`.`ID`, `class_assignments`.`due_date`, `class_assignments`.`type`, `class_assignments`.`weighting`, `class_assignments`.`max_mark`, `user_assignments`.`mark`, `user_assignments`.`timestamp`, `classes`.`name`, `classes`.`ID` as `classid`
+FROM `class_assignments`
+JOIN `classes` ON `classes`.`ID` = `class_assignments`.`classid`
+LEFT OUTER JOIN `class_students` ON `class_students`.`classid` = `class_assignments`.`classid`
+LEFT OUTER JOIN `user_assignments` ON `user_assignments`.`assignmentid` = `class_assignments`.`ID` AND `user_assignments`.`userid` =3
+WHERE   (
+`class_students`.`userid` = '3'
+AND `class_assignments`.`classid` = '1'
+ )
+ORDER BY `class_assignments`.`due_date`
+SELECT `class_grades`.`ID`, `class_grades`.`grade`, `class_grades`.`min_score`, `class_grades`.`max_score`
+FROM `class_grades`
+WHERE `classid` = '1'
+===[took:0.004]
 

@@ -16,7 +16,7 @@
 <div class="col-md-3">
 
 <div class="white-area-content content-separator align-center">
-<p><img src="<?php echo base_url() ?><?php echo $this->settings->info->upload_path_relative ?>/<?php echo $student->avatar ?>"></p>
+    <p><img src="<?php echo base_url() ?><?php echo $this->settings->info->upload_path_relative ?>/<?php echo $student->avatar ?>" width="160" height="160"></p>
 <p><?php echo $student->first_name ?> <?php echo $student->last_name ?></p>
 <p class="small-text">@<?php echo $student->username ?></p>
 </div>
@@ -41,9 +41,9 @@
                 </div>
 </div>
 <div class="form-group">
-                <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_421") ?></label>
+                <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_1021") ?></label>
                 <div class="col-md-9">
-                <?php echo $student->address_line_2 ?>
+                <?php echo $student->mobile_phone ?>
                 </div>
 </div>
 <div class="form-group">
@@ -59,9 +59,9 @@
                 </div>
 </div>
 <div class="form-group">
-                <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_424") ?></label>
+                <label for="name-in" class="col-md-3 label-heading"><?php echo lang("ctn_1022") ?></label>
                 <div class="col-md-9">
-                <?php echo $student->zip ?>
+                <?php echo $student->phone ?>
                 </div>
 </div>
 <div class="form-group">
@@ -86,7 +86,9 @@
                          <?php $values = array_map('trim', (explode(",", $r->value))); ?>
                         <?php if(count($options) > 0) : ?>
                             <?php foreach($options as $k=>$v) : ?>
-                            <?php if(in_array($v,$values)) echo $v ?><br />
+                                <?php if(in_array($v,$values)): ?>
+                                    <?php echo $v . "<br />"; ?>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     <?php elseif($r->type == 3) : ?>
@@ -94,14 +96,18 @@
                         
                         <?php if(count($options) > 0) : ?>
                             <?php foreach($options as $k=>$v) : ?>
-                           <?php if($r->value == $v) echo $v ?><br />
+                                <?php if($r->value == $v): ?>
+                                    <?php echo $v . "<br />"; ?>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     <?php elseif($r->type == 4) : ?>
                         <?php $options = explode(",", $r->options); ?>
                         <?php if(count($options) > 0) : ?>
                             <?php foreach($options as $k=>$v) : ?>
-                            <?php if($r->value == $v) echo $v ?><br />
+                                <?php if($r->value == $v): ?>
+                                    <?php echo $v . "<br />"; ?>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     <?php elseif($r->type == 5) : ?>

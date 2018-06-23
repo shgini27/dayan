@@ -17,15 +17,18 @@
         
         <link href="<?php echo base_url();?>styles/elements.css" rel="stylesheet" type="text/css">
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,500,550,600,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+        <!-- <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" /> -->
+        <link rel="stylesheet" href="<?php echo base_url();?>scripts/libraries/jquery/jquery-ui/jquery-ui.css" />
 
         <!-- SCRIPTS -->
         <script type="text/javascript">
         var global_base_url = "<?php echo site_url('/') ?>";
         var global_hash = "<?php echo $this->security->get_csrf_hash() ?>";
         </script>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+        <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>jquery-2.1.1.min -->
+        <script src="<?php echo base_url();?>scripts/libraries/jquery/jquery.min.js"></script>
+        <script src="<?php echo base_url();?>scripts/libraries/jquery/jquery-ui/jquery-ui.min.js"></script>
 
         <!-- Load locally, cuz it could be banned-->
         <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>scripts/libraries/datatable/datatables.min.css"/>
@@ -38,7 +41,8 @@
         <script type="text/javascript" src="<?php echo base_url();?>scripts/libraries/datatable/buttons.html5.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url();?>scripts/libraries/datatable/buttons.print.min.js "></script>
 
-        <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
+        <!-- <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script> -->
+        <script src="<?php echo base_url();?>scripts/libraries/ckeditor/ckeditor.js"></script>
         <!--<script src="<?php echo base_url();?>scripts/libraries/datatable/ckeditor.js"></script>-->
         
         <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css"/>

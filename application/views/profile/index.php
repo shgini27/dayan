@@ -18,7 +18,7 @@
 		<table class="table">
 		<tr>
 		<td class="align-center">
-		<img src="<?php echo base_url() ?><?php echo $this->settings->info->upload_path_relative ?>/<?php echo $user->avatar ?>">
+		<img src="<?php echo base_url() ?><?php echo $this->settings->info->upload_path_relative ?>/<?php echo $user->avatar ?>" class="img-responsive">
 		</td>
 		</td>
 		</tr>

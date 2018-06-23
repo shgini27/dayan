@@ -25,7 +25,7 @@
 	    </div>
 	</div>
 	<?php if($this->settings->info->payment_enabled) : ?>
-		<div class="form-group">
+		<!-- <div class="form-group">
 		    <label for="inputEmail3" class="col-sm-2 control-label">Premium Time</label>
 		    <div class="col-sm-10">
 		    <p><?php echo lang("ctn_248") ?>: <?php echo number_format($this->user->info->points,2) ?>. <a href="<?php echo site_url("funds") ?>"><?php echo lang("ctn_245") ?></a></p>
@@ -38,7 +38,7 @@
 			<?php endif; ?>
 			<p><a href="<?php echo site_url("funds/plans") ?>"><?php echo lang("ctn_285") ?></a></p>
 		    </div>
-		</div>
+		</div> -->
 	<?php endif; ?>
 	<div class="form-group">
 	    <label for="inputEmail3" class="col-sm-2 control-label"><?php echo lang("ctn_229") ?></label>
@@ -81,9 +81,9 @@
 	    </div>
 	</div>
 	<div class="form-group">
-	    <label for="inputEmail3" class="col-sm-2 control-label"><?php echo lang("ctn_421") ?></label>
+	    <label for="inputEmail3" class="col-sm-2 control-label"><?php echo lang("ctn_1021") ?></label>
 	    <div class="col-sm-10">
-	      <input type="text" name="address_2" class="form-control" value="<?php echo $this->user->info->address_line_2 ?>">
+	      <input type="text" name="mobile_phone" class="form-control" value="<?php echo $this->user->info->mobile_phone ?>">
 	    </div>
 	</div>
 	<div class="form-group">
@@ -99,9 +99,9 @@
 	    </div>
 	</div>
 	<div class="form-group">
-	    <label for="inputEmail3" class="col-sm-2 control-label"><?php echo lang("ctn_424") ?></label>
+	    <label for="inputEmail3" class="col-sm-2 control-label"><?php echo lang("ctn_1022") ?></label>
 	    <div class="col-sm-10">
-	      <input type="text" name="zipcode" class="form-control" value="<?php echo $this->user->info->zip ?>">
+	      <input type="text" name="phone" class="form-control" value="<?php echo $this->user->info->phone ?>">
 	    </div>
 	</div>
 	<div class="form-group">
