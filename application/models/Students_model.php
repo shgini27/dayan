@@ -340,7 +340,7 @@ class Students_Model extends CI_Model {
                         ->where("user_roles.student", 1)
                         ->where("users.ID", $id)
                         ->select("users.username, users.avatar, users.online_timestamp, 
-				users.first_name, users.last_name, users.ID, users.email,
+				users.first_name, users.last_name, users.fathers_name, users.ID, users.email,
 				users.points, users.aboutme, users.joined, users.active,
 				users.IP, users.password, users.address_line_1,
 				users.mobile_phone, users.state, users.city, users.country,

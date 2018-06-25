@@ -86,7 +86,7 @@
             <?php if($this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) : ?>
               <option value='<?php echo site_url("invoices") ?>'><?php echo lang("ctn_718") ?></option>
               <option value='<?php echo site_url("invoices/templates") ?>'><?php echo lang("ctn_719") ?></option>
-              <option value='<?php echo site_url("invoices/reoccuring") ?>'><?php echo lang("ctn_670") ?></option>
+              <!-- <option value='<?php echo site_url("invoices/reoccuring") ?>'><?php echo lang("ctn_670") ?></option> -->
               <option value='<?php echo site_url("invoices/paying_accounts") ?>'><?php echo lang("ctn_720") ?></option>
             <?php endif; ?>
             <option value='<?php echo site_url("invoices/your") ?>'><?php echo lang("ctn_721") ?></option>
@@ -104,8 +104,8 @@
               <option value='<?php echo site_url("library/checkedout") ?>'><?php echo lang("ctn_725") ?></option>
            <?php endif; ?>
            <?php if($this->settings->info->reports_section && $this->common->has_permissions(array("admin", "report_manager"), $this->user)) : ?>
-            <option value='<?php echo site_url("reports/finance") ?>'><?php echo lang("ctn_726") ?></option>
-            <option value='<?php echo site_url("reports/attendance") ?>'><?php echo lang("ctn_727") ?></option>
+            <!-- <option value='<?php echo site_url("reports/finance") ?>'><?php echo lang("ctn_726") ?></option>
+            <option value='<?php echo site_url("reports/attendance") ?>'><?php echo lang("ctn_727") ?></option> -->
                <option value='<?php echo site_url("reports/statistics") ?>'><?php echo lang("ctn_979") ?></option>
            <?php endif; ?>
            <?php if($this->settings->info->hostel_section && $this->common->has_permissions(array("admin", "hostel_manager"), $this->user)) : ?>

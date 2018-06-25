@@ -353,8 +353,8 @@ class Classes_Model extends CI_Model {
         );
 
         return $this->db
-                        ->select("classes.ID, classes.name, classes.description, classes.room_id,
-				classes.subjectid, classes.categoryid, classes.students,
+                        ->select("classes.ID, classes.name, classes.description, classes.room_id, classes.class_days,
+				classes.subjectid, classes.categoryid, classes.students, classes.start_hour,
 				classes.max_students, classes.allow_signups, classes.branch_id,
 				subjects.name as subject_name, branch.name as branch_name,
                                 class_categories.end_date as cat_end_date, class_categories.hrs,

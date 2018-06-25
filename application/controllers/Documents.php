@@ -427,7 +427,7 @@ class Documents extends CI_Controller {
         $section->addTextBreak(1);
 
         // Saving the document as WORD 2007 file...
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($word, 'Word2007');
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save($filename);
 
         //download the created content
@@ -504,7 +504,7 @@ class Documents extends CI_Controller {
         $section->addTextBreak(1);
 
         // Saving the document as WORD 2007 file...
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($word, 'Word2007');
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save($filename);
 
         $this->download($filename);
@@ -783,7 +783,7 @@ class Documents extends CI_Controller {
         $section->addTextBreak(3);
 
         // Saving the document as WORD 2007 file...
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($word, 'Word2007');
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save($filename);
 
         $this->download($filename);
@@ -1142,8 +1142,12 @@ class Documents extends CI_Controller {
             $sheet_1->setCellValue('I' . $cell, $exam_result['total_failed']); //failed class
             $sheet_1->getStyle('I' . $cell)->applyFromArray($styleArray);
 
-            $not_attent = intval($done) - intval($exam_result['total_passed']);
-            $not_attent -= intval($exam_result['total_failed']);
+            if(intval($done) > 0){
+                $not_attent = intval($done) - intval($exam_result['total_passed']);
+                $not_attent -= intval($exam_result['total_failed']);
+            }else{
+                $not_attent = 0;
+            }
 
             $sheet_1->setCellValue('J' . $cell, $not_attent); //not attent exam
             $sheet_1->getStyle('J' . $cell)->applyFromArray($styleArray);
@@ -1666,7 +1670,8 @@ class Documents extends CI_Controller {
         foreach ($classes->result() as $class) {
             $sheet = $spreadsheet->createSheet();
 
-            $sheet->setTitle("$class->name SYNAG NETIJELERI");
+			//echo "<pre>";print($class->name);die;
+            $sheet->setTitle("$class->name NETIJE");
 
             $styleArray = [
                 'borders' => [
@@ -2143,7 +2148,7 @@ class Documents extends CI_Controller {
             $section->addTextBreak(1);
 
             // Saving the document as WORD 2007 file...
-            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($word, 'Word2007');
+            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
             $objWriter->save($filename);
 
             $this->download($filename);
@@ -2421,7 +2426,7 @@ class Documents extends CI_Controller {
             $section->addTextBreak(3);
 
             // Saving the document as WORD 2007 file...
-            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($word, 'Word2007');
+            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
             $objWriter->save($filename);
 
             $this->download($filename);

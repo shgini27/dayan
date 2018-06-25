@@ -125,9 +125,16 @@ class Classes extends CI_Controller {
                 $style = 'style="color: red;"';
             }
 
+            $week_days = "";
+            if ($r->class_days === 'odd') {
+                $week_days = "1,3,5";
+            } elseif ($r->class_days === 'even') {
+                $week_days = "2,4,6";
+            }
+
             $this->datatables->data[] = array(
                 '<div class="text-center"><i class="glyphicon glyphicon-stop" ' . $style . '></i></div>',
-                $r->name,
+                $r->name . " / $week_days / " . substr($r->start_hour, 0, 5),
                 $r->subject_name,
                 $r->hrs,
                 $r->cat_name,
@@ -315,38 +322,41 @@ class Classes extends CI_Controller {
             $color = '26FF2F';
         }
 
-        $room_code = $room->row();
-        $this->classes_model->delete_class_lesson_events($id);
-        foreach ($days as $day) {
-            $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
+        if (trim($class->class_days) !== trim($class_days) || $class->start_hour !== $start_hour) {
+            
+            $room_code = $room->row();
+            $this->classes_model->delete_class_lesson_events($id);
+            foreach ($days as $day) {
+                $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
 
-            foreach ($dates as $date) {
+                foreach ($dates as $date) {
 
-                $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
-                $start_date = $sd->format('Y-m-d H:i:s');
+                    $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
+                    $start_date = $sd->format('Y-m-d H:i:s');
 
-                $ed = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $end_hour);
-                $end_date = $ed->format('Y-m-d H:i:s');
+                    $ed = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $end_hour);
+                    $end_date = $ed->format('Y-m-d H:i:s');
 
-                //check if rooms are available
-                $events = $this->classes_model->get_room_events($start_date, $end_date, $room_code->code, true);
+                    //check if rooms are available
+                    $events = $this->classes_model->get_room_events($start_date, $end_date, $room_code->code, true);
 
-                if ($events->num_rows() > 0) {
-                    $this->template->error(lang("error_200") . " " . lang("ctn_1000") . ": $room_code->code ($start_date --- $end_date)");
+                    if ($events->num_rows() > 0) {
+                        $this->template->error(lang("error_200") . " " . lang("ctn_1000") . ": $room_code->code ($start_date --- $end_date)");
+                    }
+
+                    $this->classes_model->add_class_event(array(
+                        "title" => $name,
+                        "description" => $description,
+                        "start" => $start_date,
+                        "end" => $end_date,
+                        "userid" => $this->user->info->ID,
+                        "classid" => $id,
+                        "room" => $room_code->code,
+                        "color" => $color,
+                        "lesson_flag" => 1
+                            )
+                    );
                 }
-
-                $this->classes_model->add_class_event(array(
-                    "title" => $name,
-                    "description" => $description,
-                    "start" => $start_date,
-                    "end" => $end_date,
-                    "userid" => $this->user->info->ID,
-                    "classid" => $id,
-                    "room" => $room_code->code,
-                    "color" => $color,
-                    "lesson_flag" => 1
-                        )
-                );
             }
         }
 
@@ -2510,9 +2520,8 @@ class Classes extends CI_Controller {
         $startdt = new DateTime('now'); // setup a local datetime
         $startdt->add(DateInterval::createFromDateString('360 days'));
         $format2 = $startdt->format('Y-m-d H:i:s');
-        
-        //$attend_ids[] = $attendance->eventid;
 
+        //$attend_ids[] = $attendance->eventid;
         //$events = $this->classes_model->get_class_events($format, $format2, $attendance->classid, $attend_ids);
         $events = $this->classes_model->get_class_event($attendance->eventid);
 
@@ -2713,10 +2722,10 @@ class Classes extends CI_Controller {
         $startdt = new DateTime('now'); // setup a local datetime
         $startdt->add(DateInterval::createFromDateString('30 days'));
         $format2 = $startdt->format('Y-m-d H:i:s');
-        
+
         $attends = $this->classes_model->get_attendance_sheet_by_class($id);
-        if($attends->num_rows() > 0){
-            foreach($attends->result() as $attend){
+        if ($attends->num_rows() > 0) {
+            foreach ($attends->result() as $attend) {
                 $attend_ids[] = $attend->eventid;
             }
         }
@@ -2970,6 +2979,7 @@ class Classes extends CI_Controller {
             }
             $options .= '<a href="' . site_url("documents/download_agreement/" . $r->ID) . '" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1020") . '"><span class="glyphicon glyphicon-download"></span></a>';
             $options .= ' <a href="' . site_url("documents/download_student_attendance/" . $r->ID) . '" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_494") . '"><span class="glyphicon glyphicon-download"></span></a>';
+            $options .= ' <a href="' . site_url("classes/certificate_pdf/" . $r->user_id . "/" . $id) . '" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1023") . '"><span class="glyphicon glyphicon-certificate"></span></a>';
             $options .= ' <a href="' . site_url("classes/delete_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
 
             $this->datatables->data[] = array(
@@ -2981,6 +2991,77 @@ class Classes extends CI_Controller {
         }
 
         echo json_encode($this->datatables->process());
+    }
+
+    public function certificate_pdf($id, $class_id) {
+        $id = intval($id);
+        $class_id = intval($class_id);
+        if ($this->settings->info->allow_student_profile && $id == $this->user->info->ID) {
+            
+        } else {
+            if (!$this->common->has_permissions(array("admin", "student_manager",
+                        "student_viewer", "parent"), $this->user)) {
+                $this->template->error(lang("error_2"));
+            }
+
+            // Check if user is a parent that the child is theres
+            // All roles except parent means they are a parent
+            if (!$this->common->has_permissions(array("admin", "student_manager",
+                        "student_viewer"), $this->user)) {
+                $child = $this->user_model->check_child($this->user->info->ID, $id);
+                if ($child->num_rows() == 0) {
+                    $this->template->error(lang("error_161"));
+                }
+            }
+        }
+
+        $id = intval($id);
+        $student = $this->students_model->get_student($id);
+        if ($student->num_rows() == 0) {
+            $this->template->error(lang("error_114"));
+        }
+        $student = $student->row();
+
+        $this->template->loadData("activeLink", array("students" => array("general" => 1)));
+
+        $fields = $this->user_model->get_custom_fields_answers(array(
+            "report" => 1
+                ), $student->ID);
+
+        $classes = $this->classes_model->get_class($class_id);
+        if ($classes->num_rows() == 0) {
+            $this->template->error(lang("error_92"));
+        }
+        $class = $classes->row();
+
+        $categories = $this->classes_model->get_category($class->categoryid);
+        $category = $categories->row();
+
+        $subjects = $this->subjects_model->get_subject($class->subjectid);
+        $subject = $subjects->row();
+
+        $report = $this->students_model->get_student_report($student->ID);
+
+        ob_start();
+        $this->template->loadAjax("classes/view_certificate_pdf.php", array(
+            "student" => $student,
+            "fields" => $fields,
+            "class" => $class,
+            "subject" => $subject,
+            "category" => $category,
+            "report" => $report
+                )
+        );
+        $out = ob_get_contents();
+        ob_end_clean();
+        require_once APPPATH . 'third_party/mpdf/vendor/autoload.php';
+
+        $mpdf = new \Mpdf\Mpdf(array(
+            "mode" => "UTF-8"
+                )
+        );
+        $mpdf->WriteHTML($out);
+        $mpdf->Output();
     }
 
     public function student_assignments($id) {
@@ -3030,14 +3111,14 @@ class Classes extends CI_Controller {
                 $this->template->error(lang("error_2"));
             }
         }
-        
+
         $grades = $this->classes_model->get_student_total_grade($memberr->userid);
         $total_grade = 0;
-        foreach($grades->result() as $grade){
+        foreach ($grades->result() as $grade) {
             $x = ($grade->mark * $grade->weighting) / $grade->max_mark;
             $total_grade += $x;
         }
-        
+
         $letter_grades = $this->classes_model->get_class_grades_all($memberr->classid);
         foreach ($letter_grades->result() as $r) {
             $grades_arr[] = array(
@@ -3218,7 +3299,7 @@ class Classes extends CI_Controller {
         }
         $user = $user->row();
         $userid = $user->ID;
-        
+
         $category = $this->classes_model->get_category($class->categoryid);
         $cat = $category->row();
 
@@ -3227,7 +3308,7 @@ class Classes extends CI_Controller {
         if ($t->num_rows() > 0) {
             $this->template->error($username . ' ' . lang("error_227"));
         }
-        
+
         // Check user role
         $user_role = $this->user_model->get_users_user_role($user->user_role);
         if ($user_role->num_rows() == 0) {
@@ -3421,14 +3502,14 @@ class Classes extends CI_Controller {
 
         // Delete
         $this->classes_model->delete_student($id);
-        
+
         $data = array(
             "user_id" => $student->userid,
             "class_id" => $student->classid,
             "flag_teacher" => 0,
             "agreement_number" => $student->agreement_number
         );
-        
+
         $this->classes_model->add_dropped_student($data);
 
         $user = $this->user_model->get_user($student->userid);
@@ -3758,16 +3839,16 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_221"));
         }
 
-        /*if (empty($seat_total)) {
-            $this->template->error(lang("error_222"));
-        }*/
+        /* if (empty($seat_total)) {
+          $this->template->error(lang("error_222"));
+          } */
 
 
         $roomid = $this->classes_model->add_room(array(
             "numeric_code" => $numeric_code,
             "code" => $code,
             "branch_id" => $branch_id,
-            //"seat_total" => $seat_total
+                //"seat_total" => $seat_total
                 )
         );
 
@@ -3839,16 +3920,16 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_221"));
         }
 
-        /*if (empty($seat_total)) {
-            $this->template->error(lang("error_222"));
-        }*/
+        /* if (empty($seat_total)) {
+          $this->template->error(lang("error_222"));
+          } */
 
 
         $this->classes_model->update_room($id, array(
             "numeric_code" => $numeric_code,
             "code" => $code,
             "branch_id" => $branch_id,
-            //"seat_total" => $seat_total
+                //"seat_total" => $seat_total
                 )
         );
 

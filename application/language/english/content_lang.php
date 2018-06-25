@@ -1086,6 +1086,6 @@ $lang['ctn_1019'] = 'Agreement No';
 $lang['ctn_1020'] = 'Sertnama';
 $lang['ctn_1021'] = 'Mobile Phone';
 $lang['ctn_1022'] = 'Phone';
-$lang['ctn_1023'] = '';
+$lang['ctn_1023'] = 'Certificate';
 
 

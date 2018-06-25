@@ -47,12 +47,12 @@
         <input type="checkbox" name="files_section" value="1" <?php if($this->settings->info->files_section) echo "checked" ?> />
     </div>
 </div>
-<div class="form-group">
+<!-- <div class="form-group">
     <label for="name-in" class="col-sm-2 control-label"><?php echo lang("ctn_395") ?></label>
     <div class="col-sm-10">
         <input type="checkbox" name="finance_section" value="1" <?php if($this->settings->info->finance_section) echo "checked" ?> />
     </div>
-</div>
+</div> -->
 <div class="form-group">
     <label for="name-in" class="col-sm-2 control-label"><?php echo lang("ctn_396") ?></label>
     <div class="col-sm-10">
@@ -83,18 +83,18 @@
         <input type="checkbox" name="parent_section" value="1" <?php if($this->settings->info->parent_section) echo "checked" ?> />
     </div>
 </div>
-<div class="form-group">
+ <div class="form-group">
     <label for="name-in" class="col-sm-2 control-label"><?php echo lang("ctn_952") ?></label>
     <div class="col-sm-10">
         <input type="checkbox" name="documents_section" value="1" <?php if($this->settings->info->documents_section) echo "checked" ?> />
     </div>
 </div>
-<div class="form-group">
+<!-- <div class="form-group">
     <label for="name-in" class="col-sm-2 control-label"><?php echo lang("ctn_921") ?></label>
     <div class="col-sm-10">
         <input type="checkbox" name="hostel_section" value="1" <?php if($this->settings->info->hostel_section) echo "checked" ?> />
     </div>
-</div>
+</div> -->
 <input type="submit" class="btn btn-primary form-control" value="<?php echo lang("ctn_13") ?>" />
 <?php echo form_close() ?>
 </div>

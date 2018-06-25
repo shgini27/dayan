@@ -185,7 +185,7 @@
                     <?php if($this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) : ?>
                       <li class="<?php if(isset($activeLink['invoice']['general'])) echo "active" ?>"><a href="<?php echo site_url("invoices") ?>"> <?php echo lang("ctn_718") ?></a></li>
                       <li class="<?php if(isset($activeLink['invoice']['templates'])) echo "active" ?>"><a href="<?php echo site_url("invoices/templates") ?>"> <?php echo lang("ctn_719") ?></a></li>
-                      <li class="<?php if(isset($activeLink['invoice']['reoccuring'])) echo "active" ?>"><a href="<?php echo site_url("invoices/reoccuring") ?>"> <?php echo lang("ctn_670") ?></a></li>
+                      <!-- <li class="<?php if(isset($activeLink['invoice']['reoccuring'])) echo "active" ?>"><a href="<?php echo site_url("invoices/reoccuring") ?>"> <?php echo lang("ctn_670") ?></a></li> -->
                       <li class="<?php if(isset($activeLink['invoice']['items'])) echo "active" ?>"><a href="<?php echo site_url("invoices/items") ?>"> <?php echo lang("ctn_946") ?></a></li>
                       <li class="<?php if(isset($activeLink['invoice']['pay'])) echo "active" ?>"><a href="<?php echo site_url("invoices/paying_accounts") ?>"> <?php echo lang("ctn_720") ?></a></li>
                     <?php endif; ?>
@@ -240,8 +240,8 @@
                 </a>
                 <div id="reports_sb_c" class="panel-collapse collapse sidebar-links-inner <?php if(isset($activeLink['reports'])) echo "in" ?>">
                   <ul class="inner-sidebar-links">
-                    <li class="<?php if(isset($activeLink['reports']['finance'])) echo "active" ?>"><a href="<?php echo site_url("reports/finance") ?>"> <?php echo lang("ctn_726") ?></a></li>
-                    <li class="<?php if(isset($activeLink['reports']['attendance'])) echo "active" ?>"><a href="<?php echo site_url("reports/attendance") ?>"> <?php echo lang("ctn_727") ?></a></li>
+                    <!-- <li class="<?php if(isset($activeLink['reports']['finance'])) echo "active" ?>"><a href="<?php echo site_url("reports/finance") ?>"> <?php echo lang("ctn_726") ?></a></li>
+                    <li class="<?php if(isset($activeLink['reports']['attendance'])) echo "active" ?>"><a href="<?php echo site_url("reports/attendance") ?>"> <?php echo lang("ctn_727") ?></a></li> -->
                     <li class="<?php if(isset($activeLink['reports']['statistics'])) echo "active" ?>"><a href="<?php echo site_url("reports/statistics") ?>"> <?php echo lang("ctn_979") ?></a></li>
                   </ul>
                 </div>
@@ -249,7 +249,7 @@
             <?php endif; ?>
           <?php endif; ?>
           <!-- CUSTOM ADDED SECTION DOCUMENTS START -->
-          <?php if($this->settings->info->documents_section) : ?>
+          <!-- <?php if($this->settings->info->documents_section) : ?>
             <?php if($this->common->has_permissions(array("admin", "documents_manager", "documents_viewer"), $this->user)) : ?>
             <li id="documents_sb">
                 <a data-toggle="collapse" data-parent="#documents_sb" href="#documents_sb_c" class="collapsed <?php if(isset($activeLink['documents'])) echo "active" ?>" >
@@ -267,7 +267,7 @@
                 </div>
               </li>
             <?php endif; ?>
-          <?php endif; ?>
+          <?php endif; ?> -->
           <!-- CUSTOM ADDED SECTION DOCUMENTS ENDS -->
           <?php if($this->settings->info->hostel_section) : ?>
              <?php if($this->common->has_permissions(array("admin", "hostel_manager"), $this->user)) : ?>
