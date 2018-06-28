@@ -43,6 +43,7 @@ class Classes extends CI_Controller {
     }
 
     public function index() {
+
         $this->template->loadData("activeLink", array("classes" => array("general" => 1)));
 
         $this->template->loadContent("classes/index.php", array(
@@ -3221,7 +3222,6 @@ class Classes extends CI_Controller {
             }
         }
     }
-    
 
     public function student_assignments($id) {
         $id = intval($id);
@@ -3627,6 +3627,91 @@ class Classes extends CI_Controller {
 
         $this->session->set_flashdata("globalmsg", lang("success_75"));
         redirect(site_url("classes/class_students/" . $id));
+    }
+
+    public function add_student_to_class() {
+        $class_id = intval($this->common->nohtml($this->input->post("class_id")));
+        $student_id = intval($this->common->nohtml($this->input->post("student_id")));
+
+        if ($class_id === 0) {
+            $this->template->error(lang("error_234"));
+        }
+        $class = $this->classes_model->get_class($class_id);
+        if ($class->num_rows() == 0) {
+            $this->template->error(lang("error_92"));
+        }
+
+        $class = $class->row();
+
+        if ($this->settings->info->teacher_class_manage) {
+            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+                $member = $this->classes_model
+                        ->get_class_student_user($this->user->info->ID, $class_id);
+                if ($member->num_rows() == 0) {
+                    $this->template->error(lang("error_2"));
+                }
+                $member = $member->row();
+                if (!$member->teacher_flag) {
+                    $this->template->error(lang("error_2"));
+                }
+            }
+        } else {
+            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+                $this->template->error(lang("error_2"));
+            }
+        }
+
+        $student = $this->students_model->get_student($student_id);
+        if ($student->num_rows() === 0) {
+            $this->template->error(lang("error_114"));
+        }
+        $student = $student->row();
+        
+        // Check user is not already a member
+        $member = $this->classes_model
+                ->get_class_student_user($student->ID, $class->ID);
+        if ($member->num_rows() > 0) {
+            $this->template->error(lang("error_115"));
+        }
+        
+        // Add
+        $branch = $this->classes_model->get_branch($class->branch_id)->row();
+        $branch_code = $branch->code;
+        $this->classes_model->add_student(array(
+            "classid" => $class_id,
+            "userid" => $student->ID
+                ), $branch_code
+        );
+
+        $user = $this->user_model->get_user($student->ID);
+        if ($user->num_rows() > 0) {
+            $user = $user->row();
+            // Send notification
+            $this->user_model->increment_field($student->ID, "noti_count", 1);
+            $this->user_model->add_notification(array(
+                "userid" => $student->ID,
+                "url" => "classes/view/" . $class_id,
+                "timestamp" => time(),
+                "message" => lang("ctn_820") . ": <strong>" . $class->name . "</strong>",
+                "status" => 0,
+                "fromid" => $this->user->info->ID,
+                "email" => $user->email,
+                "username" => $user->username,
+                "email_notification" => $user->email_notification
+                    )
+            );
+        }
+
+        // Recount Class students
+        $count = $this->classes_model->get_student_count($class_id);
+
+        $this->classes_model->update_class($class_id, array(
+            "students" => $count
+                )
+        );
+
+        $this->session->set_flashdata("globalmsg", lang("success_75"));
+        redirect(site_url("classes"));
     }
 
     public function delete_student($id, $hash) {

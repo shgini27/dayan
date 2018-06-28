@@ -35,11 +35,13 @@ class Students extends CI_Controller {
                     "student_viewer"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
+        $date = date("Y-m-d");
+        
+        $classes = $this->classes_model->get_all_active_classes($date);
+        
         $this->template->loadData("activeLink", array("students" => array("general" => 1)));
 
-        $this->template->loadContent("students/index.php", array(
-                )
-        );
+        $this->template->loadContent("students/index.php", ['classes' => $classes]);
     }
 
     public function student_page() {
@@ -74,12 +76,16 @@ class Students extends CI_Controller {
 
             $options = '<a href="' . site_url("students/view/" . $r->ID) . '" class="btn btn-primary btn-xs">' . lang("ctn_552") . '</a>';
             if ($this->common->has_permissions(array("admin", "student_manager"), $this->user)) {
-                $options .= ' <a href="' . site_url("students/edit_student/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("students/delete_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
+                $options .= ' <a href="' . site_url("students/edit_student/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a>';
+                $options .= ' <a href="' . site_url("students/delete_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
+                //$options .= ' <a href="' . site_url("students/view/" . $r->ID) . '" class="btn btn-success btn-xs">' . lang("ctn_1028") . '</a>'; 
+                $options .= ' <input type="button" class="btn btn-success btn-xs addStudentDialog" value="' . lang("ctn_504") . '" data-toggle="modal" data-id="' . $r->ID .'" data-target="#myModal" />';
             }
 
 
             $this->datatables->data[] = array(
                 $this->common->get_user_display(array("username" => $r->username, "avatar" => $r->avatar, "online_timestamp" => $r->online_timestamp, "first_name" => $r->first_name, "last_name" => $r->last_name)),
+                $r->mobile_phone,
                 $r->email,
                 $options
             );

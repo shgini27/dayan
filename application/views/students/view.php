@@ -4,9 +4,13 @@
     <div class="page-header-title"> <span class="glyphicon glyphicon-education"></span> <?php echo lang("ctn_481") ?></div>
     <div class="db-header-extra form-inline"> 
 
-<a href="<?php echo site_url("students/view/" . $student->ID) ?>" class="btn btn-primary btn-sm"><?php echo lang("ctn_456") ?></a> <a href="<?php echo site_url("students/view_classes/" . $student->ID) ?>" class="btn btn-info btn-sm"><?php echo lang("ctn_471") ?></a> <a href="<?php echo site_url("students/view_attendance/" . $student->ID) ?>" class="btn btn-success btn-sm"><?php echo lang("ctn_494") ?></a> <a href="<?php echo site_url("students/view_behaviour/" . $student->ID) ?>" class="btn btn-danger btn-sm"><?php echo lang("ctn_455") ?></a> <a href="<?php echo site_url("students/view_report/" . $student->ID) ?>" class="btn btn-info btn-sm"><?php echo lang("ctn_845") ?></a>
+        <a href="<?php echo site_url("students/view/" . $student->ID) ?>" class="btn btn-primary btn-sm"><?php echo lang("ctn_456") ?></a> 
+        <a href="<?php echo site_url("students/view_classes/" . $student->ID) ?>" class="btn btn-info btn-sm"><?php echo lang("ctn_471") ?></a> 
+        <a href="<?php echo site_url("students/view_attendance/" . $student->ID) ?>" class="btn btn-success btn-sm"><?php echo lang("ctn_494") ?></a> 
+        <a href="<?php echo site_url("students/view_behaviour/" . $student->ID) ?>" class="btn btn-danger btn-sm"><?php echo lang("ctn_455") ?></a> 
+        <a href="<?php echo site_url("students/view_report/" . $student->ID) ?>" class="btn btn-info btn-sm"><?php echo lang("ctn_845") ?></a>
 
-</div>
+    </div>
 </div>
 
 

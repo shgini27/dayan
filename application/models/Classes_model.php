@@ -390,6 +390,24 @@ class Classes_Model extends CI_Model {
 				classes.max_students, classes.branch_id,")
                         ->get("classes");
     }
+    
+    /**
+
+     * Method to get all active classes
+     * @return object database result object classes     /
+     */
+    public function get_all_active_classes($date) {
+        //SELECT * FROM `classes` left join class_categories on(class_categories.ID = classes.categoryid) WHERE class_categories.start_date <= NOW() and class_categories.end_date >= NOW()
+        return $this->db
+                        ->select("classes.ID, classes.name, classes.description, classes.room_id,
+				classes.subjectid, classes.categoryid, classes.students,
+				classes.max_students, classes.branch_id, classes.class_days,
+                                classes.start_hour, classes.end_hour")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
+                        ->where("class_categories.start_date <=", $date)
+                        ->where("class_categories.end_date >=", $date)
+                        ->get("classes");
+    }
 
     public function get_classes_total_your($userid) {
         $s = $this->db
