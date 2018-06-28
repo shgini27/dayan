@@ -5,7 +5,7 @@
         <input type="hidden" name="redirect" value="<?php echo $redirect ?>">
         <input type="hidden" name="hook" value="<?php echo $hook ?>">
         <div class="form-group">
-            <label for="email-in" class="col-md-3 label-heading"><?php echo lang("ctn_24") ?><span class="required"> *</span></label>
+            <label for="email-in" class="col-md-3 label-heading"><?php echo lang("ctn_24") ?></label>
             <div class="col-md-9">
                 <input type="email" class="form-control" id="email-in" name="email" value="<?php if (isset($member->email)) echo $member->email ?>">
             </div>
@@ -22,7 +22,7 @@
             <label for="inputEmail3" class="col-sm-3 label-heading"><?php echo lang("ctn_26") ?></label>
             <div class="col-sm-9">
                 <?php if (isset($member->avatar)) : ?>
-                    <img src="<?php echo base_url() ?>/<?php echo $this->settings->info->upload_path_relative ?>/<?php echo $member->avatar ?>" />
+                <img src="<?php echo base_url() ?>/<?php echo $this->settings->info->upload_path_relative ?>/<?php echo $member->avatar ?>" width="150"/>
                 <?php endif; ?>
                 <input type="file" name="userfile" /> 
             </div>
@@ -70,6 +70,27 @@
             <label for="fathers-name-in" class="col-md-3 label-heading"><?php echo lang("ctn_977") ?><span class="required"> *</span></label>
             <div class="col-md-9">
                 <input type="text" class="form-control" id="fathers-name-in" name="fathers_name" value="<?php if (isset($member->fathers_name)) echo $member->fathers_name ?>">
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label for="first-name-en-in" class="col-md-3 label-heading"><?php echo lang("ctn_1025") ?><span class="required"> *</span></label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" id="first-name-en-in" name="first_name_en" value="<?php if (isset($member->first_name)) echo $member->first_name_en ?>">
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label for="last-name-en-in" class="col-md-3 label-heading"><?php echo lang("ctn_1026") ?><span class="required"> *</span></label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" id="last-name-en-in" name="last_name_en" value="<?php if (isset($member->last_name)) echo $member->last_name_en ?>">
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label for="fathers-name-en-in" class="col-md-3 label-heading"><?php echo lang("ctn_1027") ?><span class="required"> *</span></label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" id="fathers-name-en-in" name="fathers_name_en" value="<?php if (isset($member->fathers_name_en)) echo $member->fathers_name_en ?>">
             </div>
         </div>
         <div class="form-group ui-front">
@@ -219,4 +240,9 @@
 <?php echo form_close() ?>
     </div>
 </div>
+<script type="text/javascript">
+    $('.datepicker').datepicker({
+        format: "dd/mm/yyyy"
+    });
+</script>
 </div>

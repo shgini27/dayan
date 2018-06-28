@@ -344,9 +344,15 @@ class Students_Model extends CI_Model {
 				users.points, users.aboutme, users.joined, users.active,
 				users.IP, users.password, users.address_line_1,
 				users.mobile_phone, users.state, users.city, users.country,
-				users.phone")
+				users.phone, users.first_name_en, users.last_name_en, users.fathers_name_en")
                         ->join("user_roles", "users.user_role = user_roles.ID")
                         ->get("users");
+    }
+    
+    public function get_dropped_student($id) {
+        return $this->db
+                        ->where("dropped_student.dropped_student_id", $id)
+                        ->get("dropped_student");
     }
 
     public function get_student_attendance($id, $datatable) {
@@ -441,6 +447,10 @@ class Students_Model extends CI_Model {
 
     public function delete_student($id) {
         $this->db->where("ID", $id)->delete("users");
+    }
+    
+    public function delete_dropped_student($id){
+        $this->db->where("dropped_student_id", $id)->delete("dropped_student");
     }
 
     public function get_student_report($id) {

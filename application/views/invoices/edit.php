@@ -382,6 +382,11 @@
   </div>
 </div>
 <script type="text/javascript">
+$('.datepicker').datepicker({
+    format: "dd/mm/yyyy"
+});
+</script>
+<script type="text/javascript">
 var payments_total = parseFloat(<?php echo $payments_total ?>);
 $(document).ready(function() {
 

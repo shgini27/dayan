@@ -13,15 +13,14 @@
             <div class="wrapper">
                 <p>
                     Şu şadatnama <b class="text-underline"> <?php echo "$student->first_name $student->last_name $student->fathers_name "; ?> </b>
-                    onuň hakykatdan hem 2018-nji ýylyň 14-nji fewralyndan 2018-nji ýylyň 7-nji maýyna çenli
+                    onuň hakykatdan hem <?php echo $period_tm; ?> çenli
                     <b class="text-underline"> DAÝAN hususy kärhanasynda <?php echo strtoupper("$subject->name ($class->name) ") ; ?> </b>
-                    <?php echo "$category->hrs"; ?> akademik sagatlyk kursyny 74%* bal bilen üstünlikli tamamlandygy barada berildi.
+                    <?php echo "$class->hrs"; ?> akademik sagatlyk kursyny <?php echo $total_grade; ?>%* bal bilen üstünlikli tamamlandygy barada berildi.
                 </p>
                 <p>
-                    This is to certify that <b class="text-underline"> <?php echo "$student->first_name $student->last_name $student->fathers_name "; ?> </b>
-                    has studied at <b class="text-underline"> DAYAN individual enterprise </b> from 14th of February 2018 to 7th of 
-                    May 2018 having successfully completed <?php echo "$category->hrs"; ?> academic hours of <b class="text-underline"> <?php echo strtoupper("$subject->name ($class->name) ") ; ?> </b>
-                    course with a score of 74%*, has been awarded with this certificate with all rights, honor
+                    This is to certify that <b class="text-underline"> <?php echo "$student->first_name_en $student->last_name_en $student->fathers_name_en "; ?> </b>
+                    has studied at <b class="text-underline"> DAYAN individual enterprise </b> from <?php echo $period_en; ?> having successfully completed <?php echo "$class->hrs"; ?> academic hours of <b class="text-underline"> <?php echo strtoupper("$subject->name ($class->name) ") ; ?> </b>
+                    course with a score of <?php echo $total_grade; ?>%*, has been awarded with this certificate with all rights, honor
                     and privileges.
                 </p>
             </div>

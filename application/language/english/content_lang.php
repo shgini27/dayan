@@ -1078,14 +1078,16 @@ $lang['ctn_1011'] = 'should come';
 $lang['ctn_1012'] = 'missing class';
 $lang['ctn_1013'] = 'in class';
 $lang['ctn_1014'] = 'Total Grade';
-$lang['ctn_1015'] = 'Buyruk';
-$lang['ctn_1016'] = 'Tapgyr';
-$lang['ctn_1017'] = 'Sertifikat';
+$lang['ctn_1015'] = 'Buyruk 1';
+$lang['ctn_1016'] = 'Arhiw';
+$lang['ctn_1017'] = 'Buyruk 2';
 $lang['ctn_1018'] = 'Birth Date';
 $lang['ctn_1019'] = 'Agreement No';
 $lang['ctn_1020'] = 'Sertnama';
 $lang['ctn_1021'] = 'Mobile Phone';
 $lang['ctn_1022'] = 'Phone';
 $lang['ctn_1023'] = 'Certificate';
-
-
+$lang['ctn_1024'] = 'Every Day';
+$lang['ctn_1025'] = 'First Name (English)';
+$lang['ctn_1026'] = 'Last Name (English)';
+$lang['ctn_1027'] = 'Fathers Name (English)';

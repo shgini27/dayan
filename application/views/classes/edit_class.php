@@ -75,11 +75,23 @@
                         <?php if($class->class_days === 'odd') :?>
                         <option value="odd" selected><?php echo lang('ctn_1005'); ?></option>
                         <option value="even"><?php echo lang('ctn_1006'); ?></option>
-                        <?php else: ?>
+                        <option value="everyday"><?php echo lang('ctn_1024'); ?></option>
+                        <?php elseif($class->class_days === 'even'): ?>
                         <option value="even" selected><?php echo lang('ctn_1006'); ?></option>
                         <option value="odd"><?php echo lang('ctn_1005'); ?></option>
+                        <option value="everyday"><?php echo lang('ctn_1024'); ?></option>
+                        <?php else: ?>
+                        <option value="everyday" selected><?php echo lang('ctn_1024'); ?></option>
+                        <option value="odd"><?php echo lang('ctn_1005'); ?></option>
+                        <option value="even"><?php echo lang('ctn_1006'); ?></option>
                         <?php endif; ?>
                     </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="p-in" class="col-sm-2 control-label"><?php echo lang("ctn_981") ?></label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" name="hrs" min="1" max="300" id="hrs" value="<?php echo $class->hrs ?>">
                 </div>
             </div>
             <div class="form-group">

@@ -235,7 +235,8 @@ class Documents extends CI_Controller {
     public function download_order($category_id, $type) {
         $cat_data = $this->classes_model->get_category_data($category_id);
 
-        if ($cat_data->num_rows() > 0) {
+        $row_count = $cat_data->num_rows();
+        if ($row_count > 0) {
             $counter = 1;
             $subjects = '';
             $period = '';
@@ -245,17 +246,15 @@ class Documents extends CI_Controller {
                 $start_date = new DateTime($data->start_date);
                 $end_date = new DateTime($data->end_date);
 
-                if ($counter === ($cat_data->num_rows() - 1)) {
+                if ($counter === ($row_count - 1)) {
                     $subjects .= ' we ';
-                    $period .= $start_date->format('d-m-Y') . ' - ' . $end_date->format('d-m-Y');
-                } elseif ($cat_data->num_rows() !== 1) {
+                } elseif (($row_count - 1) > 1) {
                     $subjects .= ', ';
-                } else {
-                    $period .= $start_date->format('d-m-Y') . ' - ' . $end_date->format('d-m-Y');
                 }
 
                 $counter ++;
             }
+            $period .= $start_date->format('d-m-Y') . ' - ' . $end_date->format('d-m-Y');
 
             if ($type === 'general') {
                 $this->draw_order_document($subjects, $period);
@@ -293,7 +292,7 @@ class Documents extends CI_Controller {
 
         $student_data = [
             "tm_name" => "$class_student->first_name $class_student->last_name $class_student->fathers_name",
-            "en_name" => "$class_student->first_name $class_student->last_name $class_student->fathers_name",
+            "en_name" => "$class_student->first_name_en $class_student->last_name_en $class_student->fathers_name_en",
             "week" => "$week",
             "hrs" => "$category->hrs",
             "subject" => "$category->name",
@@ -365,19 +364,20 @@ class Documents extends CI_Controller {
     private function draw_order_document($subjects, $period) {
         $filename = 'buyruk.docx';
 
-        //$image_logo = base_url() . 'uploads/school_logo.jpg';
+        $image_logo = base_url() . 'uploads/school_logo.png';
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
         // Adding an empty Section to the document...
-        $section = $phpWord->addSection();
+        $section = $phpWord->addSection(['marginLeft' => 1700, 'marginRight' => 850, 'marginTop' => 1134]);
         $section_style = $section->getStyle();
         $position = $section_style->getPageSizeW() - $section_style->getMarginRight() - $section_style->getMarginLeft();
         $phpWord->addParagraphStyle("leftRight", array("tabs" => array(
                 new \PhpOffice\PhpWord\Style\Tab("right", $position)
         )));
 
-        $this->add_header($section);
+        //$this->add_header($section);
+        $section->addImage($image_logo, ['width' => 467, 'height' => 100]);
 
         $section->addTextBreak(1);
         // Define styles
@@ -388,8 +388,12 @@ class Documents extends CI_Controller {
         $section->addTextBreak(1);
 
         $section->addText(
-                "Täze okuw tapgyryny açmak hakynda", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'right']
+                "Täze okuw tapgyryny", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'right']
         );
+        $section->addText(
+                "açmak hakynda", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'right']
+        );
+
         $section->addTextBreak(2);
 
         // Adding Text element with font customized using named font style...
@@ -408,18 +412,35 @@ class Documents extends CI_Controller {
 
         $section->addTextBreak(1);
 
-        $paragraphStyleName = 'P-Style';
-        $phpWord->addParagraphStyle($paragraphStyleName, array('spaceAfter' => 95));
-
-        $predefinedMultilevelStyle = array('listType' => \PhpOffice\PhpWord\Style\ListItem::TYPE_NUMBER_NESTED);
-
         $section->addText(
                 "buýurýaryn:", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'center']
         );
         $section->addTextBreak(1);
 
-        $section->addListItem('“Daýan” HK-da, ' . trim($period) . ' aralygyndaky geçiriljek dersleriň başlamagyny gurnamaly.', 0, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
-        $section->addListItem(trim($period) . ' seneleri aralygynda okan diňleýjileriň jemi sanyny görkezýän maglumaty, olaryň sanawyny, dürli sebäplere görä okuwyny dowam edip bilmeýänleriň sanawyny, şahadatnamany almaga hukuk gazananlaryň sanawyny we olaryň synag netijeleriniň sanawyny tapgyryň soňunda bukjada birleşdirmeli we dikip möhürlemeli.', 0, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+        /**/
+        // Adding Text element with font customized using named font style...
+        $paragraphStyleName = 'multilevel';
+        $phpWord->addNumberingStyle(
+                $paragraphStyleName, [
+            'type' => 'multilevel',
+            'levels' => [
+                [
+                    'format' => 'decimal',
+                    'text' => '%1.',
+                    'left' => 360,
+                    'hanging' => 360,
+                    'tabPos' => 360,
+                    'suffix' => 'space',
+                    'font' => 'Cambria (Headings)',
+                    'fontSize' => 28
+                ]
+            ]
+                ]
+        );
+        /**/
+
+        $section->addListItem('“Daýan” HK-da, ' . trim($period) . ' aralygyndaky geçiriljek dersleriň başlamagyny gurnamaly.', 0, $fontStyleName, $paragraphStyleName);
+        $section->addListItem(trim($period) . ' seneleri aralygynda okan diňleýjileriň jemi sanyny görkezýän maglumaty, olaryň sanawyny, dürli sebäplere görä okuwyny dowam edip bilmeýänleriň sanawyny, şahadatnamany almaga hukuk gazananlaryň sanawyny we olaryň synag netijeleriniň sanawyny tapgyryň soňunda bukjada birleşdirmeli we dikip möhürlemeli.', 0, $fontStyleName, $paragraphStyleName);
         $section->addTextBreak(3);
 
         $section->addText(
@@ -437,17 +458,20 @@ class Documents extends CI_Controller {
     private function draw_certificate_document($subjects, $period) {
         $filename = 'sertifikat_buyruk.docx';
 
+        $image_logo = base_url() . 'uploads/school_logo.png';
+
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
         // Adding an empty Section to the document...
-        $section = $phpWord->addSection();
+        $section = $phpWord->addSection(['marginLeft' => 1700, 'marginRight' => 850, 'marginTop' => 1134]);
         $section_style = $section->getStyle();
         $position = $section_style->getPageSizeW() - $section_style->getMarginRight() - $section_style->getMarginLeft();
         $phpWord->addParagraphStyle("leftRight", array("tabs" => array(
                 new \PhpOffice\PhpWord\Style\Tab("right", $position)
         )));
 
-        $this->add_header($section);
+        //$this->add_header($section);
+        $section->addImage($image_logo, ['width' => 467, 'height' => 100]);
 
         $section->addTextBreak(1);
         // Define styles
@@ -458,8 +482,12 @@ class Documents extends CI_Controller {
         $section->addTextBreak(1);
 
         $section->addText(
-                "Diňleýjilere şahadatnama bermek hakynda", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'right']
+                "Diňleýjilere şahadatnama", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'right']
         );
+        $section->addText(
+                "bermek hakynda", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'right']
+        );
+
         $section->addTextBreak(2);
 
         // Adding Text element with font customized using named font style...
@@ -477,20 +505,35 @@ class Documents extends CI_Controller {
 
         $section->addTextBreak(1);
 
-        $paragraphStyleName = 'P-Style';
-        $phpWord->addParagraphStyle($paragraphStyleName, array('spaceAfter' => 95));
-
-        $predefinedMultilevelStyle = array('listType' => \PhpOffice\PhpWord\Style\ListItem::TYPE_NUMBER_NESTED);
-
         $section->addText(
                 "buýurýaryn:", ['name' => 'Cambria (Headings)', 'size' => 14, 'bold' => true], ['alignment' => 'center']
         );
         $section->addTextBreak(1);
 
+        // Adding Text element with font customized using named font style...
+        $paragraphStyleName = 'multilevel';
+        $phpWord->addNumberingStyle(
+                $paragraphStyleName, [
+            'type' => 'multilevel',
+            'levels' => [
+                [
+                    'format' => 'decimal',
+                    'text' => '%1.',
+                    'left' => 360,
+                    'hanging' => 360,
+                    'tabPos' => 360,
+                    'suffix' => 'space',
+                    'font' => 'Cambria (Headings)',
+                    'fontSize' => 28
+                ]
+            ]
+                ]
+        );
+
         $section->addListItem(
                 '“Daýan” HK-nyň okuw merkezinde kompýuter sowatlylygy, iňlis, rus dilleri '
                 . 'we suratkeşlik dersleri boýunça ' . trim($period) . ' seneleri aralygynda '
-                . 'okan we synaglaryny üstünlikli tabşyran diňleýjilere şahadatnama bermeli.', 0, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'okan we synaglaryny üstünlikli tabşyran diňleýjilere şahadatnama bermeli.', 0, $fontStyleName, $paragraphStyleName);
 
         $section->addTextBreak(1);
         $section->addText(
@@ -539,12 +582,20 @@ class Documents extends CI_Controller {
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
+        $phpWord->setDefaultParagraphStyle(
+                [
+                    'spaceAfter' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(0),
+                    'spacing' => 120,
+                    'lineHeight' => 1,
+                ]
+        );
+
         // Adding an empty Section to the document...
-        $section = $phpWord->addSection();
+        $section = $phpWord->addSection(['marginTop' => 500, 'marginBottom' => 500, 'marginLeft' => 1000, 'marginRight' => 800]);
 
         // Define styles
         $section->addText(
-                "ŞERTNAMA ($agreement_no)", ['name' => 'Cambria', 'size' => 14, 'bold' => true], ['alignment' => 'center']
+                "ŞERTNAMA (No: $agreement_no)", ['name' => 'Cambria', 'size' => 10, 'bold' => true], ['alignment' => 'center']
         );
 
         $section->addTextBreak(1);
@@ -571,48 +622,58 @@ class Documents extends CI_Controller {
 
         $section->addTextBreak(1);
 
-        $paragraphStyleName = 'P-Style';
-        $phpWord->addParagraphStyle($paragraphStyleName, array('spaceAfter' => 95));
+        //$paragraphStyleName = 'P-Style';
+        //$phpWord->addParagraphStyle($paragraphStyleName, array('spaceAfter' => 95, 'font' => 'Cambria', 'fontSize' => 8));
+        $paragraphStyleName = 'multilevel';
+        $phpWord->addNumberingStyle(
+                $paragraphStyleName, array(
+            'type' => 'multilevel',
+            'levels' => array(
+                array('format' => 'decimal', 'text' => '%1.', 'left' => 360, 'hanging' => 360, 'tabPos' => 360, 'suffix' => 'space', 'font' => 'Cambria', 'fontSize' => 16),
+                array('format' => 'decimal', 'text' => '%1.%2.', 'left' => 360, 'hanging' => 360, 'tabPos' => 360, 'suffix' => 'space', 'font' => 'Cambria', 'fontSize' => 16),
+            )
+                )
+        );
 
-        $predefinedMultilevelStyle = array('listType' => \PhpOffice\PhpWord\Style\ListItem::TYPE_NUMBER_NESTED);
+        //$predefinedMultilevelStyle = array('listType' => \PhpOffice\PhpWord\Style\ListItem::TYPE_NUMBER_NESTED);
 
 
         $section->addListItem(
-                'Diňleýjiniň borçlary', 0, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Diňleýjiniň borçlary', 0, $boldFontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Bellenen wagtlarda sapaklara doly gatnaşmak.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Bellenen wagtlarda sapaklara doly gatnaşmak.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Sapaklara wagtynda gelmek.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Sapaklara wagtynda gelmek.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                '«Daýan» okuw merkeziniň emläklerine zeper ýetirmezlik.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                '«Daýan» okuw merkeziniň emläklerine zeper ýetirmezlik.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Bellenen wagtlarda synaglara gatnaşmak.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Bellenen wagtlarda synaglara gatnaşmak.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Okuw merkezinde tertip-düzgüni saklamak.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Okuw merkezinde tertip-düzgüni saklamak.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                '«Daýan» okuw merkeziniň düzgünlerini doly talabalaýyk ýerine ýetirmek.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                '«Daýan» okuw merkeziniň düzgünlerini doly talabalaýyk ýerine ýetirmek.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
                 'Diňleýji sapaga girenlerinde el telefonlaryny öçürmäge borçludyrlar. '
                 . 'Diňleýji el telefonyny öçürmedik halatynda, dolandyryş bölümi tarapyndan '
-                . 'duýduryş beriljekdir.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'duýduryş beriljekdir.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                '«Daýan» okuw merkeziniň borçlary', 0, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                '«Daýan» okuw merkeziniň borçlary', 0, $boldFontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Diňleýjini okuw talaplaryna laýyklykda zerur şertler bilen üpjün etmek.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Diňleýjini okuw talaplaryna laýyklykda zerur şertler bilen üpjün etmek.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Sapaklary döwrüň talabyna laýyk we öz wagtynda geçirmek.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Sapaklary döwrüň talabyna laýyk we öz wagtynda geçirmek.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Diňleýjini okuwa degişli kitaplar ýa-da elektron ýazgylar bilen üpjün etmek.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Diňleýjini okuwa degişli kitaplar ýa-da elektron ýazgylar bilen üpjün etmek.', 1, $fontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Diňleýjini tapgyryň dowamynda ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($week, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" hepde okatmak.", ['name' => 'Cambria Math', 'size' => 8]);
 
         $section->addListItem(
-                'Okuwyň wagtlary', 0, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Okuwyň wagtlary', 0, $boldFontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Okuw merkezinde okuwlar hepdede ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($day, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" gün ", ['name' => 'Cambria Math', 'size' => 8]);
@@ -620,28 +681,28 @@ class Documents extends CI_Controller {
         $listItemRun->addText(" okuw sagady okadylýar.", ['name' => 'Cambria Math', 'size' => 8]);
 
         $section->addListItem(
-                'Okuw wagtlary diňleýji tarapyndan bir saparlyk bellenilýär.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Okuw wagtlary diňleýji tarapyndan bir saparlyk bellenilýär.', 1, $fontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Okuw bölümi ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($subject, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Okuw wagty hepdäniň ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($week_day, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" günleri ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($time, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(".", ['name' => 'Cambria Math', 'size' => 8]);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Okuw tölegi ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($price, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" manat.", ['name' => 'Cambria Math', 'size' => 8]);
 
         $section->addListItem(
-                '«Daýan» okuw merkeziniň düzgünleri', 0, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                '«Daýan» okuw merkeziniň düzgünleri', 0, $boldFontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Synaglaryň netijleriniň orta bahasy iňlis - rus dili kurslarynda okaýan diňleýjiler "
                 . "üçin azyndan ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($point_1, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
@@ -655,7 +716,7 @@ class Documents extends CI_Controller {
         $listItemRun->addText(" - dan ýokary bolan diňleýjiler Sertifikat "
                 . "tölegini töläp almaga hukuk gazanarlar.", ['name' => 'Cambria Math', 'size' => 8]);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Sapaklarda ýetişigi pes we synaglarynyň bahasy iňlis - rus dili kurslarynda "
                 . "okaýanlar üçin ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($point_1, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
@@ -667,36 +728,36 @@ class Documents extends CI_Controller {
         $section->addListItem(
                 'Diňleýji synaga sebäpsiz gatnaşmadyk ýagdaýynda, synagdan öň administrasiýa hat '
                 . 'üsti bilen arza ýazyp ýüz tutmaly we administrasiýaň bellän wagtynda synaga '
-                . 'gelmeli.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'gelmeli.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
                 'Diňleýjiniň sapaklara sebäpli ýa-da sebäpsiz gelmedik günleriniň öwezi dolunmaýar. '
                 . 'Iki hepdeden artyk sapaklaryna sebäpsiz gelmedik diňleýji, okuw tölegi '
-                . 'gaýtarylmazdan okuwdan çykarylar.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'gaýtarylmazdan okuwdan çykarylar.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                '«Daýan» okuw merkeziniň emlägine zeper ýetiren diňleýji ýetiren zyýanyň öwezini doldurmaklyga borçludyr.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                '«Daýan» okuw merkeziniň emlägine zeper ýetiren diňleýji ýetiren zyýanyň öwezini doldurmaklyga borçludyr.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
                 'Diňleýjileriň ýany bilen getiren goşlarynyň ýitirilen ýa-da zeper ýetirilen '
-                . 'halatlarynda «Daýan» okuw merkezi hiç hili jogapkärçilik çekmeýär.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'halatlarynda «Daýan» okuw merkezi hiç hili jogapkärçilik çekmeýär.', 1, $fontStyleName, $paragraphStyleName);
         //bold and underline section starts
         $section->addListItem(
                 'Diňleýji okuwa mynasyp şekilde geýinmäge borçlydyr. (Köýnekler ýeňli, '
-                . 'ýubkalaryň uzynlygy dyzdan aşak bolmaly).', 1, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'ýubkalaryň uzynlygy dyzdan aşak bolmaly).', 1, $boldFontStyleName, $paragraphStyleName);
         $section->addListItem(
                 'Okuw merkezine içgili gelmek, we merkezimizde alkagolly içgiler içmek, '
-                . 'çilim çekmek we nas atmak düýbinden gadagandyr.', 1, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'çilim çekmek we nas atmak düýbinden gadagandyr.', 1, $boldFontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Okuw merkezinde okuwyň dowamynda edep we terbiýe kadalarynyň çäginde hereket etmelidir', 1, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Okuw merkezinde okuwyň dowamynda edep we terbiýe kadalarynyň çäginde hereket etmelidir', 1, $boldFontStyleName, $paragraphStyleName);
         $section->addListItem(
                 'Ene-atalar diňleýjiniň ýetişigi we her ara synaglarynyň netijesi barada '
                 . 'mugallymyndan sorap gyzyklanmalydyrlar. Mugallym diňleýjiniň ýetişigi '
-                . 'barada ene – atasyna habar etmäge borçly däldir!', 1, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'barada ene – atasyna habar etmäge borçly däldir!', 1, $boldFontStyleName, $paragraphStyleName);
         //bold and underlined is end
 
         $section->addListItem(
                 'Türkmenistan döwleti tarapyndan resmi yglan edilen baýramçylyk günlerinde '
-                . 'okuw merkezimiz işlemeýär, we şol günki sapaklaryň öwezi dolunmaýar.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'okuw merkezimiz işlemeýär, we şol günki sapaklaryň öwezi dolunmaýar.', 1, $fontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Diňleýji okuw merkeziniň düzgünlerini bozan we öz borçlaryny ýerine ýetirmedik '
                     . 'ýagdaýynda administrasiýa tarapyndan ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText(" DUÝDURYŞ ", ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
@@ -705,12 +766,12 @@ class Documents extends CI_Controller {
         $listItemRun->addText(" alan halatynda okuwdan çykarylar.", ['name' => 'Cambria Math', 'size' => 8]);
 
         $section->addListItem(
-                'Okuw tölegini yzyna gaýtaryp berilmeýär', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Okuw tölegini yzyna gaýtaryp berilmeýär', 1, $fontStyleName, $paragraphStyleName);
 
         $section->addListItem(
-                'Şertnamanyň şertleriniň onuň täzeden baglaşylmasy ýa-da tamamlanmasy', 0, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Şertnamanyň şertleriniň onuň täzeden baglaşylmasy ýa-da tamamlanmasy', 0, $boldFontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Şertnama, diňleýji okuwyň dowamynda üç ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText(" DUÝDURYŞ ", ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" alan halatynda okuw merkezi tarapyndan ýatyrlyp biliner.", ['name' => 'Cambria Math', 'size' => 8]);
@@ -718,9 +779,9 @@ class Documents extends CI_Controller {
         $section->addListItem(
                 'Şertnamaň başlan möhletinden 1 (bir) hepde geçmän şertnama täzeden baglanyşylyp '
                 . 'biliner (eger diňleýji okuw wagtyny indiki okuw ýazlyşygyna geçirmek islän '
-                . 'ýagdaýynda).', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . 'ýagdaýynda).', 1, $fontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Şertnamanyň başlanan möhletinden ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($agree_week, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" hepde soň eger diňleýji şertnamany indiki tapgyra geçirmek "
@@ -730,11 +791,11 @@ class Documents extends CI_Controller {
 
         $section->addListItem(
                 "Okuw merkezine içgili ýagdaýda gelmek, ýa-da okuw merkeziniň çäklerinde alkagolly içgiler içilmesi, "
-                . "çilim çekilmesi we nas atylmasy ýagdaýynda şertnama ýatyrylýar.", 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                . "çilim çekilmesi we nas atylmasy ýagdaýynda şertnama ýatyrylýar.", 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Şertnamanyň möhleti', 0, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Şertnamanyň möhleti', 0, $boldFontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Bu şertnama ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($start_date, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" ýyldan - ", ['name' => 'Cambria Math', 'size' => 8]);
@@ -742,16 +803,16 @@ class Documents extends CI_Controller {
         $listItemRun->addText(" ýyla çenli baglaşyldy.", ['name' => 'Cambria Math', 'size' => 8]);
 
         $section->addListItem(
-                'Şertnama iki tarapyň gol çekmegi bilen güýje girýär.', 1, $fontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Şertnama iki tarapyň gol çekmegi bilen güýje girýär.', 1, $fontStyleName, $paragraphStyleName);
         $section->addListItem(
-                'Jerimeler', 0, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Jerimeler', 0, $boldFontStyleName, $paragraphStyleName);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Sertifikaty gaýtadan almak üçin ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($lost_fee, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" manat jerime tölenmelidir.", ['name' => 'Cambria Math', 'size' => 8]);
 
-        $listItemRun = $section->addListItemRun(1, $predefinedMultilevelStyle);
+        $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
         $listItemRun->addText("Sertfikat berlip başlan wagtyndan ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText($late_period, ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" içinde alynmadyk ýagdaýda goşmaça ", ['name' => 'Cambria Math', 'size' => 8]);
@@ -759,7 +820,7 @@ class Documents extends CI_Controller {
         $listItemRun->addText(" manat tölenmelidir.", ['name' => 'Cambria Math', 'size' => 8]);
 
         $section->addListItem(
-                'Taraplaryň hukuky rekwizitleri', 0, $boldFontStyleName, $predefinedMultilevelStyle, $paragraphStyleName);
+                'Taraplaryň hukuky rekwizitleri', 0, $boldFontStyleName, $paragraphStyleName);
 
         $section_style = $section->getStyle();
         $position = $section_style->getPageSizeW() - $section_style->getMarginRight() - $section_style->getMarginLeft();
@@ -767,6 +828,7 @@ class Documents extends CI_Controller {
                 new \PhpOffice\PhpWord\Style\Tab("right", $position)
         )));
 
+        $section->addTextBreak(1);
 
         $section->addText(
                 "          Diňleýjiniň Familiýasy, ady, atasynyň ady\t“Daýan” H.K.", ['name' => 'Cambria Math', 'size' => 8, 'bold' => true], "leftRight");
@@ -780,7 +842,6 @@ class Documents extends CI_Controller {
                 "                                         \tGoly:_____________", ['name' => 'Cambria Math', 'size' => 8], "leftRight");
         $section->addText(
                 "                                   \tM.Ýe.", ['name' => 'Cambria Math', 'size' => 8, 'bold' => true], "leftRight");
-        $section->addTextBreak(3);
 
         // Saving the document as WORD 2007 file...
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
@@ -841,14 +902,14 @@ class Documents extends CI_Controller {
         $sheet->getStyle('A2:E2')->applyFromArray($styleArray);
         $sheet->getStyle('A3:E3')->applyFromArray($styleArray);
         $sheet->getStyle('A4:E4')->applyFromArray($styleArray);
-        
+
         $sheet->getColumnDimension('A')->setWidth(15);
         $sheet->getColumnDimension('B')->setWidth(15);
         $sheet->getColumnDimension('C')->setWidth(20);
         $sheet->getColumnDimension('D')->setWidth(40);
         $sheet->getColumnDimension('E')->setWidth(20);
 
-        
+
         //setting cells values for header part
         $sheet->setCellValue('A1', '"DAÝAN" HUSUSY KÄRHANASY');
         $sheet->setCellValue('A2', $class->name);
@@ -860,16 +921,16 @@ class Documents extends CI_Controller {
 
         $sheet->setCellValue('B5', 'Wagty'); //order number
         $sheet->getStyle('B5')->applyFromArray($styleArray);
-        
+
         $sheet->setCellValue('C5', 'Gatnaşygy'); //order number
         $sheet->getStyle('C5')->applyFromArray($styleArray);
 
         $sheet->setCellValue('D5', 'Sebäbi'); //order number
         $sheet->getStyle('D5')->applyFromArray($styleArray); //attendance_date
-        
+
         $sheet->setCellValue('E5', 'Mugallymy'); //order number
         $sheet->getStyle('E5')->applyFromArray($styleArray); //attendance_date
-        
+
         $student_attendance_sheets = $this->classes_model->get_student_attendances($class->ID, $student->userid);
 
         $counter = 1;
@@ -890,10 +951,10 @@ class Documents extends CI_Controller {
             $date = substr($class_student->start, 0, 10);
             $time_start = substr($class_student->start, 11, 5);
             $time_end = substr($class_student->end, 11, 5);
-            
+
             $sheet->setCellValue("A$row", $date); //order number
             $sheet->getStyle("A$row")->applyFromArray($styleArray);
-            
+
             $sheet->setCellValue("B$row", "$time_start - $time_end"); //order number
             $sheet->getStyle("B$row")->applyFromArray($styleArray);
 
@@ -918,7 +979,7 @@ class Documents extends CI_Controller {
 
             $sheet->setCellValue("D$row", "$class_student->notes"); //order number
             $sheet->getStyle("D$row")->applyFromArray($styleArray);
-            
+
             $sheet->setCellValue("E$row", "$class_student->first_name $class_student->last_name"); //order number
             $sheet->getStyle("E$row")->applyFromArray($styleArray);
 
@@ -1068,7 +1129,7 @@ class Documents extends CI_Controller {
         $sheet_1->getStyle('A2:J2')->applyFromArray($styleArray);
 
         $sheet_1->setCellValue('A1', '"DAÝAN" HUSUSY KÄRHANASY');
-        $sheet_1->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . "($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
+        $sheet_1->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . " ($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
 
         $sheet_1->setCellValue('A3', 'No');
         $sheet_1->getStyle('A3:A4')->applyFromArray($styleArray);
@@ -1142,10 +1203,10 @@ class Documents extends CI_Controller {
             $sheet_1->setCellValue('I' . $cell, $exam_result['total_failed']); //failed class
             $sheet_1->getStyle('I' . $cell)->applyFromArray($styleArray);
 
-            if(intval($done) > 0){
+            if (intval($done) > 0) {
                 $not_attent = intval($done) - intval($exam_result['total_passed']);
                 $not_attent -= intval($exam_result['total_failed']);
-            }else{
+            } else {
                 $not_attent = 0;
             }
 
@@ -1321,7 +1382,7 @@ class Documents extends CI_Controller {
 
         //setting cells values for header part
         $sheet->setCellValue('A1', '"DAÝAN" HUSUSY KÄRHANASY');
-        $sheet->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . "($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
+        $sheet->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . " ($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
 
         $sheet->setCellValue('A3', '№');
         $sheet->getStyle('A3')->applyFromArray($styleArray);
@@ -1440,7 +1501,7 @@ class Documents extends CI_Controller {
 
         //setting cells values for header part
         $sheet->setCellValue('A1', '"DAÝAN" HUSUSY KÄRHANASY');
-        $sheet->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . "($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
+        $sheet->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . " ($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
         $sheet->setCellValue('A3', 'Kursdan çykan diňleýjiler');
 
         $sheet->setCellValue('A4', '№');
@@ -1559,7 +1620,7 @@ class Documents extends CI_Controller {
 
         //setting cells values for header part
         $sheet->setCellValue('A1', '"DAÝAN" HUSUSY KÄRHANASY');
-        $sheet->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . "($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
+        $sheet->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . " ($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
         $sheet->setCellValue('A3', 'Şahadatnama alanlaryň sanawy');
 
         $sheet->setCellValue('A4', '№');
@@ -1670,8 +1731,13 @@ class Documents extends CI_Controller {
         foreach ($classes->result() as $class) {
             $sheet = $spreadsheet->createSheet();
 
-			//echo "<pre>";print($class->name);die;
-            $sheet->setTitle("$class->name NETIJE");
+            //echo "<pre>";print($class->name);die;
+            if (strlen($class->name) > 23) {
+                $t = substr($class->name, 0, 22);
+                $sheet->setTitle("$t NETIJE");
+            } else {
+                $sheet->setTitle("$class->name NETIJE");
+            }
 
             $styleArray = [
                 'borders' => [
@@ -1730,7 +1796,7 @@ class Documents extends CI_Controller {
 
             //setting cells values for header part
             $sheet->setCellValue('A1', '"DAÝAN" HUSUSY KÄRHANASY');
-            $sheet->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . "($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
+            $sheet->setCellValue('A2', $category->start_date . ' - ' . $category->end_date . " ($category->number)"); //course period 28.08.2017 - 18.11.2017(1)
             $sheet->setCellValue('A3', "$class->name synplarynyň synag netijeleri");
 
             $sheet->setCellValue('A4', '№');
@@ -2452,7 +2518,7 @@ class Documents extends CI_Controller {
     }
 
     private function add_header(Section $section) {
-        $image_logo = base_url() . 'uploads/school_logo.jpg';
+        $image_logo = base_url() . 'uploads/school_logo.png';
         // Add first page header
         $header = $section->addHeader();
         $header->firstPage();
@@ -2461,8 +2527,8 @@ class Documents extends CI_Controller {
         $cell = $table->addCell(4500);
         $textrun = $cell->addTextRun();
         //$header->addWatermark($image_logo, array('marginTop' => 200, 'marginLeft' => 55));
-        $table->addCell(4500)->addImage($image_logo, array('width' => 150, 'height' => 75, 'align' => 'right'));
-        $this->printSeparator($section);
+        $table->addCell(4500)->addImage($image_logo, array('width' => 450, 'height' => 100));
+        //$this->printSeparator($section);
     }
 
     /* private function printSeparator(Section $section) {

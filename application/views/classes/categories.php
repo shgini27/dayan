@@ -31,7 +31,6 @@
                     <td><?php echo lang("ctn_984") ?></td>
                     <td><?php echo lang("ctn_980") ?></td>
                     <td><?php echo lang("ctn_81") ?></td>
-                    <td><?php echo lang("ctn_982") ?></td>
                     <td><?php echo lang("ctn_680") ?></td>
                     <td><?php echo lang("ctn_681") ?></td>
                     <td><?php echo lang("ctn_52") ?></td>
@@ -73,47 +72,45 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_535") ?></label>
+                    <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_972") ?></label>
                     <div class="col-md-8">
                         <input type="text" class="form-control datetimepicker" name="start_date" id="start_date">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_981") ?></label>
-                    <div class="col-md-8">
-                        <input type="number" class="form-control" name="hrs" min="1" max="300" id="hrs">
-                    </div>
-                </div>
-                <!-- <div class="form-group">
-                        <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_536") ?></label>
+                        <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_973") ?></label>
                         <div class="col-md-8">
                             <input type="text" class="form-control datetimepicker" name="end_date" id="end_date">
                         </div>
                 </div>
+                <!-- 
                 <div class="form-group">
                     <label for="p-in" class="col-md-4 label-heading">Icon</label>
                     <div class="col-md-8">
                         <p><input type="file" name="userfile" /></p>
                         <span class="help-block"><?php echo lang("ctn_503") ?></span>
                     </div>
-                </div> -->
+                </div> 
+                -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo lang("ctn_60") ?></button>
                 <input type="submit" class="btn btn-primary" value="<?php echo lang("ctn_502") ?>">
-                <?php echo form_close() ?>
+<?php echo form_close() ?>
             </div>
         </div>
     </div>
 </div>
 
 
-
 <script type="text/javascript">
     $(document).ready(function () {
         CKEDITOR.replace('cat-description', {height: '100'});
-        $('.datetimepicker').datetimepicker({
+        /*$('.datetimepicker').datetimepicker({
             format: '<?php echo $this->settings->info->date_format ?>'
+        });*/
+        $('.datetimepicker').datepicker({
+            format: 'dd/mm/yyyy'
         });
     });
 </script>
@@ -139,10 +136,9 @@
                 [1, "desc"]
             ],
             "columns": [
-                {"orderable": false},            
-                null,
                 {"orderable": false},
                 null,
+                {"orderable": false},
                 null,
                 null,
                 {"orderable": false}

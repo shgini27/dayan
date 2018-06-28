@@ -176,6 +176,7 @@ class Numbering extends AbstractPart
     private function writeFont(XMLWriter $xmlWriter, NumberingLevel $level)
     {
         $font = $level->getFont();
+        $fontSize = $level->getFontSize();//custom added code font size
         $hint = $level->getHint();
 
         $xmlWriter->startElement('w:rPr');
@@ -185,6 +186,8 @@ class Numbering extends AbstractPart
         $xmlWriter->writeAttributeIf($font !== null, 'w:cs', $font);
         $xmlWriter->writeAttributeIf($hint !== null, 'w:hint', $hint);
         $xmlWriter->endElement(); // w:rFonts
+        $xmlWriter->writeElementIf($fontSize !== null, 'w:sz', 'w:val', $fontSize);//custom added code font size
+        $xmlWriter->writeElementIf($fontSize !== null, 'w:szCs', 'w:val', $fontSize);//custom added code font size
         $xmlWriter->endElement(); // w:rPr
     }
 

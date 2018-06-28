@@ -280,6 +280,11 @@
 
 
 <script type="text/javascript">
+$('.datepicker').datepicker({
+    format: "dd/mm/yyyy"
+});
+</script>
+<script type="text/javascript">
 $(document).ready(function() {
 
 	var projectid = 0;

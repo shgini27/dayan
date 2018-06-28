@@ -61,8 +61,10 @@
             <option value='<?php echo site_url("students/dropped_students") ?>'><?php echo lang("ctn_1009") ?></option>
             <?php endif; ?>
             <?php if($this->common->has_permissions(array("admin", "student_group_manager", "student_group_viewer"), $this->user)) : ?>
+            <!--
             <option value='<?php echo site_url("students/groups") ?>'><?php echo lang("ctn_714") ?></option>
             <option value='<?php echo site_url("students/your") ?>'><?php echo lang("ctn_715") ?></option>
+            -->
             <?php endif; ?>
            <?php endif; ?>
            <?php if($this->settings->info->parent_section) : ?>

@@ -117,6 +117,14 @@ class NumberingLevel extends AbstractStyle
      * @var string
      */
     private $font;
+    
+    //custom added code font size
+    /**
+     * Font size
+     *
+     * @var string
+     */
+    private $fontSize;
 
     /**
      * Hint default|eastAsia|cs
@@ -428,6 +436,30 @@ class NumberingLevel extends AbstractStyle
     public function setFont($value)
     {
         $this->font = $value;
+
+        return $this;
+    }
+    
+    //custom added code font size
+    /**
+     * Get font size
+     *
+     * @return string
+     */
+    public function getFontSize()
+    {
+        return $this->fontSize;
+    }
+
+    /**
+     * Set font size
+     *
+     * @param string $value
+     * @return self
+     */
+    public function setFontSize($value)
+    {
+        $this->fontSize = $value;
 
         return $this;
     }

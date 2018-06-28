@@ -81,8 +81,14 @@
                         <option value=""><?php echo lang('ctn_1001'); ?></option>
                         <option value="odd"><?php echo lang('ctn_1005'); ?></option>
                         <option value="even"><?php echo lang('ctn_1006'); ?></option>
-                        
+                        <option value="everyday"><?php echo lang('ctn_1024'); ?></option>
                     </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="p-in" class="col-sm-2 control-label"><?php echo lang("ctn_981") ?></label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" name="hrs" min="1" max="300" id="hrs">
                 </div>
             </div>
             <div class="form-group">
@@ -157,21 +163,21 @@
     $(document).ready(function () {
         CKEDITOR.replace('desc-area', {height: '150'});
         CKEDITOR.replace('content-area', {height: '150'});
-        
-        var options = { 
+
+        var options = {
             now: '09:00',
-            twentyFour: true, 
-            upArrow: 'wickedpicker__controls__control-up', 
-            downArrow: 'wickedpicker__controls__control-down', 
-            close: 'wickedpicker__close', 
-            hoverState: 'hover-state', 
-            title: 'Timepicker', 
+            twentyFour: true,
+            upArrow: 'wickedpicker__controls__control-up',
+            downArrow: 'wickedpicker__controls__control-down',
+            close: 'wickedpicker__close',
+            hoverState: 'hover-state',
+            title: 'Timepicker',
             showSeconds: false,
-            minutesInterval: 5, 
+            minutesInterval: 5,
             beforeShow: null,
-            show: null, 
-            clearable: false 
-        }; 
+            show: null,
+            clearable: false
+        };
         $('.timepicker').wickedpicker(options);
         $(".chosen-select-no-single").chosen({
         });

@@ -519,6 +519,12 @@ class Home extends CI_Controller {
                     $this->input->post("last_name", true));
             $fathers_name = $this->common->nohtml(
                     $this->input->post("fathers_name", true));
+            $first_name_en = $this->common->nohtml(
+                    $this->input->post("first_name_en", true));
+            $last_name_en = $this->common->nohtml(
+                    $this->input->post("last_name_en", true));
+            $fathers_name_en = $this->common->nohtml(
+                    $this->input->post("fathers_name_en", true));
             $birth_date = $this->common->nohtml(
                     $this->input->post("birth_date"));
             $pass = $this->common->nohtml(
@@ -547,6 +553,15 @@ class Home extends CI_Controller {
             }
             if ($student_flag && $fathers_name === "") {
                 $this->template->error(lang("error_203"));
+            }
+            if ($student_flag && $first_name_en === "") {
+                $this->template->error(lang("error_231"));
+            }
+            if ($student_flag && $last_name_en === "") {
+                $this->template->error(lang("error_232"));
+            }
+            if ($student_flag && $fathers_name_en === "") {
+                $this->template->error(lang("error_233"));
             }
             if ($student_flag && empty($birth_date)) {
                 $this->template->error(lang("error_209"));
@@ -596,7 +611,8 @@ class Home extends CI_Controller {
             $this->load->library('upload');
 
             if (empty($email)) {
-                $this->template->error(lang("error_18"));
+                //$this->template->error(lang("error_18"));
+                $email = $username . '@dayan.ru';
             }
 
             if (!valid_email($email)) {
@@ -754,6 +770,9 @@ class Home extends CI_Controller {
                 "first_name" => $first_name,
                 "last_name" => $last_name,
                 "fathers_name" => $fathers_name,
+                "first_name_en" => $first_name_en,
+                "last_name_en" => $last_name_en,
+                "fathers_name_en" => $fathers_name_en,
                 "birth_date" => $birth_date,
                 "password" => $pass,
                 "avatar" => $image,
@@ -800,6 +819,12 @@ class Home extends CI_Controller {
                     $this->input->post("last_name", true));
             $fathers_name = $this->common->nohtml(
                     $this->input->post("fathers_name", true));
+            $first_name_en = $this->common->nohtml(
+                    $this->input->post("first_name_en", true));
+            $last_name_en = $this->common->nohtml(
+                    $this->input->post("last_name_en", true));
+            $fathers_name_en = $this->common->nohtml(
+                    $this->input->post("fathers_name_en", true));
             $birth_date = $this->common->nohtml(
                     $this->input->post("birth_date", true));
             $pass = $this->common->nohtml(
@@ -827,6 +852,15 @@ class Home extends CI_Controller {
             }
             if ($student_flag && $fathers_name === "") {
                 $this->template->error(lang("error_203"));
+            }
+            if ($student_flag && $first_name_en === "") {
+                $this->template->error(lang("error_231"));
+            }
+            if ($student_flag && $last_name_en === "") {
+                $this->template->error(lang("error_232"));
+            }
+            if ($student_flag && $fathers_name_en === "") {
+                $this->template->error(lang("error_233"));
             }
             if ($student_flag && empty($birth_date)) {
                 $this->template->error(lang("error_209"));
@@ -1031,6 +1065,9 @@ class Home extends CI_Controller {
                 "first_name" => $first_name,
                 "last_name" => $last_name,
                 "fathers_name" => $fathers_name,
+                "first_name_en" => $first_name_en,
+                "last_name_en" => $last_name_en,
+                "fathers_name_en" => $fathers_name_en,
                 "birth_date" => $birth_date,
                 "password" => $pass,
                 "avatar" => $image,

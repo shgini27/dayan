@@ -55,7 +55,7 @@ class Classes_Model extends CI_Model {
         //`class_categories` cc on(c.categoryid = cc.ID) left join `subjects` s 
         //on(s.ID = c.subjectid) WHERE cc.ID = 2 GROUP by s.name
         return $this->db
-                        ->select("subjects.name, class_categories.start_date, class_categories.end_date, class_categories.hrs")
+                        ->select("subjects.name, class_categories.start_date, class_categories.end_date, classes.hrs")
                         ->where("class_categories.ID", $category_id)
                         ->join("class_categories", "classes.categoryid = class_categories.ID")
                         ->join("subjects", "subjects.ID = classes.subjectid")
@@ -357,7 +357,7 @@ class Classes_Model extends CI_Model {
 				classes.subjectid, classes.categoryid, classes.students, classes.start_hour,
 				classes.max_students, classes.allow_signups, classes.branch_id,
 				subjects.name as subject_name, branch.name as branch_name,
-                                class_categories.end_date as cat_end_date, class_categories.hrs,
+                                class_categories.end_date as cat_end_date, classes.hrs,
                                 class_categories.start_date as cat_start_date,
 				class_categories.name as cat_name, room.code as room_code")
                         ->join("subjects", "subjects.ID = classes.subjectid")
@@ -419,7 +419,7 @@ class Classes_Model extends CI_Model {
                                 classes.students, classes.room_id,
 				classes.max_students, classes.allow_signups,
 				subjects.name as subject_name, branch.name as branch_name,
-                                class_categories.end_date as cat_end_date, class_categories.hrs,
+                                class_categories.end_date as cat_end_date, classes.hrs,
                                 class_categories.start_date as cat_start_date,
 				class_categories.name as cat_name, room.code as room_code")
                         ->join("classes", "classes.ID = class_students.classid")
@@ -643,7 +643,8 @@ class Classes_Model extends CI_Model {
                         ->where("class_students.ID", $id)
                         ->select("class_students.ID, class_students.classid,
 				class_students.userid, class_students.agreement_number, users.fathers_name,
-				classes.name, users.username, users.first_name, users.last_name")
+				classes.name, users.username, users.first_name, users.last_name,
+                                users.fathers_name_en, users.first_name_en, users.last_name_en")
                         ->join("classes", "classes.ID = class_students.classid")
                         ->join("users", "users.ID = class_students.userid")
                         ->get("class_students");

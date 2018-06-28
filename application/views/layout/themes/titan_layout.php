@@ -138,7 +138,7 @@
             <ul class="dropdown-menu" aria-labelledby="email-menu-drop">
             <li>
               <div class="notification-box-title">
-                <?php echo lang("707") ?> <?php if($this->user->info->email_count > 0) : ?><span class="badge"><?php echo $this->user->info->email_count ?></span><?php endif; ?>
+                <?php echo lang("ctn_707") ?> <?php if($this->user->info->email_count > 0) : ?><span class="badge"><?php echo $this->user->info->email_count ?></span><?php endif; ?>
                 </div>
                 <div id="email-scroll">
                   <div id="loading_spinner_email">

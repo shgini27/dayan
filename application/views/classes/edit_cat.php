@@ -29,25 +29,22 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_535") ?></label>
+                <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_972") ?></label>
                 <div class="col-md-8">
                     <input type="text" class="form-control datetimepicker" name="start_date" 
-                           id="start_date" value="<?php $sd = DateTime::createFromFormat("Y-m-d", $category->start_date);echo $sd->format('d/m/Y'); ?>">
+                           id="start_date" value="<?php $sd = DateTime::createFromFormat("Y-m-d", $category->start_date);
+            echo $sd->format('d/m/Y'); ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_981") ?></label>
+                <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_973") ?></label>
                 <div class="col-md-8">
-                    <input type="number" class="form-control" name="hrs" min="1" max="300" id="hrs" value="<?php echo $category->hrs ?>">
+                    <input type="text" class="form-control datetimepicker" name="end_date" 
+                           id="end_date" value="<?php $sd = DateTime::createFromFormat("Y-m-d", $category->end_date);
+            echo $sd->format('d/m/Y') ?>">
                 </div>
             </div>
             <!-- <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_536") ?></label>
-                <div class="col-md-8">
-                    <input type="text" class="form-control datetimepicker" name="end_date" id="end_date" value="<?php echo $category->end_date ?>">
-                </div>
-            </div>
-            <div class="form-group">
                 <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_347") ?></label>
                 <div class="col-md-8">
                     <p><img src="<?php echo base_url() ?><?php echo $this->settings->info->upload_path_relative ?>/<?php echo $category->image ?>"><br /></p>
@@ -57,7 +54,7 @@
             </div> -->
 
             <input type="submit" class="btn btn-primary form-control" value="<?php echo lang("ctn_523") ?>">
-            <?php echo form_close() ?>
+<?php echo form_close() ?>
 
         </div>
     </div>
@@ -68,8 +65,11 @@
 <script type="text/javascript">
     $(document).ready(function () {
         CKEDITOR.replace('cat-description', {height: '100'});
-        $('.datetimepicker').datetimepicker({
-            format: '<?php echo $this->settings->info->date_format ?>'
+        /*$('.datetimepicker').datetimepicker({
+         format: '<?php echo $this->settings->info->date_format ?>'
+         });*/
+        $('.datetimepicker').datepicker({
+            format: 'dd/mm/yyyy'
         });
     });
 </script>

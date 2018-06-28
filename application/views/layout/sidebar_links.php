@@ -114,8 +114,10 @@
                         <li class="<?php if(isset($activeLink['students']['dropped'])) echo "active" ?>"><a href="<?php echo site_url("students/dropped_students") ?>"> <?php echo lang("ctn_1009") ?></a></li>
                       <?php endif; ?>
                       <?php if($this->common->has_permissions(array("admin", "student_group_manager", "student_group_viewer"), $this->user)) : ?>
+                        <!--
                         <li class="<?php if(isset($activeLink['students']['groups'])) echo "active" ?>"><a href="<?php echo site_url("students/groups") ?>"> <?php echo lang("ctn_714") ?></a></li>
                         <li class="<?php if(isset($activeLink['students']['your'])) echo "active" ?>"><a href="<?php echo site_url("students/your") ?>"> <?php echo lang("ctn_715") ?></a></li>
+                        -->
                       <?php endif; ?>
                     </ul>
                   </div>

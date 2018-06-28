@@ -91,6 +91,12 @@ class Students extends CI_Controller {
         if (!$this->common->has_permissions(array("admin", "student_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
+        
+        $this->template->loadExternal(
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css" />
+			<script src="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>'
+        );
+        
         $this->template->loadData("activeLink", array("students" => array("general" => 1)));
 
         $user_roles = $this->user_model->get_student_roles();
@@ -146,6 +152,11 @@ class Students extends CI_Controller {
         /* $fields = $this->user_model->get_custom_fields_answers(array(
           ), $id); */
 
+        $this->template->loadExternal(
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css" />
+			<script src="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>'
+        );
+        
         $this->template->loadContent("students/edit_student.php", array(
             "form" => $this->common->get_user_registration_fields(
                     "edit_student", "students", $student, $user_roles, $fields, // custom fields
@@ -434,6 +445,26 @@ class Students extends CI_Controller {
         $this->session->set_flashdata("globalmsg", lang("success_115"));
         redirect(site_url("students"));
     }
+    
+    public function delete_dropped_student($id, $hash){
+        if (!$this->common->has_permissions(array("admin", "student_manager",
+                        ), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        if ($hash != $this->security->get_csrf_hash()) {
+            $this->template->error(lang("error_6"));
+        }
+        $id = intval($id);
+        $student = $this->students_model->get_dropped_student($id);
+        if ($student->num_rows() == 0) {
+            $this->template->error(lang("error_114"));
+        }
+        $student = $student->row();
+
+        $this->students_model->delete_dropped_student($id);
+        $this->session->set_flashdata("globalmsg", lang("success_115"));
+        redirect(site_url("students/dropped_students"));
+    }
 
     public function dropped_students() {
         if (!$this->common->has_permissions(array("admin", "student_manager",
@@ -481,9 +512,9 @@ class Students extends CI_Controller {
         foreach ($users->result() as $r) {
 
             $options = '<a href="' . site_url("students/view/" . $r->ID) . '" class="btn btn-primary btn-xs">' . lang("ctn_552") . '</a>';
-            /*if ($this->common->has_permissions(array("admin", "student_manager"), $this->user)) {
-                $options .= ' <a href="' . site_url("students/edit_student/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("students/delete_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
-            }*/
+            if ($this->common->has_permissions(array("admin", "student_manager"), $this->user)) {
+                $options .= ' <a href="' . site_url("students/delete_dropped_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
+            }
 
 
             $this->datatables->data[] = array(

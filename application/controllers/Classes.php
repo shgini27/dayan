@@ -126,10 +126,16 @@ class Classes extends CI_Controller {
             }
 
             $week_days = "";
-            if ($r->class_days === 'odd') {
-                $week_days = "1,3,5";
-            } elseif ($r->class_days === 'even') {
-                $week_days = "2,4,6";
+            switch (trim($r->class_days)) {
+                case 'odd':
+                    $week_days = "1,3,5";
+                    break;
+                case 'even':
+                    $week_days = "2,4,6";
+                    break;
+                case 'everyday':
+                    $week_days = "1-6";
+                    break;
             }
 
             $this->datatables->data[] = array(
@@ -250,6 +256,7 @@ class Classes extends CI_Controller {
         $branch_id = intval($this->input->post("branch_id"));
         $room_id = intval($this->input->post("room_id"));
         $class_days = $this->common->nohtml($this->input->post("class_days"));
+        $hrs = $this->common->nohtml($this->input->post("hrs"));
         $start_hour = $this->common->nohtml($this->input->post("start_hour"));
         $end_hour = $this->common->nohtml($this->input->post("end_hour"));
 
@@ -282,6 +289,10 @@ class Classes extends CI_Controller {
 
         if (empty($class_days)) {
             $this->template->error(lang("error_226"));
+        }
+
+        if (intval($hrs) === 0) {
+            $this->template->error(lang("error_230"));
         }
 
         if (!empty($start_hour)) {
@@ -322,8 +333,23 @@ class Classes extends CI_Controller {
             $color = '26FF2F';
         }
 
+        switch (trim($class_days)) {
+            case 'odd':
+                $days = array(1, 3, 5);
+                $color = '1CAAF3';
+                break;
+            case 'even':
+                $days = array(2, 4, 6);
+                $color = '26FF2F';
+                break;
+            case 'everyday':
+                $days = array(1, 2, 3, 4, 5, 6);
+                $color = '35FA2F';
+                break;
+        }
+
         if (trim($class->class_days) !== trim($class_days) || $class->start_hour !== $start_hour) {
-            
+
             $room_code = $room->row();
             $this->classes_model->delete_class_lesson_events($id);
             foreach ($days as $day) {
@@ -368,6 +394,7 @@ class Classes extends CI_Controller {
             "branch_id" => $branch_id,
             "room_id" => $room_id,
             "class_days" => $class_days,
+            "hrs" => $hrs,
             "start_hour" => $start_hour,
             "end_hour" => $end_hour,
             "subjectid" => $subjectid,
@@ -481,6 +508,7 @@ class Classes extends CI_Controller {
         $branch_id = intval($this->input->post("branch_id"));
         $room_id = intval($this->input->post("room_id"));
         $class_days = $this->common->nohtml($this->input->post("class_days"));
+        $hrs = $this->common->nohtml($this->input->post("hrs"));
         $start_hour = $this->common->nohtml($this->input->post("start_hour"));
         $end_hour = $this->common->nohtml($this->input->post("end_hour"));
 
@@ -518,6 +546,10 @@ class Classes extends CI_Controller {
 
         if (empty($class_days)) {
             $this->template->error(lang("error_226"));
+        }
+
+        if (intval($hrs) === 0) {
+            $this->template->error(lang("error_230"));
         }
 
         if (!empty($start_hour)) {
@@ -598,13 +630,19 @@ class Classes extends CI_Controller {
         $students_toadd = array_unique($students_toadd);
 
         //Add events
-
-        if (trim($class_days) === 'odd') {
-            $days = array(1, 3, 5);
-            $color = '1CAAF3';
-        } elseif (trim($class_days) === 'even') {
-            $days = array(2, 4, 6);
-            $color = '26FF2F';
+        switch (trim($class_days)) {
+            case 'odd':
+                $days = array(1, 3, 5);
+                $color = '1CAAF3';
+                break;
+            case 'even':
+                $days = array(2, 4, 6);
+                $color = '26FF2F';
+                break;
+            case 'everyday':
+                $days = array(1, 2, 3, 4, 5, 6);
+                $color = '35FA2F';
+                break;
         }
 
         $room_code = $room->row();
@@ -636,6 +674,7 @@ class Classes extends CI_Controller {
             "branch_id" => $branch_id,
             "room_id" => $room_id,
             "class_days" => $class_days,
+            "hrs" => $hrs,
             "start_hour" => $start_hour,
             "end_hour" => $end_hour,
             "subjectid" => $subjectid,
@@ -797,6 +836,11 @@ class Classes extends CI_Controller {
         $books = $this->classes_model->get_reading_books($id);
         $files = $this->classes_model->get_files($id);
 
+
+        $this->template->loadExternal(
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css" />
+			<script src="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>'
+        );
 
         $this->template->loadContent("classes/view.php", array(
             "class" => $class,
@@ -1782,6 +1826,11 @@ class Classes extends CI_Controller {
 
         $class = $class->row();
 
+        $this->template->loadExternal(
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css" />
+			<script src="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>'
+        );
+
         $this->template->loadContent("classes/edit_assignment.php", array(
             "assignment" => $assignment,
             "class" => $class,
@@ -2724,6 +2773,7 @@ class Classes extends CI_Controller {
         $format2 = $startdt->format('Y-m-d H:i:s');
 
         $attends = $this->classes_model->get_attendance_sheet_by_class($id);
+        $attend_ids[] = 0;
         if ($attends->num_rows() > 0) {
             foreach ($attends->result() as $attend) {
                 $attend_ids[] = $attend->eventid;
@@ -3022,12 +3072,6 @@ class Classes extends CI_Controller {
         }
         $student = $student->row();
 
-        $this->template->loadData("activeLink", array("students" => array("general" => 1)));
-
-        $fields = $this->user_model->get_custom_fields_answers(array(
-            "report" => 1
-                ), $student->ID);
-
         $classes = $this->classes_model->get_class($class_id);
         if ($classes->num_rows() == 0) {
             $this->template->error(lang("error_92"));
@@ -3040,16 +3084,67 @@ class Classes extends CI_Controller {
         $subjects = $this->subjects_model->get_subject($class->subjectid);
         $subject = $subjects->row();
 
-        $report = $this->students_model->get_student_report($student->ID);
+        //format periods in turkmen and english language
+        $day1 = date('d', strtotime($category->start_date));
+        $day2 = date('d', strtotime($category->end_date));
+
+        $month1 = date('F', strtotime($category->start_date));
+        $month2 = date('F', strtotime($category->end_date));
+
+        $month1_num = date('n', strtotime($category->start_date));
+        $month2_num = date('n', strtotime($category->end_date));
+
+        $year1 = date('Y', strtotime($category->start_date));
+        $year2 = date('Y', strtotime($category->end_date));
+
+        $formated_day1 = $this->addOrdinalNumberSuffix(intval($day1));
+        $formated_day2 = $this->addOrdinalNumberSuffix(intval($day2));
+
+        $formated_day1_tm = $this->addOrdinalNumberSuffixTm(intval($day1));
+        $formated_day2_tm = $this->addOrdinalNumberSuffixTm(intval($day2));
+
+        $formated_year1_tm = $this->addOrdinalNumberSuffixTm(intval($year1));
+        $formated_year2_tm = $this->addOrdinalNumberSuffixTm(intval($year2));
+
+        $formated_month1_tm = $this->getMonthSuffix($month1_num, true);
+        $formated_month2_tm = $this->getMonthSuffix($month2_num, false);
+
+        $period_en = $formated_day1 . " of " . $month1 . " " . $year1 . " to " .
+                $formated_day2 . " of " . $month2 . " " . $year2;
+
+        $period_tm = $formated_year1_tm . " ýylyň " . $formated_day1_tm . " " .
+                $formated_month1_tm . " " . $formated_year2_tm . " ýylyň " .
+                $formated_day2_tm . " " . $formated_month2_tm;
+
+
+
+        // calculate grade
+        $grades = $this->classes_model->get_student_total_grade($student->ID);
+        $total_grade = 0;
+        foreach ($grades->result() as $grade) {
+            $x = ($grade->mark * $grade->weighting) / $grade->max_mark;
+            $total_grade += $x;
+        }
+
+        $letter_grades = $this->classes_model->get_class_grades_all($class->ID);
+        foreach ($letter_grades->result() as $r) {
+            $grades_arr[] = array(
+                "min_score" => $r->min_score,
+                "max_score" => $r->max_score,
+                "grade" => $r->grade
+            );
+        }
+        $total_letter_grade = $this->calculate_grade($total_grade, 100, $grades_arr);
+
 
         ob_start();
         $this->template->loadAjax("classes/view_certificate_pdf.php", array(
             "student" => $student,
-            "fields" => $fields,
             "class" => $class,
             "subject" => $subject,
-            "category" => $category,
-            "report" => $report
+            "period_en" => $period_en,
+            "period_tm" => $period_tm,
+            "total_grade" => $total_grade
                 )
         );
         $out = ob_get_contents();
@@ -3063,6 +3158,70 @@ class Classes extends CI_Controller {
         $mpdf->WriteHTML($out);
         $mpdf->Output();
     }
+
+    /**
+
+     * Method to return number with suffix
+     * @param type $num
+     * @return string number with suffix example: 3rd    /
+     */
+    function addOrdinalNumberSuffix($num) {
+        if (!in_array(($num % 100), array(11, 12, 13))) {
+            switch ($num % 10) {
+                // Handle 1st, 2nd, 3rd
+                case 1: return $num . 'st';
+                case 2: return $num . 'nd';
+                case 3: return $num . 'rd';
+            }
+        }
+        return $num . 'th';
+    }
+
+    /**
+
+     * 
+     * @param type $num
+     * @return string number with suffix in turkmen language example: 8-nji    /
+     */
+    function addOrdinalNumberSuffixTm($num) {
+        if (in_array(($num % 100), [1, 6, 9, 10, 16, 19, 26, 29, 30, 36, 39, 40, 46, 49, 56, 59, 60, 66, 69, 76, 79, 86, 89, 96, 99])) {
+            return $num . "-njy";
+        } else {
+            return $num . "-nji";
+        }
+    }
+
+    /**
+
+     * Method to get Month from correct suffix (from and to)
+     * @param type $num
+     * @param type $status if status is set tot true then it means from, to otherwise
+     * @return string month with proper suffix   Example Aprelinden or Apreline /
+     */
+    function getMonthSuffix($num, $status) {
+        $months = [
+            1 => 'Ýanwar', 2 => 'Fewral', 3 => 'Mart', 4 => 'Aprel', 5 => 'Maý',
+            6 => 'Iýun', 7 => 'Iýul', 8 => 'Awgust', 9 => 'Sentýabyr',
+            10 => 'Oktýabyr', 11 => 'Noýabyr', 12 => 'Dekabyr'
+        ];
+
+        if ($num > 0 && $num < 13 && array_key_exists($num, $months)) {
+            if ($status) {
+                $suffix1 = 'yndan';
+                $suffix2 = 'inden';
+            } else {
+                $suffix1 = 'yna';
+                $suffix2 = 'ine';
+            }
+
+            if ($num === 4) {
+                return $months[$num] . $suffix2;
+            } else {
+                return $months[$num] . $suffix1;
+            }
+        }
+    }
+    
 
     public function student_assignments($id) {
         $id = intval($id);
@@ -3993,9 +4152,13 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_2"));
         }
 
+        /* $this->template->loadExternal(
+          '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.css" />
+          <script src="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.full.min.js"></script>'
+          ); */
         $this->template->loadExternal(
-                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.css" />
-			<script src="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.full.min.js"></script>'
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css" />
+			<script src="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>'
         );
 
         $this->template->loadData("activeLink", array("classes" => array("cats" => 1)));
@@ -4013,7 +4176,7 @@ class Classes extends CI_Controller {
         $number = intval($this->common->nohtml($this->input->post("number")));
         $desc = $this->lib_filter->go($this->input->post("description"));
         $start_date = $this->lib_filter->go($this->input->post("start_date"));
-        $hrs = intval($this->common->nohtml($this->input->post("hrs")));
+        $end_date = intval($this->common->nohtml($this->input->post("end_date")));
 
         $this->load->library("upload");
 
@@ -4057,16 +4220,23 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_211"));
         }
 
-        if (!empty($hrs) && !empty($start_date)) {
-            $after_week = (floor($hrs / 6) * 7) - 1;
-            $day = $hrs % 6;
-            $interval = 'P' . ($after_week + $day) . 'D';
-            $date = new DateTime($start_date);
-            $date->add(new DateInterval($interval));
-            $end_date = $date->format('Y-m-d');
+        if (!empty($end_date)) {
+            $sd = DateTime::createFromFormat($this->settings->info->date_format, $end_date);
+            $end_date = $sd->format('Y-m-d');
         } else {
-            $this->template->error(lang("error_214"));
+            $this->template->error(lang("error_211"));
         }
+
+        /* if (!empty($hrs) && !empty($start_date)) {
+          $after_week = (floor($hrs / 6) * 7) - 1;
+          $day = $hrs % 6;
+          $interval = 'P' . ($after_week + $day) . 'D';
+          $date = new DateTime($start_date);
+          $date->add(new DateInterval($interval));
+          $end_date = $date->format('Y-m-d');
+          } else {
+          $this->template->error(lang("error_214"));
+          } */
 
         //log_message("debug", "start: " . $start_date . " End :" . $end_date);
 
@@ -4076,7 +4246,6 @@ class Classes extends CI_Controller {
             "description" => $desc,
             "start_date" => $start_date,
             "end_date" => $end_date,
-            "hrs" => $hrs,
             "image" => $image
                 )
         );
@@ -4113,9 +4282,13 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_94"));
         }
 
+        /* $this->template->loadExternal(
+          '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.css" />
+          <script src="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.full.min.js"></script>'
+          ); */
         $this->template->loadExternal(
-                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.css" />
-			<script src="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.full.min.js"></script>'
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css" />
+			<script src="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>'
         );
 
         $category = $category->row();
@@ -4145,7 +4318,7 @@ class Classes extends CI_Controller {
         $number = intval($this->common->nohtml($this->input->post("number")));
         $desc = $this->lib_filter->go($this->input->post("description"));
         $start_date = $this->common->nohtml($this->input->post("start_date"));
-        $hrs = intval($this->common->nohtml($this->input->post("hrs")));
+        $end_date = $this->common->nohtml($this->input->post("end_date"));
 
 
         $this->load->library("upload");
@@ -4189,18 +4362,25 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_211"));
         }
 
-        if (!empty($hrs) && !empty($start_date)) {
-            $after_week = (floor($hrs / 6) * 7) - 1;
-            $day = $hrs % 6;
-            $interval = 'P' . ($after_week + $day) . 'D';
-            $date = new DateTime($start_date);
-            $date->add(new DateInterval($interval));
-            $end_date = $date->format('Y-m-d');
-            //$ed = DateTime::createFromFormat($this->settings->info->date_format, $end_date);
-            //$end_date = $ed->format('Y-m-d');
+        if (!empty($end_date)) {
+            $sd = DateTime::createFromFormat($this->settings->info->date_format, $end_date);
+            $end_date = $sd->format('Y-m-d');
         } else {
-            $this->template->error(lang("error_214"));
+            $this->template->error(lang("error_211"));
         }
+
+        /* if (!empty($hrs) && !empty($start_date)) {
+          $after_week = (floor($hrs / 6) * 7) - 1;
+          $day = $hrs % 6;
+          $interval = 'P' . ($after_week + $day) . 'D';
+          $date = new DateTime($start_date);
+          $date->add(new DateInterval($interval));
+          $end_date = $date->format('Y-m-d');
+          //$ed = DateTime::createFromFormat($this->settings->info->date_format, $end_date);
+          //$end_date = $ed->format('Y-m-d');
+          } else {
+          $this->template->error(lang("error_214"));
+          } */
 
         $this->classes_model->update_category($id, array(
             "name" => $name,
@@ -4208,7 +4388,6 @@ class Classes extends CI_Controller {
             "description" => $desc,
             "start_date" => $start_date,
             "end_date" => $end_date,
-            "hrs" => $hrs,
             "image" => $image
                 )
         );
@@ -4261,18 +4440,20 @@ class Classes extends CI_Controller {
                     $today->getTimestamp() < $contractDateEnd->getTimestamp()) {
 
                 $style = 'style="color: greenyellow;"';
+                $val = 1;
             } elseif ($today->getTimestamp() < $contractDateBegin->getTimestamp()) {
                 $style = 'style="color: yellow;"';
+                $val = 2;
             } else {
                 $style = 'style="color: red;"';
+                $val = 3;
             }
 
             $this->datatables->data[] = array(
                 //'<img src="' . base_url() . $this->settings->info->upload_path_relative . '/' . $r->image . '" class="cat-icon">',
-                '<div class="text-center"><i class="glyphicon glyphicon-stop" ' . $style . '></i></div>',
+                '</div><div class="text-center"><i class="glyphicon glyphicon-stop" ' . $style . '></i></div>',
                 $r->number,
                 $r->name,
-                $r->hrs,
                 $r->start_date,
                 $r->end_date,
                 '<a href="' . site_url("classes/edit_cat/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("classes/delete_cat/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a> <a href="' . site_url("documents/download_order/" . $r->ID . "/general") . '" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1015") . '"><span class="glyphicon glyphicon-download"></span></a> <a href="' . site_url("documents/download_order/" . $r->ID . "/certificate") . '" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1017") . '"><span class="glyphicon glyphicon-download"></span></a> <a href="' . site_url("documents/close_category/" . $r->ID) . '" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1016") . '"><span class="glyphicon glyphicon-download"></span></a>'
@@ -4469,7 +4650,7 @@ class Classes extends CI_Controller {
         foreach ($events->result() as $r) {
             $data_events[] = array(
                 "id" => $r->ID,
-                "title" => $r->title,
+                "title" => $r->title . " ($r->room)",
                 "description" => $r->description,
                 "end" => $r->end,
                 "start" => $r->start,

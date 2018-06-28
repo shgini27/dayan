@@ -3,7 +3,7 @@
 </style>
 
 <div class="white-area-content">
-
+    <?php if ($this->common->has_permissions(array("admin", "class_manager"), $this->user)) : ?>
     <div class="row">
         <div class="col-md-4">
             <div class="dashboard-window clearfix" style="background: #9e3c9b; border-left: 5px solid #82227f;">
@@ -84,7 +84,7 @@
         </div>
 
     </div>
-
+    <?php endif; ?>
     <hr>
 
     <div class="row">

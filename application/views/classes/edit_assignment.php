@@ -76,7 +76,11 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
-CKEDITOR.replace('ann-area', { height: '150'});
-
+    CKEDITOR.replace('ann-area', { height: '150'});
+});
+</script>
+<script type="text/javascript">
+$('.datepicker').datepicker({
+    format: "dd/mm/yyyy"
 });
 </script>
