@@ -434,8 +434,8 @@ class Classes_Model extends CI_Model {
                         ->where("class_students.userid", $userid)
                         ->select("classes.ID, classes.name, classes.description, classes.room_id,
 				classes.subjectid, classes.categoryid, classes.branch_id, 
-                                classes.students, classes.room_id,
-				classes.max_students, classes.allow_signups,
+                                classes.students, classes.room_id, classes.class_days,
+				classes.max_students, classes.allow_signups, classes.start_hour,
 				subjects.name as subject_name, branch.name as branch_name,
                                 class_categories.end_date as cat_end_date, classes.hrs,
                                 class_categories.start_date as cat_start_date,
