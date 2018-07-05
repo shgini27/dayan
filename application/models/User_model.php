@@ -106,6 +106,19 @@ class User_Model extends CI_Model
 		->get("users");
 	}
 
+        public function get_total_members_admin_count() 
+	{
+		$s= $this->db->select("COUNT(*) as num")
+                        ->join("user_roles", "user_roles.ID = users.user_role", 
+				 	"left outer")
+                        ->where("user_roles.student !=", 1)
+                        ->where("user_roles.parent !=", 1)
+                        ->get("users");
+		$r = $s->row();
+		if(isset($r->num)) return $r->num;
+		return 0;
+	}
+        
 	public function get_members_admin($datatable) 
 	{
 		$datatable->db_order();
@@ -125,6 +138,8 @@ class User_Model extends CI_Model
 			user_roles.name as user_role_name")
 		->join("user_roles", "user_roles.ID = users.user_role", 
 				 	"left outer")
+                ->where("user_roles.student !=", 1)
+                ->where("user_roles.parent !=", 1)
 		->limit($datatable->length, $datatable->start)
 		->get("users");
 	}

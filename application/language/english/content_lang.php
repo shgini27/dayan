@@ -1093,4 +1093,8 @@ $lang['ctn_1026'] = 'Last Name (English)';
 $lang['ctn_1027'] = 'Fathers Name (English)';
 $lang['ctn_1028'] = 'AssignToClass';
 $lang['ctn_1029'] = '------------------------------------------- Please Select Class -------------------------------------------';
+$lang['ctn_1030'] = 'Payed Students';
+$lang['ctn_1031'] = 'Not Payed Students';
+$lang['ctn_1032'] = 'Partially Payed Students';
+
 

@@ -53,3 +53,6 @@ body { font-size: 13px; font-family: "Open Sans"; background: url(../images/case
 .form-error-no-margin { border: 1px solid #fc1b00; padding: 5px; background: #fcf5f0; color: #864143;}
 .errorField { border: 1px solid #fc1b00 !important; }
 
+.required {
+    color:red;
+}

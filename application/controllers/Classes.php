@@ -4261,7 +4261,7 @@ class Classes extends CI_Controller {
         $number = intval($this->common->nohtml($this->input->post("number")));
         $desc = $this->lib_filter->go($this->input->post("description"));
         $start_date = $this->lib_filter->go($this->input->post("start_date"));
-        $end_date = intval($this->common->nohtml($this->input->post("end_date")));
+        $end_date = $this->common->nohtml($this->input->post("end_date"));
 
         $this->load->library("upload");
 
@@ -4735,7 +4735,7 @@ class Classes extends CI_Controller {
         foreach ($events->result() as $r) {
             $data_events[] = array(
                 "id" => $r->ID,
-                "title" => $r->title . " ($r->room)",
+                "title" => $r->title . " $r->room",
                 "description" => $r->description,
                 "end" => $r->end,
                 "start" => $r->start,

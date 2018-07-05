@@ -1,105 +1,148 @@
 <?php
 
-class Invoices_Model extends CI_Model 
-{
+class Invoices_Model extends CI_Model {
 
-	public function add_paying_account($data) 
-	{
-		$this->db->insert("paying_accounts", $data);
-	}
+    public function add_paying_account($data) {
+        $this->db->insert("paying_accounts", $data);
+    }
 
-	public function get_user_paying_account($userid) 
-	{
-		return $this->db->where("userid", $userid)->get("paying_accounts");
-	}
+    public function get_user_paying_account($userid) {
+        return $this->db->where("userid", $userid)->get("paying_accounts");
+    }
 
-	public function get_paying_account($id) 
-	{
-		return $this->db->where("ID", $id)->get("paying_accounts");
-	}
+    public function get_paying_account($id) {
+        return $this->db->where("ID", $id)->get("paying_accounts");
+    }
 
-	public function update_paying_account($id, $data) 
-	{
-		$this->db->where("ID", $id)->update("paying_accounts", $data);
-	}
+    public function update_paying_account($id, $data) {
+        $this->db->where("ID", $id)->update("paying_accounts", $data);
+    }
 
-	public function delete_paying_account($id) 
-	{
-		$this->db->where("ID", $id)->delete("paying_accounts");
-	}
+    public function delete_paying_account($id) {
+        $this->db->where("ID", $id)->delete("paying_accounts");
+    }
 
-	public function get_total_paying_accounts() 
-	{
-		$s = $this->db->where("userid", 0)->select("COUNT(*) as num")->get("paying_accounts");
-		$r = $s->row();
-		if(isset($r->num)) return $r->num;
-		return 0;
-	}
+    public function get_total_paying_accounts() {
+        $s = $this->db->where("userid", 0)->select("COUNT(*) as num")->get("paying_accounts");
+        $r = $s->row();
+        if (isset($r->num))
+            return $r->num;
+        return 0;
+    }
 
-	public function get_paying_accounts($datatable) 
-	{
-		$datatable->db_order();
+    public function get_paying_accounts($datatable) {
+        $datatable->db_order();
 
-		$datatable->db_search(array(
-			"paying_accounts.name",
-			"paying_accounts.paypal_email",
-			"paying_accounts.address_line_1"
-			)
-		);
+        $datatable->db_search(array(
+            "paying_accounts.name",
+            "paying_accounts.paypal_email",
+            "paying_accounts.address_line_1"
+                )
+        );
 
-		return $this->db
-			->where("userid", 0)
-			->limit($datatable->length, $datatable->start)
-			->get("paying_accounts");
-	}
+        return $this->db
+                        ->where("userid", 0)
+                        ->limit($datatable->length, $datatable->start)
+                        ->get("paying_accounts");
+    }
 
-	public function get_all_paying_accounts() 
-	{
-		return $this->db->where("userid", 0)->get("paying_accounts");
-	}
+    public function get_all_paying_accounts() {
+        return $this->db->where("userid", 0)->get("paying_accounts");
+    }
 
-	public function get_currencies() 
-	{
-		return $this->db->get("currencies");
-	}
+    public function get_payed_students($datatable, $status) {
+        /*
+         * SELECT classes.name, branch.name, invoices.total, users.email, 
+         * users.first_name, users.last_name, users.username, users.avatar, 
+         * users.mobile_phone FROM class_students left join users on 
+         * (users.ID = class_students.userid) left join classes on 
+         * (classes.ID = class_students.classid) left join invoices on 
+         * (invoices.clientid = class_students.userid) left join branch on 
+         * (branch.branch_id = classes.branch_id) left join class_categories on 
+         * (class_categories.ID = classes.categoryid) 
+         * where class_students.teacher_flag = 0 and class_categories.end_date >= NOW() and invoices.status = 2
+         */
 
-	public function get_currency($id) 
-	{
-		return $this->db->where("ID", $id)->get("currencies");
-	}
+        $now = date("Y-m-d");
+        $datatable->db_order();
 
-	public function get_last_invoice() 
-	{
-		return $this->db->order_by("ID", "DESC")->get("invoices");
-	}
+        $datatable->db_search(array(
+            "users.username",
+            "users.first_name",
+            "users.mobile_phone"
+                )
+        );
 
-	public function add_invoice($data) 
-	{
-		$this->db->insert("invoices", $data);
-		return $this->db->insert_id();
-	}
+        return $this->db->select("classes.name as class_name, branch.name as branch_name, invoices.total, users.email, currencies.symbol,
+                            users.first_name as client_first_name, users.last_name as client_last_name, users.username as client_username, 
+                            users.avatar as client_avatar, users.online_timestamp as client_online_timestamp, users.mobile_phone")
+                        ->where("class_students.teacher_flag", 0)
+                        ->where("invoices.status", intval($status))
+                        ->where("class_categories.end_date >=", $now)
+                        ->join("users", "users.ID = class_students.userid", "LEFT")
+                        ->join("classes", "classes.ID = class_students.classid", "LEFT")
+                        ->join("invoices", "invoices.clientid = class_students.userid", "LEFT")
+                        ->join("branch", "branch.branch_id = classes.branch_id", "LEFT")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
+                        ->join("currencies", "currencies.ID = invoices.currencyid", "LEFT")
+                        ->limit($datatable->length, $datatable->start)
+                        ->get("class_students");
+    }
+    
+    public function get_total_payed_students($status) {
+        $now = date("Y-m-d");
+        $s = $this->db->where("class_students.teacher_flag", 0)
+                        ->where("invoices.status", intval($status))
+                        ->where("class_categories.end_date >=", $now)
+                        ->join("users", "users.ID = class_students.userid", "LEFT")
+                        ->join("classes", "classes.ID = class_students.classid", "LEFT")
+                        ->join("invoices", "invoices.clientid = class_students.userid", "LEFT")
+                        ->join("branch", "branch.branch_id = classes.branch_id", "LEFT")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
+                        ->select("COUNT(*) as num")
+                        ->get("class_students");
+        $r = $s->row();
+        if (isset($r->num))
+            return $r->num;
+        return 0;
+    }
 
-	public function add_invoice_item($data) 
-	{
-		$this->db->insert("invoice_items", $data);
-	}
+    public function get_currencies() {
+        return $this->db->get("currencies");
+    }
 
-	public function get_invoices($template, $userid, $datatable) 
-	{
-		$datatable->db_order();
+    public function get_currency($id) {
+        return $this->db->where("ID", $id)->get("currencies");
+    }
 
-		$datatable->db_search(array(
-			"invoices.invoice_id",
-			"invoices.title",
-			"users.username",
-			)
-		);
+    public function get_last_invoice() {
+        return $this->db->order_by("ID", "DESC")->get("invoices");
+    }
 
-		if($userid > 0) {
-			$this->db->where("invoices.clientid", $userid);
-		}
-		
-		return $this->db->select("invoices.ID, invoices.invoice_id, 
+    public function add_invoice($data) {
+        $this->db->insert("invoices", $data);
+        return $this->db->insert_id();
+    }
+
+    public function add_invoice_item($data) {
+        $this->db->insert("invoice_items", $data);
+    }
+
+    public function get_invoices($template, $userid, $datatable) {
+        $datatable->db_order();
+
+        $datatable->db_search(array(
+            "invoices.invoice_id",
+            "invoices.title",
+            "users.username",
+                )
+        );
+
+        if ($userid > 0) {
+            $this->db->where("invoices.clientid", $userid);
+        }
+
+        return $this->db->select("invoices.ID, invoices.invoice_id, 
 			invoices.title, invoices.notes, invoices.due_date, invoices.timestamp,
 			invoices.userid, invoices.clientid,
 			invoices.total, invoices.tax_name_1, invoices.tax_rate_1,
@@ -111,34 +154,33 @@ class Invoices_Model extends CI_Model
 			users.last_name as client_last_name,
 			currencies.name as currencyname, currencies.symbol,
 			currencies.code")
-			->where("invoices.template", $template)
-			->join("users", "users.ID = invoices.clientid", "left outer")
-			->join("currencies", "currencies.ID = invoices.currencyid")
-			->order_by("invoices.ID", "DESC")
-			->limit($datatable->length, $datatable->start)
-			->get("invoices");
-	}
+                        ->where("invoices.template", $template)
+                        ->join("users", "users.ID = invoices.clientid", "left outer")
+                        ->join("currencies", "currencies.ID = invoices.currencyid")
+                        ->order_by("invoices.ID", "DESC")
+                        ->limit($datatable->length, $datatable->start)
+                        ->get("invoices");
+    }
 
-	public function get_invoices_total($template, $userid) 
-	{
-		if($userid > 0) {
-			$this->db->where("invoices.clientid", $userid);
-		}
-		$s = $this->db->select("COUNT(*) as num")
-			->where("invoices.template", $template)
-			->join("users", "users.ID = invoices.clientid")
-			->join("currencies", "currencies.ID = invoices.currencyid")
-			->get("invoices");
-		$r = $s->row();
-		if(isset($r->num)) return $r->num;
-		return 0;
-	}
+    public function get_invoices_total($template, $userid) {
+        if ($userid > 0) {
+            $this->db->where("invoices.clientid", $userid);
+        }
+        $s = $this->db->select("COUNT(*) as num")
+                ->where("invoices.template", $template)
+                ->join("users", "users.ID = invoices.clientid")
+                ->join("currencies", "currencies.ID = invoices.currencyid")
+                ->get("invoices");
+        $r = $s->row();
+        if (isset($r->num))
+            return $r->num;
+        return 0;
+    }
 
-	public function get_invoice($id) 
-	{
-		return $this->db
-			->where("invoices.ID", $id)
-			->select("invoices.ID, invoices.invoice_id, 
+    public function get_invoice($id) {
+        return $this->db
+                        ->where("invoices.ID", $id)
+                        ->select("invoices.ID, invoices.invoice_id, 
 			invoices.title, invoices.notes, invoices.due_date, invoices.timestamp,
 			invoices.userid, invoices.clientid,
 			invoices.total, invoices.tax_name_1, invoices.tax_rate_1,
@@ -168,62 +210,54 @@ class Invoices_Model extends CI_Model
 			paying_accounts.checkout2_secret_key, paying_accounts.first_name,
 			paying_accounts.last_name, paying_accounts.userid as pa_userid,
 			invoice_themes.file as theme_file")
-			->join("invoice_themes", "invoice_themes.ID = invoices.themeid")
-			->join("paying_accounts", "paying_accounts.ID = invoices.paying_accountid")
-			->join("users", "users.ID = invoices.clientid", "left outer")
-			->join("users as u2", "u2.ID = invoices.userid", "left outer")
-			->join("currencies", "currencies.ID = invoices.currencyid")
-			->get("invoices");
-	}
+                        ->join("invoice_themes", "invoice_themes.ID = invoices.themeid")
+                        ->join("paying_accounts", "paying_accounts.ID = invoices.paying_accountid")
+                        ->join("users", "users.ID = invoices.clientid", "left outer")
+                        ->join("users as u2", "u2.ID = invoices.userid", "left outer")
+                        ->join("currencies", "currencies.ID = invoices.currencyid")
+                        ->get("invoices");
+    }
 
-	public function get_invoice_items($id) 
-	{
-		return $this->db->where("invoiceid", $id)->get("invoice_items");
-	}
+    public function get_invoice_items($id) {
+        return $this->db->where("invoiceid", $id)->get("invoice_items");
+    }
 
-	public function delete_invoice_items($id) 
-	{
-		$this->db->where("invoiceid", $id)->delete("invoice_items");
-	}
+    public function delete_invoice_items($id) {
+        $this->db->where("invoiceid", $id)->delete("invoice_items");
+    }
 
-	public function update_invoice($id, $data) 
-	{
-		$this->db->where("ID", $id)->update("invoices", $data);
-	}
+    public function update_invoice($id, $data) {
+        $this->db->where("ID", $id)->update("invoices", $data);
+    }
 
-	public function delete_invoice($id) 
-	{
-		$this->db->where("ID", $id)->delete("invoices");
-	}
+    public function delete_invoice($id) {
+        $this->db->where("ID", $id)->delete("invoices");
+    }
 
-	public function get_invoice_settings()
-	{
-		return $this->db->where("ID", 1)->get("invoice_settings");
-	}
+    public function get_invoice_settings() {
+        return $this->db->where("ID", 1)->get("invoice_settings");
+    }
 
-	public function update_settings($data) 
-	{
-		$this->db->where("ID", 1)->update("invoice_settings", $data);
-	}
+    public function update_settings($data) {
+        $this->db->where("ID", 1)->update("invoice_settings", $data);
+    }
 
-	public function add_reoccuring_invoice($data) 
-	{
-		$this->db->insert("invoice_reoccur", $data);
-	}
+    public function add_reoccuring_invoice($data) {
+        $this->db->insert("invoice_reoccur", $data);
+    }
 
-	public function get_reoccuring_invoices($datatable) 
-	{
-		$datatable->db_order();
+    public function get_reoccuring_invoices($datatable) {
+        $datatable->db_order();
 
-		$datatable->db_search(array(
-			"invoices.title",
-			"users.username",
-			"invoice_reoccur.start_date"
-			)
-		);
+        $datatable->db_search(array(
+            "invoices.title",
+            "users.username",
+            "invoice_reoccur.start_date"
+                )
+        );
 
-		return $this->db
-			->select("invoice_reoccur.ID, invoice_reoccur.templateid,
+        return $this->db
+                        ->select("invoice_reoccur.ID, invoice_reoccur.templateid,
 				invoice_reoccur.clientid, invoice_reoccur.userid,
 				invoice_reoccur.timestamp, invoice_reoccur.amount,
 				invoice_reoccur.amount_time, invoice_reoccur.status,
@@ -233,16 +267,15 @@ class Invoices_Model extends CI_Model
 				users.avatar, users.online_timestamp, users.first_name,
 				users.last_name,
 				invoices.title")
-			->join("users", "users.ID = invoice_reoccur.clientid", "left outer")
-			->join("invoices", "invoices.ID = invoice_reoccur.templateid")
-			->limit($datatable->length, $datatable->start)
-			->get("invoice_reoccur");
-	}
+                        ->join("users", "users.ID = invoice_reoccur.clientid", "left outer")
+                        ->join("invoices", "invoices.ID = invoice_reoccur.templateid")
+                        ->limit($datatable->length, $datatable->start)
+                        ->get("invoice_reoccur");
+    }
 
-	public function get_reoccuring_invoices_all() 
-	{
-		return $this->db
-			->select("invoice_reoccur.ID, invoice_reoccur.templateid,
+    public function get_reoccuring_invoices_all() {
+        return $this->db
+                        ->select("invoice_reoccur.ID, invoice_reoccur.templateid,
 				invoice_reoccur.clientid, invoice_reoccur.userid,
 				invoice_reoccur.timestamp, invoice_reoccur.amount,
 				invoice_reoccur.amount_time, invoice_reoccur.status,
@@ -252,27 +285,26 @@ class Invoices_Model extends CI_Model
 				users.avatar, users.online_timestamp, users.first_name,
 				users.last_name,
 				invoices.title")
-			->join("users", "users.ID = invoice_reoccur.clientid", "left outer")
-			->join("invoices", "invoices.ID = invoice_reoccur.templateid")
-			->get("invoice_reoccur");
-	}
+                        ->join("users", "users.ID = invoice_reoccur.clientid", "left outer")
+                        ->join("invoices", "invoices.ID = invoice_reoccur.templateid")
+                        ->get("invoice_reoccur");
+    }
 
-	public function get_reoccuring_invoices_total() 
-	{
-		$s = $this->db
-			->select("COUNT(*) as num")
-			->join("users", "users.ID = invoice_reoccur.clientid", "left outer")
-			->get("invoice_reoccur");
-		$r = $s->row();
-		if(isset($r->num)) return $r->num;
-		return 0;
-	}
+    public function get_reoccuring_invoices_total() {
+        $s = $this->db
+                ->select("COUNT(*) as num")
+                ->join("users", "users.ID = invoice_reoccur.clientid", "left outer")
+                ->get("invoice_reoccur");
+        $r = $s->row();
+        if (isset($r->num))
+            return $r->num;
+        return 0;
+    }
 
-	public function get_reoccuring_invoice($id) 
-	{
-		return $this->db
-			->where("invoice_reoccur.ID", $id)
-			->select("invoice_reoccur.ID, invoice_reoccur.templateid,
+    public function get_reoccuring_invoice($id) {
+        return $this->db
+                        ->where("invoice_reoccur.ID", $id)
+                        ->select("invoice_reoccur.ID, invoice_reoccur.templateid,
 				invoice_reoccur.clientid, invoice_reoccur.userid,
 				invoice_reoccur.timestamp, invoice_reoccur.amount,
 				invoice_reoccur.amount_time, invoice_reoccur.status,
@@ -282,24 +314,21 @@ class Invoices_Model extends CI_Model
 				users.avatar, users.online_timestamp, users.first_name,
 				users.last_name,
 				invoices.title")
-			->join("users", "users.ID = invoice_reoccur.clientid", "left outer")
-			->join("invoices", "invoices.ID = invoice_reoccur.templateid")
-			->get("invoice_reoccur");
-	}
+                        ->join("users", "users.ID = invoice_reoccur.clientid", "left outer")
+                        ->join("invoices", "invoices.ID = invoice_reoccur.templateid")
+                        ->get("invoice_reoccur");
+    }
 
-	public function delete_reoccuring_invoice($id) 
-	{
-		$this->db->where("ID", $id)->delete("invoice_reoccur");
-	}
+    public function delete_reoccuring_invoice($id) {
+        $this->db->where("ID", $id)->delete("invoice_reoccur");
+    }
 
-	public function update_reoccuring_invoice($id, $data) 
-	{
-		$this->db->where("ID", $id)->update("invoice_reoccur", $data);
-	}
+    public function update_reoccuring_invoice($id, $data) {
+        $this->db->where("ID", $id)->update("invoice_reoccur", $data);
+    }
 
-	public function get_invoice_templates_all() 
-	{
-		return $this->db->select("invoices.ID, invoices.invoice_id, 
+    public function get_invoice_templates_all() {
+        return $this->db->select("invoices.ID, invoices.invoice_id, 
 			invoices.title, invoices.notes, invoices.due_date, invoices.timestamp,
 			invoices.userid, invoices.clientid,
 			invoices.total, invoices.tax_name_1, invoices.tax_rate_1,
@@ -311,121 +340,104 @@ class Invoices_Model extends CI_Model
 			users.last_name as client_last_name,
 			currencies.name as currencyname, currencies.symbol,
 			currencies.code")
-			->where("invoices.template", 1)
-			->join("users", "users.ID = invoices.clientid", "left outer")
-			->join("currencies", "currencies.ID = invoices.currencyid")
-			->order_by("invoices.ID", "DESC")
-			->get("invoices");
-	}
+                        ->where("invoices.template", 1)
+                        ->join("users", "users.ID = invoices.clientid", "left outer")
+                        ->join("currencies", "currencies.ID = invoices.currencyid")
+                        ->order_by("invoices.ID", "DESC")
+                        ->get("invoices");
+    }
 
-	public function get_invoice_serviceid($id) 
-	{
-		return $this->db
-			->where("serviceid", $id)
-			->order_by("ID", "DESC")
-			->get("invoices");
-	}
+    public function get_invoice_serviceid($id) {
+        return $this->db
+                        ->where("serviceid", $id)
+                        ->order_by("ID", "DESC")
+                        ->get("invoices");
+    }
 
-	public function get_invoice_items_db() 
-	{
-		return $this->db->get("invoice_item_db");
-	}
+    public function get_invoice_items_db() {
+        return $this->db->get("invoice_item_db");
+    }
 
-	public function get_invoice_item_db($id) 
-	{
-		return $this->db->where("ID", $id)->get("invoice_item_db");
-	}
+    public function get_invoice_item_db($id) {
+        return $this->db->where("ID", $id)->get("invoice_item_db");
+    }
 
-	public function add_invoice_item_db($data) 
-	{
-		$this->db->insert("invoice_item_db", $data);
-	}
+    public function add_invoice_item_db($data) {
+        $this->db->insert("invoice_item_db", $data);
+    }
 
-	public function get_invoice_themes() 
-	{
-		return $this->db->get("invoice_themes");
-	}
+    public function get_invoice_themes() {
+        return $this->db->get("invoice_themes");
+    }
 
-	public function get_invoice_theme($id) 
-	{
-		return $this->db->where("ID", $id)->get("invoice_themes");
-	}
+    public function get_invoice_theme($id) {
+        return $this->db->where("ID", $id)->get("invoice_themes");
+    }
 
-	public function get_invoice_payments($id) 
-	{
-		return $this->db->where("invoiceid", $id)->get("payment_logs");
-	}
+    public function get_invoice_payments($id) {
+        return $this->db->where("invoiceid", $id)->get("payment_logs");
+    }
 
-	public function add_invoice_payment($data) 
-	{
-		$this->db->insert("payment_logs", $data);
-	}
+    public function add_invoice_payment($data) {
+        $this->db->insert("payment_logs", $data);
+    }
 
-	public function delete_invoice_payment($id) 
-	{
-		$this->db->where("ID", $id)->delete("payment_logs");
-	}
+    public function delete_invoice_payment($id) {
+        $this->db->where("ID", $id)->delete("payment_logs");
+    }
 
-	public function get_invoice_payment($id) 
-	{
-		return $this->db->where("ID", $id)->get("payment_logs");
-	}
+    public function get_invoice_payment($id) {
+        return $this->db->where("ID", $id)->get("payment_logs");
+    }
 
-	public function get_invoice_payments_total($id) 
-	{
-		$s = $this->db->select("SUM(amount) as total")->where("invoiceid", $id)->get("payment_logs");
-		$r = $s->row();
-		if(isset($r->total)) return $r->total;
-		return 0;
-	}
+    public function get_invoice_payments_total($id) {
+        $s = $this->db->select("SUM(amount) as total")->where("invoiceid", $id)->get("payment_logs");
+        $r = $s->row();
+        if (isset($r->total))
+            return $r->total;
+        return 0;
+    }
 
-	public function update_invoice_payment($id, $data) 
-	{
-		$this->db->where("ID", $id)->update("payment_logs", $data);
-	}
+    public function update_invoice_payment($id, $data) {
+        $this->db->where("ID", $id)->update("payment_logs", $data);
+    }
 
-	public function get_item_db_total() 
-	{
-		return $this->db->from("invoice_item_db")->count_all_results();
-	}
+    public function get_item_db_total() {
+        return $this->db->from("invoice_item_db")->count_all_results();
+    }
 
-	public function get_item_db($datatable) 
-	{
-		$datatable->db_order();
+    public function get_item_db($datatable) {
+        $datatable->db_order();
 
-		$datatable->db_search(array(
-			"invoice_item_db.name",
-			)
-		);
+        $datatable->db_search(array(
+            "invoice_item_db.name",
+                )
+        );
 
-		return $this->db
-			->select("invoice_item_db.name, invoice_item_db.ID, invoice_item_db.description,
+        return $this->db
+                        ->select("invoice_item_db.name, invoice_item_db.ID, invoice_item_db.description,
 				invoice_item_db.price, invoice_item_db.quantity")
-			->limit($datatable->length, $datatable->start)
-			->get("invoice_item_db");
-	}
+                        ->limit($datatable->length, $datatable->start)
+                        ->get("invoice_item_db");
+    }
 
-	public function get_item_db_single($id) 
-	{
-		return $this->db->where("ID", $id)->get("invoice_item_db");
-	}
+    public function get_item_db_single($id) {
+        return $this->db->where("ID", $id)->get("invoice_item_db");
+    }
 
-	public function delete_item_db($id) 
-	{
-		$this->db->where("ID", $id)->delete("invoice_item_db");
-	}
+    public function delete_item_db($id) {
+        $this->db->where("ID", $id)->delete("invoice_item_db");
+    }
 
-	public function update_item_db($id, $data) 
-	{
-		$this->db->where("ID", $id)->update("invoice_item_db", $data);
-	}
+    public function update_item_db($id, $data) {
+        $this->db->where("ID", $id)->update("invoice_item_db", $data);
+    }
 
-	public function get_overdue_invoices($time) 
-	{
-		return $this->db
-			->where("invoices.due_date <", $time)
-			->where("invoices.status !=", 2)->where("invoices.status !=", 3)
-			->select("invoices.ID, invoices.invoice_id, 
+    public function get_overdue_invoices($time) {
+        return $this->db
+                        ->where("invoices.due_date <", $time)
+                        ->where("invoices.status !=", 2)->where("invoices.status !=", 3)
+                        ->select("invoices.ID, invoices.invoice_id, 
 			invoices.title, invoices.notes, invoices.due_date, invoices.timestamp,
 			invoices.userid, invoices.clientid,
 			invoices.total, invoices.tax_name_1, invoices.tax_rate_1,
@@ -455,13 +467,14 @@ class Invoices_Model extends CI_Model
 			paying_accounts.checkout2_secret_key, paying_accounts.first_name,
 			paying_accounts.last_name,
 			invoice_themes.file as theme_file")
-			->join("invoice_themes", "invoice_themes.ID = invoices.themeid")
-			->join("paying_accounts", "paying_accounts.ID = invoices.paying_accountid")
-			->join("users", "users.ID = invoices.clientid", "left outer")
-			->join("users as u2", "u2.ID = invoices.userid", "left outer")
-			->join("currencies", "currencies.ID = invoices.currencyid")
-			->get("invoices");
-	}
+                        ->join("invoice_themes", "invoice_themes.ID = invoices.themeid")
+                        ->join("paying_accounts", "paying_accounts.ID = invoices.paying_accountid")
+                        ->join("users", "users.ID = invoices.clientid", "left outer")
+                        ->join("users as u2", "u2.ID = invoices.userid", "left outer")
+                        ->join("currencies", "currencies.ID = invoices.currencyid")
+                        ->get("invoices");
+    }
+
 }
 
 ?>

@@ -1319,6 +1319,83 @@ class Invoices extends CI_Controller {
         }
         echo json_encode($this->datatables->process());
     }
+    
+    public function payed_students(){
+        if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $this->template->loadData("activeLink", array("invoice" => array("payed" => 1)));
+
+        $this->template->loadContent("invoices/payed_students.php", array(
+                )
+        );
+    }
+    
+    public function payed_students_page($status) {
+        if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $this->load->library("datatables");
+
+        $this->datatables->set_default_order("users.ID", "desc");
+
+        // Set page ordering options that can be used 
+        $this->datatables->ordering(
+                array(
+                    0 => array(
+                        "users.username" => 0
+                    ),
+                    1 => array(
+                        "users.first_name" => 0
+                    ),
+                    2 => array(
+                        "users.mobile_phone" => 0
+                    )
+                )
+        );
+
+        $this->datatables->set_total_rows(
+                $this->invoices_model
+                        ->get_total_payed_students(intval($status))
+        );
+        $payed_students = $this->invoices_model->get_payed_students($this->datatables, intval($status));
+
+        foreach ($payed_students->result() as $r) {
+
+            $user = $this->common->get_user_display(array("username" => $r->client_username, "avatar" => $r->client_avatar, "online_timestamp" => $r->client_online_timestamp, "first_name" => $r->client_first_name, "last_name" => $r->client_last_name));
+            $this->datatables->data[] = array(
+                $user,
+                $r->mobile_phone,
+                $r->email,
+                $r->class_name,
+                $r->branch_name,
+                $r->total . " " . $r->symbol
+            );
+        }
+        echo json_encode($this->datatables->process());
+    }
+    
+    public function not_payed_students(){
+        if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $this->template->loadData("activeLink", array("invoice" => array("not_payed" => 1)));
+
+        $this->template->loadContent("invoices/not_payed_students.php", array(
+                )
+        );
+    }
+    
+    public function partially_payed_students(){
+        if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $this->template->loadData("activeLink", array("invoice" => array("partially_payed" => 1)));
+
+        $this->template->loadContent("invoices/partially_payed_students.php", array(
+                )
+        );
+    }
 
     public function add_payment_account() {
         if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {

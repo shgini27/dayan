@@ -90,6 +90,9 @@
               <option value='<?php echo site_url("invoices/templates") ?>'><?php echo lang("ctn_719") ?></option>
               <!-- <option value='<?php echo site_url("invoices/reoccuring") ?>'><?php echo lang("ctn_670") ?></option> -->
               <option value='<?php echo site_url("invoices/paying_accounts") ?>'><?php echo lang("ctn_720") ?></option>
+              <option value='<?php echo site_url("invoices/payed_students") ?>'><?php echo lang("ctn_1030") ?></option>
+              <option value='<?php echo site_url("invoices/not_payed_students") ?>'><?php echo lang("ctn_1031") ?></option>
+              <option value='<?php echo site_url("invoices/partially_payed_students") ?>'><?php echo lang("ctn_1032") ?></option>
             <?php endif; ?>
             <option value='<?php echo site_url("invoices/your") ?>'><?php echo lang("ctn_721") ?></option>
            <?php endif; ?>

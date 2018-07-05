@@ -190,6 +190,9 @@
                       <!-- <li class="<?php if(isset($activeLink['invoice']['reoccuring'])) echo "active" ?>"><a href="<?php echo site_url("invoices/reoccuring") ?>"> <?php echo lang("ctn_670") ?></a></li> -->
                       <li class="<?php if(isset($activeLink['invoice']['items'])) echo "active" ?>"><a href="<?php echo site_url("invoices/items") ?>"> <?php echo lang("ctn_946") ?></a></li>
                       <li class="<?php if(isset($activeLink['invoice']['pay'])) echo "active" ?>"><a href="<?php echo site_url("invoices/paying_accounts") ?>"> <?php echo lang("ctn_720") ?></a></li>
+                      <li class="<?php if(isset($activeLink['invoice']['payed'])) echo "active" ?>"><a href="<?php echo site_url("invoices/payed_students") ?>"> <?php echo lang("ctn_1030") ?></a></li>
+                      <li class="<?php if(isset($activeLink['invoice']['not_payed'])) echo "active" ?>"><a href="<?php echo site_url("invoices/not_payed_students") ?>"> <?php echo lang("ctn_1031") ?></a></li>
+                      <li class="<?php if(isset($activeLink['invoice']['partially_payed'])) echo "active" ?>"><a href="<?php echo site_url("invoices/partially_payed_students") ?>"> <?php echo lang("ctn_1032") ?></a></li>
                     <?php endif; ?>
                     <li class="<?php if(isset($activeLink['invoice']['your'])) echo "active" ?>"><a href="<?php echo site_url("invoices/your") ?>"> <?php echo lang("ctn_721") ?></a></li>
                     </ul>

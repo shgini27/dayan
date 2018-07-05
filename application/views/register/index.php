@@ -41,25 +41,25 @@
 			  	<?php foreach($fields->result() as $r) : ?>
 			  	<div class="form-group login-form-area">
 
-					    <label for="name-in" class="col-md-3 label-heading"><?php echo $r->name ?> <?php if($r->required) : ?>*<?php endif; ?></label>
+                                    <label for="name-in-<?php echo $r->ID?>" class="col-md-3 label-heading"><?php echo $r->name ?> <?php if($r->required) : ?><span class="required">*</span><?php endif; ?></label>
 					    <div class="col-md-9">
 					    	<?php if($r->type == 0) : ?>
-					    		<input type="text" class="form-control" id="name-in" name="cf_<?php echo $r->ID ?>" value="<?php if(isset($_POST['cf_'. $r->ID])) echo $_POST['cf_' . $r->ID] ?>">
+					    		<input type="text" class="form-control" id="name-in-<?php echo $r->ID?>" name="cf_<?php echo $r->ID ?>" value="<?php if(isset($_POST['cf_'. $r->ID])) echo $_POST['cf_' . $r->ID] ?>"><br />
 					    	<?php elseif($r->type == 1) : ?>
-					    		<textarea name="cf_<?php echo $r->ID ?>" rows="8" class="form-control"><?php if(isset($_POST['cf_'. $r->ID])) echo $_POST['cf_' . $r->ID] ?></textarea>
+					    		<textarea name="cf_<?php echo $r->ID ?>" rows="8" class="form-control"><?php if(isset($_POST['cf_'. $r->ID])) echo $_POST['cf_' . $r->ID] ?></textarea><br />
 					    	<?php elseif($r->type == 2) : ?>
 					    		 <?php $options = explode(",", $r->options); ?>
 					            <?php if(count($options) > 0) : ?>
 					                <?php foreach($options as $k=>$v) : ?>
 					                <div class="form-group"><input type="checkbox" name="cf_cb_<?php echo $r->ID ?>_<?php echo $k ?>" value="1" <?php if(isset($_POST['cf_cb_' . $r->ID . "_" . $k])) echo "checked" ?>> <?php echo $v ?></div>
-					                <?php endforeach; ?>
+					                <?php endforeach; ?><br />
 					            <?php endif; ?>
 					    	<?php elseif($r->type == 3) : ?>
 					    		<?php $options = explode(",", $r->options); ?>
 					            <?php if(count($options) > 0) : ?>
 					                <?php foreach($options as $k=>$v) : ?>
 					                <div class="form-group"><input type="radio" name="cf_radio_<?php echo $r->ID ?>" value="<?php echo $k ?>" <?php if(isset($_POST['cf_radio_' . $r->ID]) && $_POST['cf_radio_' . $r->ID] == $k) echo "checked" ?>> <?php echo $v ?></div>
-					                <?php endforeach; ?>
+					                <?php endforeach; ?><br />
 					            <?php endif; ?>
 					    	<?php elseif($r->type == 4) : ?>
 					    		<?php $options = explode(",", $r->options); ?>
@@ -68,7 +68,7 @@
 					                <?php foreach($options as $k=>$v) : ?>
 					                <option value="<?php echo $k ?>" <?php if(isset($_POST['cf_' . $r->ID]) && $_POST['cf_'.$r->ID] == $k) echo "selected" ?>><?php echo $v ?></option>
 					                <?php endforeach; ?>
-					                </select>
+					                </select><br />
 					            <?php endif; ?>
 					    	<?php endif; ?>
 					    	<span class="help-text"><?php echo $r->help_text ?></span>
@@ -129,7 +129,7 @@
 		          </div>
 		          <?php endif; ?>
 
-		  		<p class="decent-margin align-center"><a href="<?php echo site_url("login") ?>"><?php echo lang("ctn_1412") ?></a></p>
+		  		<p class="decent-margin align-center"><a href="<?php echo site_url("login") ?>"><?php echo lang("ctn_177") ?></a></p>
 
 		  	<?php echo form_close() ?>
 		  </div>

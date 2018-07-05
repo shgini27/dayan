@@ -284,10 +284,16 @@ class Documents extends CI_Controller {
         $category = $cat_data->row();
 
         $week = ceil($category->hrs / 6);
-        if ($class->class_days === "odd") {
-            $week_days = "1, 3, 5";
-        } else {
-            $week_days = "2, 4, 6";
+        switch($class->class_days) {
+            case 'odd':
+                $week_days = "1, 3, 5";
+                break;
+            case 'even':
+                $week_days = "2, 4, 6";
+                break;
+            case 'everyday':
+                $week_days = '1, 2, 3, 4, 5, 6';
+                break;
         }
 
         $student_data = [

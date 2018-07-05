@@ -1536,7 +1536,7 @@ class Admin extends CI_Controller
 
 		$this->datatables->set_total_rows(
 			$this->user_model
-				->get_total_members_count()
+				->get_total_members_admin_count()
 		);
 		$members = $this->user_model->get_members_admin($this->datatables);
 
