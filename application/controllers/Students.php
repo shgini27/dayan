@@ -75,11 +75,17 @@ class Students extends CI_Controller {
         foreach ($users->result() as $r) {
 
             $options = '<a href="' . site_url("students/view/" . $r->ID) . '" class="btn btn-primary btn-xs">' . lang("ctn_552") . '</a>';
+            if(intval($r->black_list_status) === 1){
+                $black_list = ' <a href="' . site_url("students/black_list/" . $r->ID . "/remove") . '" class="btn btn-warning btn-xs" onclick="return confirm(\'' . lang("ctn_1038") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1039") . '"><span class="glyphicon glyphicon-remove"></span></a>';
+            }else{
+                $black_list = ' <a href="' . site_url("students/black_list/" . $r->ID . "/add") . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_1037") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_1036") . '"><span class="glyphicon glyphicon-exclamation-sign"></span></a>';
+            }
+            
             if ($this->common->has_permissions(array("admin", "student_manager"), $this->user)) {
                 $options .= ' <a href="' . site_url("students/edit_student/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a>';
                 $options .= ' <a href="' . site_url("students/delete_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
-                //$options .= ' <a href="' . site_url("students/view/" . $r->ID) . '" class="btn btn-success btn-xs">' . lang("ctn_1028") . '</a>'; 
                 $options .= ' <input type="button" class="btn btn-success btn-xs addStudentDialog" value="' . lang("ctn_504") . '" data-toggle="modal" data-id="' . $r->ID .'" data-target="#myModal" />';
+                $options .= $black_list;
             }
 
 
@@ -87,7 +93,8 @@ class Students extends CI_Controller {
                 $this->common->get_user_display(array("username" => $r->username, "avatar" => $r->avatar, "online_timestamp" => $r->online_timestamp, "first_name" => $r->first_name, "last_name" => $r->last_name)),
                 $r->mobile_phone,
                 $r->email,
-                $options
+                $options,
+                $r->black_list_status
             );
         }
         echo json_encode($this->datatables->process());
@@ -123,6 +130,44 @@ class Students extends CI_Controller {
             )
                 )
         );
+    }
+    
+    public function black_list($id, $action){
+        if (!$this->common->has_permissions(array("admin", "student_manager",
+                        ), $this->user)) {
+            $this->template->error(lang("error_2"));
+        }
+        $this->template->loadData("activeLink", array("students" => array("general" => 1)));
+
+        $id = intval($id);
+        $student = $this->user_model->get_user($id);
+        if ($student->num_rows() == 0) {
+            $this->template->error(lang("error_52"));
+        }
+
+        $student = $student->row();
+        
+        // Check user is a parent user role
+        $role = $this->user_model->get_users_user_role($student->user_role);
+        if ($role->num_rows() == 0) {
+            $this->template->error(lang("error_114"));
+        }
+        $role = $role->row();
+        if ($role->student != 1) {
+            $this->template->error(lang("error_114"));
+        }
+        
+        //here update users role to banned
+        if(trim($action) === 'add'){
+            $this->user_model->update_user($id, ["black_list_status" => 1]);
+        }
+        
+        if(trim($action) === 'remove'){
+            $this->user_model->update_user($id, ["black_list_status" => 0]);
+        }
+        
+        $this->session->set_flashdata("globalmsg", lang("success_114"));
+        redirect(site_url("students"));
     }
 
     public function edit_student($id) {

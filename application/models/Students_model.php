@@ -330,7 +330,7 @@ class Students_Model extends CI_Model {
         return $this->db
                         ->where("user_roles.student", 1)
                         ->select("users.username, users.avatar, users.online_timestamp, users.mobile_phone,
-				users.first_name, users.last_name, users.ID, users.email")
+				users.first_name, users.last_name, users.ID, users.email, users.black_list_status")
                         ->join("user_roles", "users.user_role = user_roles.ID")
                         ->limit($datatable->length, $datatable->start)
                         ->get("users");

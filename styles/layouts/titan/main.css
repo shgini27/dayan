@@ -349,3 +349,7 @@ text-decoration: none;
 .required {
     color:red;
 }
+
+.black_list {
+    background: #f5aa94 !important;
+}

@@ -358,7 +358,7 @@ class Classes_Model extends CI_Model {
 				classes.max_students, classes.allow_signups, classes.branch_id,
 				subjects.name as subject_name, branch.name as branch_name,
                                 class_categories.end_date as cat_end_date, classes.hrs,
-                                class_categories.start_date as cat_start_date,
+                                class_categories.start_date as cat_start_date, classes.weeks,
 				class_categories.name as cat_name, room.code as room_code")
                         ->join("subjects", "subjects.ID = classes.subjectid")
                         ->join("class_categories", "class_categories.ID = classes.categoryid")
@@ -402,10 +402,31 @@ class Classes_Model extends CI_Model {
                         ->select("classes.ID, classes.name, classes.description, classes.room_id,
 				classes.subjectid, classes.categoryid, classes.students,
 				classes.max_students, classes.branch_id, classes.class_days,
-                                classes.start_hour, classes.end_hour")
+                                classes.start_hour, classes.end_hour, class_categories.name as cat_name,
+                                branch.name as branch_name, room.code as room_code")
                         ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
-                        ->where("class_categories.start_date <=", $date)
+                        ->join("branch", "branch.branch_id = classes.branch_id", "LEFT")
+                        ->join("room", "room.room_id = classes.room_id", "LEFT")
+                        //->where("class_categories.start_date <=", $date)
                         ->where("class_categories.end_date >=", $date)
+                        ->get("classes");
+    }
+    
+    public function get_all_active_classes_not_in_items($date, $class_ids) {
+        /*
+
+         * SELECT `classes`.`ID`, `classes`.`name`, `classes`.`description`, `classes`.`room_id`, `classes`.`subjectid`, `classes`.`categoryid`, `classes`.`students`, `classes`.`max_students`, `classes`.`branch_id`, `classes`.`class_days`, `classes`.`start_hour`, `classes`.`end_hour`, `class_categories`.`name` as `cat_name`, `branch`.`name` as `branch_name`, `room`.`code` as `room_code` FROM `classes` INNER JOIN `class_categories` ON `class_categories`.`ID` = `classes`.`categoryid` INNER JOIN `branch` ON `branch`.`branch_id` = `classes`.`branch_id` INNER JOIN `room` ON `room`.`room_id` = `classes`.`room_id` INNER JOIN `invoice_item_db` ON `invoice_item_db`.`class_id` = `classes`.`ID` WHERE `class_categories`.`end_date` >= '2018-07-09'         */
+        return $this->db
+                        ->select("classes.ID, classes.name, classes.description, classes.room_id,
+				classes.subjectid, classes.categoryid, classes.students,
+				classes.max_students, classes.branch_id, classes.class_days,
+                                classes.start_hour, classes.end_hour, class_categories.name as cat_name,
+                                branch.name as branch_name, room.code as room_code")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "INNER")
+                        ->join("branch", "branch.branch_id = classes.branch_id", "INNER")
+                        ->join("room", "room.room_id = classes.room_id", "INNER")
+                        ->where("class_categories.end_date >=", $date)
+                        ->where_not_in("classes.ID", $class_ids)
                         ->get("classes");
     }
 
@@ -426,6 +447,8 @@ class Classes_Model extends CI_Model {
         $datatable->db_order();
 
         $datatable->db_search(array(
+            "classes.name",
+            "subjects.name",
             "class_categories.name"
                 )
         );
@@ -438,7 +461,7 @@ class Classes_Model extends CI_Model {
 				classes.max_students, classes.allow_signups, classes.start_hour,
 				subjects.name as subject_name, branch.name as branch_name,
                                 class_categories.end_date as cat_end_date, classes.hrs,
-                                class_categories.start_date as cat_start_date,
+                                class_categories.start_date as cat_start_date, classes.weeks,
 				class_categories.name as cat_name, room.code as room_code")
                         ->join("classes", "classes.ID = class_students.classid")
                         ->join("subjects", "subjects.ID = classes.subjectid")
@@ -973,6 +996,7 @@ class Classes_Model extends CI_Model {
                         ->where("start >=", $start)
                         ->where("end <=", $end)
                         ->where_not_in("ID", $events)
+                        ->order_by("start", "asc")
                         ->get("calendar_events");
     }
 
@@ -993,6 +1017,18 @@ class Classes_Model extends CI_Model {
                             ->get("calendar_events");
         }
     }
+    
+    public function get_room_events_by_class_id($start, $end, $room, $class_id) {
+        
+            return $this->db
+                            ->where("room", $room)
+                            ->where("classid", $class_id)
+                            ->where("lesson_flag", 1)
+                            ->where("start >=", $start)
+                            ->where("end <=", $end)
+                            ->get("calendar_events");
+        
+    }
 
     public function delete_class_lesson_events($classid, $lesson = 1) {
         $this->db->where("classid", $classid)
@@ -1004,6 +1040,12 @@ class Classes_Model extends CI_Model {
         $this->db->insert("calendar_events", $data);
     }
 
+    public function add_class_events($datas) {
+        foreach ($datas as $data) {
+            $this->db->insert("calendar_events", $data);
+        }
+    }
+    
     public function get_class_event($id) {
         return $this->db->where("ID", $id)->get("calendar_events");
     }

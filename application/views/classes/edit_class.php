@@ -95,6 +95,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="weeks" class="col-sm-2 control-label"><?php echo lang("ctn_1033") ?></label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" name="weeks" min="1" max="70" id="weeks" value="<?php echo $class->weeks ?>">
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label"><?php echo lang("ctn_1003") ?></label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="start_timepicker" name="start_hour" />

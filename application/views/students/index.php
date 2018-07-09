@@ -73,7 +73,7 @@
                                     }else{
                                         $day = '1-6';
                                     } ?>
-                                <option value="<?php echo $r->ID ?>"><?php echo $r->name . " / " . $day . " / " . substr($r->start_hour, 0, 5) . " - " . substr($r->end_hour, 0, 5)?></option>
+                                <option value="<?php echo $r->ID ?>"><?php echo $r->cat_name . " / " . $r->branch_name . " (Room: " . $r->room_code . ") / " . $r->name . " / " . $day . " / " . substr($r->start_hour, 0, 5) . " - " . substr($r->end_hour, 0, 5)?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -130,6 +130,11 @@
             },
             "drawCallback": function (settings, json) {
                 $('[data-toggle="tooltip"]').tooltip();
+            },
+            "createdRow": function( row, data, dataIndex){
+                if( data[4] ==  `1`){
+                    $(row).addClass('black_list');
+                }
             }
         });
         $('#form-search-input').on('keyup change', function () {

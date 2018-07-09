@@ -283,7 +283,6 @@ class Documents extends CI_Controller {
         $cat_data = $this->classes_model->get_category_data($class->categoryid);
         $category = $cat_data->row();
 
-        $week = ceil($category->hrs / 6);
         switch($class->class_days) {
             case 'odd':
                 $week_days = "1, 3, 5";
@@ -299,8 +298,8 @@ class Documents extends CI_Controller {
         $student_data = [
             "tm_name" => "$class_student->first_name $class_student->last_name $class_student->fathers_name",
             "en_name" => "$class_student->first_name_en $class_student->last_name_en $class_student->fathers_name_en",
-            "week" => "$week",
-            "hrs" => "$category->hrs",
+            "week" => "$class->weeks",
+            "hrs" => "$class->hrs",
             "subject" => "$category->name",
             "week_day" => $week_days,
             "time" => "$class->start_hour",
@@ -568,7 +567,7 @@ class Documents extends CI_Controller {
         $hrs = $student_data['hrs']; //total hrs
         $subject = $student_data['subject'];
         $week_day = $student_data['week_day']; //example (1, 3, 5)
-        $time = $student_data['time']; // 15:00'da
+        $time = substr($student_data['time'], 0, 5); // 15:00'da
         $price = $student_data['price']; // school price
         $point_1 = 70; //point for language
         $point_2 = 60; //point for komputer
@@ -764,8 +763,7 @@ class Documents extends CI_Controller {
                 . 'okuw merkezimiz işlemeýär, we şol günki sapaklaryň öwezi dolunmaýar.', 1, $fontStyleName, $paragraphStyleName);
 
         $listItemRun = $section->addListItemRun(1, $paragraphStyleName);
-        $listItemRun->addText("Diňleýji okuw merkeziniň düzgünlerini bozan we öz borçlaryny ýerine ýetirmedik '
-                    . 'ýagdaýynda administrasiýa tarapyndan ", ['name' => 'Cambria Math', 'size' => 8]);
+        $listItemRun->addText("Diňleýji okuw merkeziniň düzgünlerini bozan we öz borçlaryny ýerine ýetirmedik ýagdaýynda administrasiýa tarapyndan ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText(" DUÝDURYŞ ", ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);
         $listItemRun->addText(" beriler. Diňleýji üç ", ['name' => 'Cambria Math', 'size' => 8]);
         $listItemRun->addText(" DUÝDURYŞ ", ['name' => 'Cambria Math', 'size' => 8, 'bold' => true]);

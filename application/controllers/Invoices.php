@@ -9,6 +9,7 @@ class Invoices extends CI_Controller {
         parent::__construct();
         $this->load->model("user_model");
         $this->load->model("invoices_model");
+        $this->load->model("classes_model");
         if (!$this->user->loggedin) {
             redirect(site_url("login"));
         }
@@ -319,6 +320,7 @@ class Invoices extends CI_Controller {
         $count = 0;
         $invoice_items = array();
         for ($i = 1; $i <= $items; $i++) {
+            $invoice_item_db_id = intval($this->input->post("invoice_item_db_id_" . $i));
             $quantity = floatval($this->input->post("item_quantity_" . $i));
             if ($quantity < 0)
                 $this->template->error(lang("error_128"));
@@ -334,6 +336,7 @@ class Invoices extends CI_Controller {
             if (!empty($name)) {
                 $count++;
                 $invoice_items[] = array(
+                    "invoice_item_db_id" => $invoice_item_db_id,
                     "name" => $name,
                     "desc" => $desc,
                     "amount" => $amount,
@@ -409,6 +412,7 @@ class Invoices extends CI_Controller {
         foreach ($invoice_items as $item) {
             $this->invoices_model->add_invoice_item(array(
                 "invoiceid" => $invoiceid,
+                "invoice_item_db_id" => $item['invoice_item_db_id'],
                 "name" => $item['name'],
                 "quantity" => $item['quantity'],
                 "amount" => $item['amount'],
@@ -418,6 +422,7 @@ class Invoices extends CI_Controller {
 
             if ($item['save']) {
                 $this->invoices_model->add_invoice_item_db(array(
+                    "class_id" => 0,
                     "name" => $item['name'],
                     "description" => $item['desc'],
                     "price" => $item['amount'],
@@ -577,7 +582,7 @@ class Invoices extends CI_Controller {
         $invoice = $invoice->row();
 
         $items = $this->invoices_model->get_invoice_items($id);
-        
+
         $this->template->loadExternal(
                 '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.min.css" />
 		<script src="' . base_url() . 'scripts/libraries/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>
@@ -731,6 +736,7 @@ class Invoices extends CI_Controller {
         $count = 0;
         $invoice_items = array();
         for ($i = 1; $i <= $items; $i++) {
+            $invoice_item_db_id = intval($this->input->post("invoice_item_db_id_" . $i));
             $quantity = floatval($this->input->post("item_quantity_" . $i));
             if ($quantity < 0)
                 $this->template->error(lang("error_128"));
@@ -746,6 +752,7 @@ class Invoices extends CI_Controller {
             if (!empty($name)) {
                 $count++;
                 $invoice_items[] = array(
+                    "invoice_item_db_id" => $invoice_item_db_id,
                     "name" => $name,
                     "desc" => $desc,
                     "amount" => $amount,
@@ -818,6 +825,7 @@ class Invoices extends CI_Controller {
         foreach ($invoice_items as $item) {
             $this->invoices_model->add_invoice_item(array(
                 "invoiceid" => $invoiceid,
+                "invoice_item_db_id" => $item['invoice_item_db_id'],
                 "name" => $item['name'],
                 "quantity" => $item['quantity'],
                 "amount" => $item['amount'],
@@ -827,6 +835,7 @@ class Invoices extends CI_Controller {
 
             if ($item['save']) {
                 $this->invoices_model->add_invoice_item_db(array(
+                    "class_id" => 0,
                     "name" => $item['name'],
                     "description" => $item['desc'],
                     "price" => $item['amount'],
@@ -1319,8 +1328,8 @@ class Invoices extends CI_Controller {
         }
         echo json_encode($this->datatables->process());
     }
-    
-    public function payed_students(){
+
+    public function payed_students() {
         if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
@@ -1330,7 +1339,7 @@ class Invoices extends CI_Controller {
                 )
         );
     }
-    
+
     public function payed_students_page($status) {
         if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
@@ -1361,21 +1370,40 @@ class Invoices extends CI_Controller {
         $payed_students = $this->invoices_model->get_payed_students($this->datatables, intval($status));
 
         foreach ($payed_students->result() as $r) {
+            $options = '';
+            if (intval($status) != 1) {
+                $options .= '<a href="' . site_url("invoices/view/" . $r->invoice_id . "/" . $r->hash) . '" class="btn btn-primary btn-xs">' . lang("ctn_552") . '</a> <a href="' . site_url("invoices/get_pdf/" . $r->invoice_id . "/" . $r->hash) . '" class="btn btn-info btn-xs" title="' . lang("ctn_828") . '" data-toggle="tooltip" data-placement="bottom"><span class="glyphicon glyphicon-save"></span></a> ';
+                $options .= '<a href="' . site_url("invoices/edit_invoice/" . $r->invoice_id) . '" class="btn btn-warning btn-xs" title="' . lang("ctn_55") . '"  data-toggle="tooltip" data-placement="bottom"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("invoices/delete_invoice/" . $r->invoice_id . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm(\'' . lang("ctn_317") . '\')" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
+            }
+            
+            $week_days = "";
+            switch (trim($r->class_days)) {
+                case 'odd':
+                    $week_days = "1,3,5";
+                    break;
+                case 'even':
+                    $week_days = "2,4,6";
+                    break;
+                case 'everyday':
+                    $week_days = "1-6";
+                    break;
+            }
 
             $user = $this->common->get_user_display(array("username" => $r->client_username, "avatar" => $r->client_avatar, "online_timestamp" => $r->client_online_timestamp, "first_name" => $r->client_first_name, "last_name" => $r->client_last_name));
             $this->datatables->data[] = array(
                 $user,
                 $r->mobile_phone,
-                $r->email,
-                $r->class_name,
-                $r->branch_name,
-                $r->total . " " . $r->symbol
+                //$r->email,
+                $r->cat_name . "/" . $r->class_name . "/" . $week_days . " (" . substr($r->start_hour, 0, 5) . ")",
+                $r->branch_name . "/" . $r->r_code,
+                $r->total . " " . $r->symbol,
+                $options
             );
         }
         echo json_encode($this->datatables->process());
     }
-    
-    public function not_payed_students(){
+
+    public function not_payed_students() {
         if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
@@ -1385,8 +1413,8 @@ class Invoices extends CI_Controller {
                 )
         );
     }
-    
-    public function partially_payed_students(){
+
+    public function partially_payed_students() {
         if (!$this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
@@ -1691,6 +1719,7 @@ class Invoices extends CI_Controller {
         $item = $item->row();
 
         echo json_encode(array(
+            "item_id" => $item->ID,
             "item_name" => $item->name,
             "item_desc" => $item->description,
             "item_price" => $item->price,
@@ -1899,8 +1928,15 @@ class Invoices extends CI_Controller {
 
         $this->template->loadData("activeLink", array("invoice" => array("items" => 1)));
 
-        $this->template->loadContent("invoices/items.php", array(
-                )
+        $date = date("Y-m-d");
+
+        $class_ids = $this->invoices_model->get_invoice_items_db_classids();
+        foreach($class_ids->result() as $class_id){
+            $ids[] = $class_id->class_id;
+        }
+        $classes = $this->classes_model->get_all_active_classes_not_in_items($date, $ids);
+
+        $this->template->loadContent("invoices/items.php", ["classes" => $classes]
         );
     }
 
@@ -1951,8 +1987,33 @@ class Invoices extends CI_Controller {
         $price = floatval($this->input->post("price"));
         $quantity = floatval($this->input->post("quantity"));
 
+        $class_id = intval($this->input->post("class_id"));
+        $is_class = intval($this->input->post("is_class"));
+
+
+        $class = $this->classes_model->get_class($class_id);
+        if ($is_class === 1 && $class->num_rows() == 0) {
+            $this->template->error(lang("error_92"));
+        }
+
+        if ($is_class === 1) {
+            $class = $class->row();
+            if ($class->class_days === 'odd') {
+                $day = '1,3,5';
+            } elseif ($class->class_days === 'even') {
+                $day = '2,4,6';
+            } else {
+                $day = '1-6';
+            }
+            $name = $class->name . " / " . $day . " / " . substr($class->start_hour, 0, 5) . " - " . substr($class->end_hour, 0, 5);
+        }
+
         if (empty($name)) {
             $this->template->error(lang("error_195"));
+        }
+        
+        if (empty($price)) {
+            $this->template->error(lang("error_236"));
         }
 
         $this->invoices_model->add_invoice_item_db(array(
@@ -1960,6 +2021,7 @@ class Invoices extends CI_Controller {
             "description" => $desc,
             "price" => $price,
             "quantity" => $quantity,
+            "class_id" => $class_id
                 )
         );
 
@@ -1974,12 +2036,17 @@ class Invoices extends CI_Controller {
             $this->template->error(lang("error_196"));
         }
         $item = $item->row();
+        
+        $date = date("Y-m-d");
+
+        $classes = $this->classes_model->get_all_active_classes($date);
 
         $this->template->loadData("activeLink", array("invoice" => array("items" => 1)));
 
 
         $this->template->loadContent("invoices/edit_item.php", array(
-            "item" => $item
+            "item" => $item,
+            "classes" =>$classes
                 )
         );
     }
@@ -1997,6 +2064,8 @@ class Invoices extends CI_Controller {
         $price = floatval($this->input->post("price"));
         $quantity = floatval($this->input->post("quantity"));
 
+        $class_id = intval($this->input->post("class_id"));
+
         if (empty($name)) {
             $this->template->error(lang("error_133"));
         }
@@ -2006,6 +2075,7 @@ class Invoices extends CI_Controller {
             "description" => $desc,
             "price" => $price,
             "quantity" => $quantity,
+            "class_id" => $class_id
                 )
         );
 

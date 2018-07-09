@@ -127,6 +127,7 @@
                     <label for="p-in" class="col-md-4 label-heading"><?php echo lang("ctn_537") ?></label>
                     <div class="col-md-8">
                         <select name="room" class="form-control" id="event_room">
+                            <option value=""><?php echo lang('ctn_1001'); ?></option>
                             <?php foreach ($rooms->result() as $r) : ?>
                                 <option value="<?php echo $r->code ?>"><?php echo $r->code . ' - ' . $r->branch_name ;?></option>
                             <?php endforeach; ?>

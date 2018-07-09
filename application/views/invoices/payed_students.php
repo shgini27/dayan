@@ -15,7 +15,7 @@
           <li><a href="#" onclick="change_search(0)"><span class="glyphicon glyphicon-ok" id="search-like"></span> <?php echo lang("ctn_337") ?></a></li>
           <li><a href="#" onclick="change_search(1)"><span class="glyphicon glyphicon-ok no-display" id="search-exact"></span> <?php echo lang("ctn_338") ?></a></li>
           <li><a href="#" onclick="change_search(2)"><span class="glyphicon glyphicon-ok no-display" id="name-exact"></span> <?php echo lang("ctn_81") ?></a></li>
-          <li><a href="#" onclick="change_search(4)"><span class="glyphicon glyphicon-ok no-display" id="paypal-exact"></span> <?php echo lang("ctn_24") ?></a></li>
+          <li><a href="#" onclick="change_search(4)"><span class="glyphicon glyphicon-ok no-display" id="paypal-exact"></span> <?php echo lang("ctn_81") ?></a></li>
           <li><a href="#" onclick="change_search(5)"><span class="glyphicon glyphicon-ok no-display" id="address-exact"></span> <?php echo lang("ctn_1021") ?></a></li>
         </ul>
       </div><!-- /btn-group -->
@@ -31,10 +31,11 @@
 <tr class="table-header">
     <td><?php echo lang("ctn_339") ?></td>
     <td><?php echo lang("ctn_1021") ?></td>
-    <td><?php echo lang("ctn_24") ?></td>
+    <!-- <td><?php echo lang("ctn_24") ?></td> -->
     <td><?php echo lang("ctn_473") ?></td>
     <td><?php echo lang("ctn_995") ?></td>
     <td><?php echo lang("ctn_292") ?></td>
+    <td><?php echo lang("ctn_52") ?></td>
 </tr>
 </thead>
 <tbody>
@@ -69,10 +70,11 @@ $(document).ready(function() {
         "columns": [
         null,
         null,
-        null,
+        //null,
         null,
         { "orderable" : false },
-        null
+        null,
+        { "orderable" : false }
     ],
         "ajax": {
             url : "<?php echo site_url("invoices/payed_students_page/2") ?>",

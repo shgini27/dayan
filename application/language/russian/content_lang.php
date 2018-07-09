@@ -1098,9 +1098,4 @@ $lang['ctn_1031'] = 'Not Payed Students';
 $lang['ctn_1032'] = 'Partially Payed Students';
 $lang['ctn_1033'] = 'Total Weeks';
 $lang['ctn_1034'] = 'Weeks';
-$lang['ctn_1035'] = '----------- Please Select Class -----------';
-$lang['ctn_1036'] = 'Add to black list';
-$lang['ctn_1037'] = 'Are you sure to add to black list?';
-$lang['ctn_1038'] = 'Are you sure to remove from black list?';
-$lang['ctn_1039'] = 'Remove from black list';
 

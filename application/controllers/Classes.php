@@ -68,18 +68,24 @@ class Classes extends CI_Controller {
         // Set page ordering options that can be used
         $this->datatables->ordering(
                 array(
-                    0 => array(
+                    1 => array(
                         "classes.name" => 0
                     ),
-                    1 => array(
+                    2 => array(
                         "subjects.name" => 0
                     ),
-                    2 => array(
+                    3 => array(
+                        "classes.weeks" => 0
+                    ),
+                    4 => array(
+                        "classes.hrs" => 0
+                    ),
+                    5 => array(
                         "class_categories.name" => 0
                     ),
-                    3 => array(
-                        "classes.students" => 0
-                    )
+                    6 => array(
+                        "branch.name" => 0
+                    ),
                 )
         );
 
@@ -143,6 +149,7 @@ class Classes extends CI_Controller {
                 '<div class="text-center"><i class="glyphicon glyphicon-stop" ' . $style . '></i></div>',
                 $r->name . " / $week_days / " . substr($r->start_hour, 0, 5),
                 $r->subject_name,
+                $r->weeks,
                 $r->hrs,
                 $r->cat_name,
                 $r->branch_name,
@@ -258,6 +265,7 @@ class Classes extends CI_Controller {
         $room_id = intval($this->input->post("room_id"));
         $class_days = $this->common->nohtml($this->input->post("class_days"));
         $hrs = $this->common->nohtml($this->input->post("hrs"));
+        $weeks = $this->common->nohtml($this->input->post("weeks"));
         $start_hour = $this->common->nohtml($this->input->post("start_hour"));
         $end_hour = $this->common->nohtml($this->input->post("end_hour"));
 
@@ -296,6 +304,10 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_230"));
         }
 
+        if (intval($weeks) === 0) {
+            $this->template->error(lang("error_235"));
+        }
+
         if (!empty($start_hour)) {
             $start_hour = DateTime::createFromFormat("H:i:s", str_replace(' ', '', $start_hour) . ":00");
             $start_hour = $start_hour->format("H:i:s");
@@ -308,6 +320,10 @@ class Classes extends CI_Controller {
             $end_hour = $end_hour->format("H:i:s");
         } else {
             $this->template->error(lang("error_225"));
+        }
+
+        if (strtotime($start_hour) === strtotime($end_hour)) {
+            $this->template->error(lang("error_237"));
         }
 
         // Student count
@@ -326,38 +342,89 @@ class Classes extends CI_Controller {
             $counter++;
         }
 
-        if (trim($class_days) === 'odd') {
-            $days = array(1, 3, 5);
-            $color = '1CAAF3';
-        } elseif (trim($class_days) === 'even') {
-            $days = array(2, 4, 6);
-            $color = '26FF2F';
-        }
 
-        switch (trim($class_days)) {
-            case 'odd':
-                $days = array(1, 3, 5);
-                $color = '1CAAF3';
-                break;
-            case 'even':
-                $days = array(2, 4, 6);
-                $color = '26FF2F';
-                break;
-            case 'everyday':
-                $days = array(1, 2, 3, 4, 5, 6);
-                $color = '35FA2F';
-                break;
-        }
+        if ($class->class_days !== $class_days || $class->end_hour !== $end_hour || $class->start_hour !== $start_hour) {
 
-        if (trim($class->class_days) !== trim($class_days) || $class->start_hour !== $start_hour) {
+            $day_count = 0;
+            switch (trim($class->class_days)) {
+                case 'odd':
+                    $day_count = 3;
+                    break;
+                case 'even':
+                    $day_count = 3;
+                    break;
+                case 'everyday':
+                    $day_count = 6;
+                    break;
+            }
+
+            $diff = abs(strtotime($class->end_hour) - strtotime($class->start_hour)) / 3600;
+            $after_week = round(intval($class->hrs) / ($day_count * $diff));
+            $class_end_date = new DateTime($cat->start_date);
+
+            $jd = cal_to_jd(CAL_GREGORIAN, intval($class_end_date->format("m")), intval($class_end_date->format("d")), intval($class_end_date->format("Y")));
+            $d_of_week = jddayofweek($jd);
+
+            $min_day = 3;
+            if (intval($d_of_week) >= 3) {
+                $min_day = 2;
+            }
+            $class_end_date->add(new DateInterval('P' . (($after_week * 7) - $min_day) . 'D'));
+
+            $old_rooms = $this->classes_model->get_room($class->room_id);
+            if ($old_rooms->num_rows() == 0) {
+                $this->template->error(lang("error_223"));
+            }
+            $old_room = $old_rooms->row();
+            $old_evetns = $this->classes_model->get_room_events(date("Y-m-d") . " " . $class->start_hour, $class_end_date->format('Y-m-d') . " " . $class->end_hour, $old_room->code, true);
 
             $room_code = $room->row();
-            $this->classes_model->delete_class_lesson_events($id);
+            //new end date accourding to new inputs
+            $new_day_count = 0;
+            switch (trim($class_days)) {
+                case 'odd':
+                    $days = array(1, 3, 5);
+                    $color = '1CAAF3';
+                    $new_day_count = 3;
+                    break;
+                case 'even':
+                    $days = array(2, 4, 6);
+                    $color = '26FF2F';
+                    $new_day_count = 3;
+                    break;
+                case 'everyday':
+                    $days = array(1, 2, 3, 4, 5, 6);
+                    $color = '35FA2F';
+                    $new_day_count = 6;
+                    break;
+            }
+
+            $left_hrs = $old_evetns->num_rows() * $diff;
+            $new_diff = abs(strtotime($end_hour) - strtotime($start_hour)) / 3600;
+            $new_after_week = intval($left_hrs) / ($new_day_count * $new_diff);
+
+            if (!ctype_digit("$new_after_week")) {
+                $this->template->error(lang("error_238"));
+            }
+
+            $new_class_end_date = new DateTime(date("Y-m-d"));
+
+            $new_jd = cal_to_jd(CAL_GREGORIAN, intval($new_class_end_date->format("m")), intval($new_class_end_date->format("d")), intval($new_class_end_date->format("Y")));
+            $new_d_of_week = jddayofweek($new_jd);
+
+            $new_min_day = 3;
+            if (intval($new_d_of_week) >= 3) {
+                $new_min_day = 2;
+            }
+            if (intval($new_d_of_week) === 0) {
+                $new_min_day = 1;
+            }
+            $new_class_end_date->add(new DateInterval('P' . (($new_after_week * 7) - $new_min_day) . 'D'));
+
             foreach ($days as $day) {
-                $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
+                $dates = $this->getDateForSpecificDayBetweenDates(date("Y-m-d"), $new_class_end_date->format('Y-m-d'), $day);
 
                 foreach ($dates as $date) {
-
                     $sd = DateTime::createFromFormat('Y-m-d H:i:s', $date . ' ' . $start_hour);
                     $start_date = $sd->format('Y-m-d H:i:s');
 
@@ -366,12 +433,11 @@ class Classes extends CI_Controller {
 
                     //check if rooms are available
                     $events = $this->classes_model->get_room_events($start_date, $end_date, $room_code->code, true);
-
                     if ($events->num_rows() > 0) {
                         $this->template->error(lang("error_200") . " " . lang("ctn_1000") . ": $room_code->code ($start_date --- $end_date)");
                     }
 
-                    $this->classes_model->add_class_event(array(
+                    $new_event_data[] = [
                         "title" => $name,
                         "description" => $description,
                         "start" => $start_date,
@@ -381,10 +447,15 @@ class Classes extends CI_Controller {
                         "room" => $room_code->code,
                         "color" => $color,
                         "lesson_flag" => 1
-                            )
-                    );
+                    ];
                 }
             }
+
+            foreach ($old_evetns->result() as $evt) {
+                $this->classes_model->delete_class_event($evt->ID);
+            }
+
+            $this->classes_model->add_class_events($new_event_data);
         }
 
         // update Class
@@ -396,6 +467,7 @@ class Classes extends CI_Controller {
             "room_id" => $room_id,
             "class_days" => $class_days,
             "hrs" => $hrs,
+            "weeks" => $weeks,
             "start_hour" => $start_hour,
             "end_hour" => $end_hour,
             "subjectid" => $subjectid,
@@ -510,13 +582,15 @@ class Classes extends CI_Controller {
         $room_id = intval($this->input->post("room_id"));
         $class_days = $this->common->nohtml($this->input->post("class_days"));
         $hrs = $this->common->nohtml($this->input->post("hrs"));
+        $weeks = $this->common->nohtml($this->input->post("weeks"));
         $start_hour = $this->common->nohtml($this->input->post("start_hour"));
         $end_hour = $this->common->nohtml($this->input->post("end_hour"));
 
         $teachers = $this->input->post("teachers");
         $students = $this->input->post("students");
 
-        $groupid = intval($this->input->post("groupid"));
+        //$groupid = intval($this->input->post("groupid"));
+        $groupid = 0;
 
         $allow_signups = intval($this->input->post("allow_signups"));
         $max_students = intval($this->input->post("max_students"));
@@ -553,6 +627,10 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_230"));
         }
 
+        if (intval($weeks) === 0) {
+            $this->template->error(lang("error_235"));
+        }
+
         if (!empty($start_hour)) {
             $start_hour = DateTime::createFromFormat("H:i:s", str_replace(' ', '', $start_hour) . ":00");
             $start_hour = $start_hour->format("H:i:s");
@@ -565,6 +643,10 @@ class Classes extends CI_Controller {
             $end_hour = $end_hour->format("H:i:s");
         } else {
             $this->template->error(lang("error_225"));
+        }
+
+        if (strtotime($start_hour) === strtotime($end_hour)) {
+            $this->template->error(lang("error_237"));
         }
 
         $students_toadd = array();
@@ -630,25 +712,45 @@ class Classes extends CI_Controller {
 
         $students_toadd = array_unique($students_toadd);
 
+        $day_count = 0;
         //Add events
         switch (trim($class_days)) {
             case 'odd':
                 $days = array(1, 3, 5);
                 $color = '1CAAF3';
+                $day_count = 3;
                 break;
             case 'even':
                 $days = array(2, 4, 6);
                 $color = '26FF2F';
+                $day_count = 3;
                 break;
             case 'everyday':
                 $days = array(1, 2, 3, 4, 5, 6);
                 $color = '35FA2F';
+                $day_count = 6;
                 break;
         }
 
+        $diff = abs(strtotime($end_hour) - strtotime($start_hour)) / 3600;
+        $after_week = intval($hrs) / ($day_count * $diff);
+        if (!ctype_digit("$after_week")) {
+            $this->template->error(lang("error_238"));
+        }
+        $class_end_date = new DateTime($cat->start_date);
+
+        $jd = cal_to_jd(CAL_GREGORIAN, intval($class_end_date->format("m")), intval($class_end_date->format("d")), intval($class_end_date->format("Y")));
+        $d_of_week = jddayofweek($jd);
+
+        $min_day = 3;
+        if (intval($d_of_week) >= 3) {
+            $min_day = 2;
+        }
+        $class_end_date->add(new DateInterval('P' . (($after_week * 7) - $min_day) . 'D'));
+
         $room_code = $room->row();
         foreach ($days as $day) {
-            $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
+            $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $class_end_date->format('Y-m-d'), $day);
 
             foreach ($dates as $date) {
 
@@ -676,6 +778,7 @@ class Classes extends CI_Controller {
             "room_id" => $room_id,
             "class_days" => $class_days,
             "hrs" => $hrs,
+            "weeks" => $weeks,
             "start_hour" => $start_hour,
             "end_hour" => $end_hour,
             "subjectid" => $subjectid,
@@ -688,7 +791,7 @@ class Classes extends CI_Controller {
 
         //Add events
         foreach ($days as $day) {
-            $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $cat->end_date, $day);
+            $dates = $this->getDateForSpecificDayBetweenDates($cat->start_date, $class_end_date->format('Y-m-d'), $day);
 
             foreach ($dates as $date) {
 
@@ -2780,6 +2883,7 @@ class Classes extends CI_Controller {
                 $attend_ids[] = $attend->eventid;
             }
         }
+        log_message('error', json_encode($attend_ids));
 
         $events = $this->classes_model->get_class_events($format, $format2, $id, $attend_ids);
 
@@ -3666,14 +3770,14 @@ class Classes extends CI_Controller {
             $this->template->error(lang("error_114"));
         }
         $student = $student->row();
-        
+
         // Check user is not already a member
         $member = $this->classes_model
                 ->get_class_student_user($student->ID, $class->ID);
         if ($member->num_rows() > 0) {
             $this->template->error(lang("error_115"));
         }
-        
+
         // Add
         $branch = $this->classes_model->get_branch($class->branch_id)->row();
         $branch_code = $branch->code;

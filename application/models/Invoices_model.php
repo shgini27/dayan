@@ -52,15 +52,19 @@ class Invoices_Model extends CI_Model {
 
     public function get_payed_students($datatable, $status) {
         /*
-         * SELECT classes.name, branch.name, invoices.total, users.email, 
-         * users.first_name, users.last_name, users.username, users.avatar, 
-         * users.mobile_phone FROM class_students left join users on 
-         * (users.ID = class_students.userid) left join classes on 
-         * (classes.ID = class_students.classid) left join invoices on 
-         * (invoices.clientid = class_students.userid) left join branch on 
-         * (branch.branch_id = classes.branch_id) left join class_categories on 
-         * (class_categories.ID = classes.categoryid) 
-         * where class_students.teacher_flag = 0 and class_categories.end_date >= NOW() and invoices.status = 2
+         SELECT `classes`.`name` as `class_name`, `branch`.`name` as `branch_name`, `invoices`.`total`, `users`.`email`, `currencies`.`symbol`, `users`.`first_name` as `client_first_name`, `users`.`last_name` as `client_last_name`, `users`.`username` as `client_username`, `users`.`avatar` as `client_avatar`, `users`.`online_timestamp` as `client_online_timestamp`, `users`.`mobile_phone`, `invoices`.`ID` as `invoice_id`, `invoices`.`hash`
+        FROM `class_students`
+        INNER JOIN `users` ON `users`.`ID` = `class_students`.`userid`
+        INNER JOIN `classes` ON `classes`.`ID` = `class_students`.`classid`
+        INNER JOIN `invoices` ON `invoices`.`clientid` = `class_students`.`userid`
+        INNER JOIN `branch` ON `branch`.`branch_id` = `classes`.`branch_id`
+        INNER JOIN `class_categories` ON `class_categories`.`ID` = `classes`.`categoryid`
+        INNER JOIN `currencies` ON `currencies`.`ID` = `invoices`.`currencyid`
+        INNER JOIN `invoice_item_db` ON `invoice_item_db`.`class_id` = `classes`.`ID`
+        INNER JOIN `invoice_items` ON `invoice_items`.`invoice_item_db_id` = `invoice_item_db`.`ID`
+        WHERE `class_students`.`teacher_flag` = 0
+        AND `invoices`.`status` = 2
+        AND `class_categories`.`end_date` >= '2018-07-07'
          */
 
         $now = date("Y-m-d");
@@ -75,16 +79,20 @@ class Invoices_Model extends CI_Model {
 
         return $this->db->select("classes.name as class_name, branch.name as branch_name, invoices.total, users.email, currencies.symbol,
                             users.first_name as client_first_name, users.last_name as client_last_name, users.username as client_username, 
-                            users.avatar as client_avatar, users.online_timestamp as client_online_timestamp, users.mobile_phone")
+                            users.avatar as client_avatar, users.online_timestamp as client_online_timestamp, users.mobile_phone, room.code as r_code,
+                            invoices.ID as invoice_id, invoices.hash, class_categories.name as cat_name, classes.class_days, classes.start_hour")
                         ->where("class_students.teacher_flag", 0)
                         ->where("invoices.status", intval($status))
                         ->where("class_categories.end_date >=", $now)
-                        ->join("users", "users.ID = class_students.userid", "LEFT")
-                        ->join("classes", "classes.ID = class_students.classid", "LEFT")
-                        ->join("invoices", "invoices.clientid = class_students.userid", "LEFT")
-                        ->join("branch", "branch.branch_id = classes.branch_id", "LEFT")
-                        ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
-                        ->join("currencies", "currencies.ID = invoices.currencyid", "LEFT")
+                        ->join("users", "users.ID = class_students.userid", "INNER")
+                        ->join("classes", "classes.ID = class_students.classid", "INNER")
+                        ->join("invoices", "invoices.clientid = class_students.userid", "INNER")
+                        ->join("branch", "branch.branch_id = classes.branch_id", "INNER")
+                        ->join("room", "room.room_id = classes.room_id", "INNER")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "INNER")
+                        ->join("currencies", "currencies.ID = invoices.currencyid", "INNER")
+                        ->join("invoice_item_db", "invoice_item_db.class_id = classes.ID", "INNER")
+                        ->join("invoice_items", "invoice_items.invoice_item_db_id = invoice_item_db.ID", "INNER")
                         ->limit($datatable->length, $datatable->start)
                         ->get("class_students");
     }
@@ -356,6 +364,10 @@ class Invoices_Model extends CI_Model {
 
     public function get_invoice_items_db() {
         return $this->db->get("invoice_item_db");
+    }
+    
+    public function get_invoice_items_db_classids() {
+        return $this->db->select("invoice_item_db.class_id")->where("class_id !=", 0)->get("invoice_item_db");
     }
 
     public function get_invoice_item_db($id) {
