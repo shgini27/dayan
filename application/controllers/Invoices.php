@@ -1363,11 +1363,23 @@ class Invoices extends CI_Controller {
                 )
         );
 
-        $this->datatables->set_total_rows(
-                $this->invoices_model
-                        ->get_total_payed_students(intval($status))
-        );
-        $payed_students = $this->invoices_model->get_payed_students($this->datatables, intval($status));
+
+        if (intval($status) === 1) {
+            $payed_partially_payed_students_ids = $this->invoices_model->get_payed_and_partially_payed_students_ids();
+            //log_message('error', json_encode($payed_partially_payed_students_ids->result()));
+            $ids[] = 0;
+            foreach ($payed_partially_payed_students_ids->result() as $id) {
+                $ids[] = $id->ID;
+            }
+
+            $payed_students = $this->invoices_model->get_not_payed_students($this->datatables, $ids);
+            $total_row = $this->invoices_model->get_total_not_payed_students($ids);
+        } else {
+            $total_row = $this->invoices_model->get_total_payed_students(intval($status));
+            $payed_students = $this->invoices_model->get_payed_students($this->datatables, intval($status));
+        }
+        
+        $this->datatables->set_total_rows($total_row);
 
         foreach ($payed_students->result() as $r) {
             $options = '';
@@ -1375,7 +1387,7 @@ class Invoices extends CI_Controller {
                 $options .= '<a href="' . site_url("invoices/view/" . $r->invoice_id . "/" . $r->hash) . '" class="btn btn-primary btn-xs">' . lang("ctn_552") . '</a> <a href="' . site_url("invoices/get_pdf/" . $r->invoice_id . "/" . $r->hash) . '" class="btn btn-info btn-xs" title="' . lang("ctn_828") . '" data-toggle="tooltip" data-placement="bottom"><span class="glyphicon glyphicon-save"></span></a> ';
                 $options .= '<a href="' . site_url("invoices/edit_invoice/" . $r->invoice_id) . '" class="btn btn-warning btn-xs" title="' . lang("ctn_55") . '"  data-toggle="tooltip" data-placement="bottom"><span class="glyphicon glyphicon-cog"></span></a> <a href="' . site_url("invoices/delete_invoice/" . $r->invoice_id . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs"  data-toggle="tooltip" data-placement="bottom" onclick="return confirm(\'' . lang("ctn_317") . '\')" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
             }
-            
+
             $week_days = "";
             switch (trim($r->class_days)) {
                 case 'odd':
@@ -1931,7 +1943,8 @@ class Invoices extends CI_Controller {
         $date = date("Y-m-d");
 
         $class_ids = $this->invoices_model->get_invoice_items_db_classids();
-        foreach($class_ids->result() as $class_id){
+        $ids[] = 0;
+        foreach ($class_ids->result() as $class_id) {
             $ids[] = $class_id->class_id;
         }
         $classes = $this->classes_model->get_all_active_classes_not_in_items($date, $ids);
@@ -1995,6 +2008,13 @@ class Invoices extends CI_Controller {
         if ($is_class === 1 && $class->num_rows() == 0) {
             $this->template->error(lang("error_92"));
         }
+        
+        $category = $this->classes_model->get_category($class->cattegoryid);
+        $category = $category->row();
+        $branch = $this->classes_model->get_branch($class->branch_id);
+        $branch = $branch->row();
+        $room = $this->classes_model->get_room($class->room_id);
+        $room = $room->row();
 
         if ($is_class === 1) {
             $class = $class->row();
@@ -2005,13 +2025,13 @@ class Invoices extends CI_Controller {
             } else {
                 $day = '1-6';
             }
-            $name = $class->name . " / " . $day . " / " . substr($class->start_hour, 0, 5) . " - " . substr($class->end_hour, 0, 5);
+            $name = $category->name . "/" . $branch->name . " " . $room->code . "/" . $class->name . "/" . $day . "/" . substr($class->start_hour, 0, 5) . "-" . substr($class->end_hour, 0, 5);
         }
 
         if (empty($name)) {
             $this->template->error(lang("error_195"));
         }
-        
+
         if (empty($price)) {
             $this->template->error(lang("error_236"));
         }
@@ -2036,7 +2056,7 @@ class Invoices extends CI_Controller {
             $this->template->error(lang("error_196"));
         }
         $item = $item->row();
-        
+
         $date = date("Y-m-d");
 
         $classes = $this->classes_model->get_all_active_classes($date);
@@ -2046,7 +2066,7 @@ class Invoices extends CI_Controller {
 
         $this->template->loadContent("invoices/edit_item.php", array(
             "item" => $item,
-            "classes" =>$classes
+            "classes" => $classes
                 )
         );
     }

@@ -34,6 +34,8 @@
 	<li>Remove all students from all classes <input type="checkbox" name="remove_students" value="1" checked></li>
 	<li>Clear All Timetable Entries <input type="checkbox" name="remove_timetable" value="1" checked></li>
 	<li>Clear All Class Announcements <input type="checkbox" name="remove_class_announcements" value="1" checked></li>
+        <li>Clear All Invoices <input type="checkbox" name="remove_invoices" value="1" checked></li>
+        <li>Clear All Invoices Items DB<input type="checkbox" name="remove_invoice_items_db" value="1" checked></li>
 	<li>Remove Classes <input type="checkbox" name="remove_class" value="1"></li>
 	<li>Remove Subjects <input type="checkbox" name="remove_subjects" value="1"></li>
 </ul>

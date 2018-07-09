@@ -246,4 +246,4 @@ $lang['error_235'] = "Total Weeks can not be empty!";
 $lang['error_236'] = "Price can not be empty!";
 $lang['error_237'] = "Start time and End Time can not be equal!Please change one of them";
 $lang['error_238'] = "Total academic hours can not be divided equally for all days! Try ro choose another start and end hours!";
-$lang['error_239'] = "";
+$lang['error_239'] = "Select at least one user role!";

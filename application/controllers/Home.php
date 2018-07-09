@@ -116,7 +116,22 @@ class Home extends CI_Controller {
 
         $online_count = $this->user_model->get_online_count();
 
-        $news = $this->home_model->get_news(4);
+        $news = $this->home_model->get_news(8);
+        $new_news = [];
+        foreach($news->result() as $r){
+            $rls = json_decode($r->roles);
+            if($rls){
+                if(in_array($this->user->info->user_role, $rls)){
+                    $new_news[] = [
+                        "username" => $r->username,
+                        "avatar" => $r->avatar,
+                        "online_timestamp" => $r->online_timestamp,
+                        "ID" => $r->ID,
+                        "title" => $r->title
+                    ];
+                }
+            }
+        }
         $assignments = $this->home_model->get_user_assignments($this->user->info->ID, 4);
 
         $classes = $this->classes_model->get_user_classes($this->user->info->ID);
@@ -165,7 +180,8 @@ class Home extends CI_Controller {
             "total_revenue" => $total_revenue,
             "total_expense" => $total_expense,
             "profit" => $profit,
-            "news" => $news,
+            //"news" => $news,
+            "news" => $new_news,
             "assignments" => $assignments,
             "classes_events" => $classes_events,
             "invoices" => $invoices,

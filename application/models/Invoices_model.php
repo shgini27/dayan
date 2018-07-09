@@ -50,6 +50,70 @@ class Invoices_Model extends CI_Model {
         return $this->db->where("userid", 0)->get("paying_accounts");
     }
 
+    public function get_payed_and_partially_payed_students_ids() {
+        $now = date("Y-m-d");
+        return $this->db->select("class_students.ID")
+                        ->where("class_students.teacher_flag", 0)
+                        ->where_in("invoices.status", [2, 3, 4])
+                        ->where("class_categories.end_date >=", $now)
+                        ->join("users", "users.ID = class_students.userid", "INNER")
+                        ->join("classes", "classes.ID = class_students.classid", "INNER")
+                        ->join("invoices", "invoices.clientid = class_students.userid", "INNER")
+                        ->join("branch", "branch.branch_id = classes.branch_id", "INNER")
+                        ->join("room", "room.room_id = classes.room_id", "INNER")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "INNER")
+                        ->join("currencies", "currencies.ID = invoices.currencyid", "INNER")
+                        ->join("invoice_item_db", "invoice_item_db.class_id = classes.ID", "INNER")
+                        ->join("invoice_items", "invoice_items.invoice_item_db_id = invoice_item_db.ID", "INNER")
+                        ->get("class_students");
+    }
+    
+    public function get_not_payed_students($datatable, $ids) {
+        /* 
+
+         *SELECT `classes`.`name` as `class_name`, `branch`.`name` as `branch_name`, 
+         * `users`.`email`, `users`.`first_name` as `client_first_name`, `users`.`last_name` as 
+         * `client_last_name`, `users`.`username` as `client_username`, `users`.`avatar` as 
+         * `client_avatar`, `users`.`online_timestamp` as `client_online_timestamp`, `users`.`mobile_phone`, 
+         * `room`.`code` as `r_code`, `class_categories`.`name` as `cat_name`, `classes`.`class_days`, 
+         * `classes`.`start_hour`, `invoice_item_db`.`price` as `total`
+        FROM `class_students`
+        LEFT JOIN `users` ON `users`.`ID` = `class_students`.`userid`
+        LEFT JOIN `classes` ON `classes`.`ID` = `class_students`.`classid`
+        LEFT JOIN `branch` ON `branch`.`branch_id` = `classes`.`branch_id`
+        LEFT JOIN `room` ON `room`.`room_id` = `classes`.`room_id`
+        LEFT JOIN `class_categories` ON `class_categories`.`ID` = `classes`.`categoryid`
+        LEFT JOIN `invoice_item_db` ON `invoice_item_db`.`class_id` = `classes`.`ID`
+        WHERE `class_students`.`teacher_flag` = 0
+        AND `class_students`.`ID` NOT IN(0)
+        AND `class_categories`.`end_date` >= '2018-07-09'         */
+        $now = date("Y-m-d");
+        $datatable->db_order();
+
+        $datatable->db_search(array(
+            "users.username",
+            "users.first_name",
+            "users.mobile_phone"
+                )
+        );
+
+        return $this->db->select("classes.name as class_name, branch.name as branch_name, users.email, currencies.symbol,
+                            users.first_name as client_first_name, users.last_name as client_last_name, users.username as client_username, 
+                            users.avatar as client_avatar, users.online_timestamp as client_online_timestamp, users.mobile_phone, room.code as r_code,
+                            class_categories.name as cat_name, classes.class_days, classes.start_hour, invoice_item_db.price as total, currencies.symbol")
+                        ->where("class_students.teacher_flag", 0)
+                        ->where_not_in("class_students.ID", $ids)
+                        ->where("class_categories.end_date >=", $now)
+                        ->join("users", "users.ID = class_students.userid", "LEFT")
+                        ->join("classes", "classes.ID = class_students.classid", "LEFT")
+                        ->join("branch", "branch.branch_id = classes.branch_id", "LEFT")
+                        ->join("room", "room.room_id = classes.room_id", "LEFT")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
+                        ->join("invoice_item_db", "invoice_item_db.class_id = classes.ID", "LEFT")
+                        ->join("currencies", "currencies.ID = 4", "LEFT")
+                        ->limit($datatable->length, $datatable->start)
+                        ->get("class_students");
+    }
     public function get_payed_students($datatable, $status) {
         /*
          SELECT `classes`.`name` as `class_name`, `branch`.`name` as `branch_name`, `invoices`.`total`, `users`.`email`, `currencies`.`symbol`, `users`.`first_name` as `client_first_name`, `users`.`last_name` as `client_last_name`, `users`.`username` as `client_username`, `users`.`avatar` as `client_avatar`, `users`.`online_timestamp` as `client_online_timestamp`, `users`.`mobile_phone`, `invoices`.`ID` as `invoice_id`, `invoices`.`hash`
@@ -82,7 +146,7 @@ class Invoices_Model extends CI_Model {
                             users.avatar as client_avatar, users.online_timestamp as client_online_timestamp, users.mobile_phone, room.code as r_code,
                             invoices.ID as invoice_id, invoices.hash, class_categories.name as cat_name, classes.class_days, classes.start_hour")
                         ->where("class_students.teacher_flag", 0)
-                        ->where("invoices.status", intval($status))
+                        ->where("invoices.status", $status)
                         ->where("class_categories.end_date >=", $now)
                         ->join("users", "users.ID = class_students.userid", "INNER")
                         ->join("classes", "classes.ID = class_students.classid", "INNER")
@@ -97,10 +161,29 @@ class Invoices_Model extends CI_Model {
                         ->get("class_students");
     }
     
+    public function get_total_not_payed_students($ids) {
+        $now = date("Y-m-d");
+        $s = $this->db->select("COUNT(*) as num")
+                        ->where("class_students.teacher_flag", 0)
+                        ->where_not_in("class_students.ID", $ids)
+                        ->where("class_categories.end_date >=", $now)
+                        ->join("users", "users.ID = class_students.userid", "LEFT")
+                        ->join("classes", "classes.ID = class_students.classid", "LEFT")
+                        ->join("branch", "branch.branch_id = classes.branch_id", "LEFT")
+                        ->join("room", "room.room_id = classes.room_id", "LEFT")
+                        ->join("class_categories", "class_categories.ID = classes.categoryid", "LEFT")
+                        ->join("invoice_item_db", "invoice_item_db.class_id = classes.ID", "LEFT")
+                        ->get("class_students");
+        $r = $s->row();
+        if (isset($r->num))
+            return $r->num;
+        return 0;
+    }
+    
     public function get_total_payed_students($status) {
         $now = date("Y-m-d");
         $s = $this->db->where("class_students.teacher_flag", 0)
-                        ->where("invoices.status", intval($status))
+                        ->where("invoices.status", $status)
                         ->where("class_categories.end_date >=", $now)
                         ->join("users", "users.ID = class_students.userid", "LEFT")
                         ->join("classes", "classes.ID = class_students.classid", "LEFT")

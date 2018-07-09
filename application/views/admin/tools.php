@@ -8,10 +8,10 @@
 <ol class="breadcrumb">
   <li><a href="<?php echo site_url() ?>"><?php echo lang("ctn_2") ?></a></li>
   <li><a href="<?php echo site_url("admin") ?>"><?php echo lang("ctn_1") ?></a></li>
-  <li class="active"><?php echo lang("ctn_1192") ?></li>
+  <li class="active"><?php echo lang("ctn_945") ?></li>
 </ol>
 
-<p><?php echo lang("ctn_1197") ?></p>
+<p><?php echo lang("ctn_945") ?></p>
 
 <hr>
 

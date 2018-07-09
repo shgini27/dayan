@@ -37,7 +37,7 @@ class Home_Model extends CI_Model
 		return $this->db
     		->select("users.ID as userid, users.username, users.avatar,
     			users.online_timestamp, users.first_name, users.last_name,
-    			announcements.title, announcements.timestamp, announcements.ID")
+    			announcements.title, announcements.timestamp, announcements.ID, announcements.roles")
     		->join("users", "users.ID = announcements.userid")
     		->limit($limit)
     		->order_by("announcements.ID", "DESC")

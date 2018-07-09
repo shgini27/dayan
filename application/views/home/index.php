@@ -172,9 +172,12 @@
 
 
                         <table class="table">
-                            <?php foreach ($news->result() as $r) : ?>
-                                <tr><td width="30"><?php echo $this->common->get_user_display(array("username" => $r->username, "avatar" => $r->avatar, "online_timestamp" => $r->online_timestamp)) ?></td><td><p class="small-text"><a href="<?php echo site_url("announcements/view/" . $r->ID) ?>"><?php echo $r->title ?></a></p>
-                                    </td></tr>
+                            <?php foreach ($news as $r) : ?>
+                                <tr>
+                                    <td width="30"><?php echo $this->common->get_user_display(array("username" => $r['username'], "avatar" => $r['avatar'], "online_timestamp" => $r['online_timestamp'])) ?></td>
+                                    <td><p class="small-text"><a href="<?php echo site_url("announcements/view/" . $r['ID']) ?>"><?php echo $r['title'] ?></a></p>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </table>
 

@@ -71,6 +71,15 @@ class Admin extends CI_Controller
 				$this->db->truncate("class_announcement_users");
 				$debug .= "Class Announcement cleared! <br />";
 			}
+                        if($_POST['remove_invoices']) {
+				$this->db->truncate("invoices");
+				$this->db->truncate("invoice_items");
+				$debug .= "Invoices cleared! <br />";
+			}
+                        if($_POST['remove_invoice_items_db']) {
+				$this->db->truncate("invoice_item_db");
+				$debug .= "Invoice Items cleared! <br />";
+			}
 			if($_POST['remove_class']) {
 				$this->db->truncate("classes");
 				$this->db->truncate("class_books");

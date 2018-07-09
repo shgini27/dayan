@@ -559,12 +559,11 @@ class Students extends CI_Controller {
         );
         $users = $this->students_model->get_dropped_students($this->datatables);
 
-
         foreach ($users->result() as $r) {
 
             $options = '<a href="' . site_url("students/view/" . $r->ID) . '" class="btn btn-primary btn-xs">' . lang("ctn_552") . '</a>';
             if ($this->common->has_permissions(array("admin", "student_manager"), $this->user)) {
-                $options .= ' <a href="' . site_url("students/delete_dropped_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
+                $options .= ' <a href="' . site_url("students/delete_dropped_student/" . $r->dropped_student_id . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
             }
 
 

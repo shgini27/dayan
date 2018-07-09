@@ -253,8 +253,8 @@ class Students_Model extends CI_Model {
      */
     public function get_dropped_students() {
         return $this->db
-                        ->select("users.ID, users.username, users.email, users.online_timestamp,
-                                users.avatar, users.first_name, users.last_name, 
+                        ->select("dropped_student.dropped_student_id, users.username, users.email, users.online_timestamp,
+                                users.avatar, users.first_name, users.last_name, users.ID,
                                 classes.name as class_name, dropped_student.agreement_number")
                         ->join("users", "users.ID = dropped_student.user_id", "LEFT")
                         ->join("classes", "classes.ID = dropped_student.class_id", "LEFT")

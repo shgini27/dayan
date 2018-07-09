@@ -35,8 +35,9 @@ class Announcements extends CI_Controller
 		$this->template->loadData("activeLink", 
 			array("announcement" => array("general" => 1)));
 
-		$this->template->loadContent("announcement/index.php", array(
-			)
+                $user_roles = $this->user_model->get_user_roles();
+                
+		$this->template->loadContent("announcement/index.php", ["user_roles" => $user_roles]
 		);
 	}
 
@@ -97,15 +98,23 @@ class Announcements extends CI_Controller
 		$announcement = $this->lib_filter->go($this->input->post("announcement"));
 		$notify = intval($this->input->post("notify"));
 
+                $user_roles = $this->input->post("roles");
+                
 		if(empty($title)) {
 			$this->template->error(lang("error_85"));
 		}
 
+                if(empty($user_roles)) {
+			$this->template->error(lang("error_239"));
+		}
+                $roles = json_encode($user_roles);
+                
 		$id = $this->announcement_model->add(array(
 			"title" => $title,
 			"announcement" => $announcement,
 			"userid" => $this->user->info->ID,
-			"timestamp" => time()
+			"timestamp" => time(),
+                        "roles" => $roles
 			)
 		);
 
@@ -162,12 +171,15 @@ class Announcements extends CI_Controller
 			$this->template->error(lang("error_86"));
 		}
 		$announcement = $announcement->row();
+                
+                $user_roles = $this->user_model->get_user_roles();
 
 		$this->template->loadData("activeLink", 
 			array("announcement" => array("general" => 1)));
 
 		$this->template->loadContent("announcement/edit.php", array(
-			"announcement" => $announcement
+			"announcement" => $announcement,
+                        "user_roles" => $user_roles
 			)
 		);
 	}

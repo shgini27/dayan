@@ -26,7 +26,7 @@ class Announcement_Model extends CI_Model
 			->select("users.ID as userid, users.username, users.avatar,
     			users.online_timestamp, users.first_name, users.last_name,
     			announcements.title, announcements.timestamp, announcements.ID,
-    			announcements.announcement")
+    			announcements.announcement, announcements.roles")
     		->join("users", "users.ID = announcements.userid")
 			->get("announcements");
 	}
