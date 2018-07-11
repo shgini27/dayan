@@ -21,7 +21,7 @@ class Settings
 			 login_protect, activate_account, default_user_role,
 			 secure_login, stripe_secret_key, stripe_publish_key,
 			 google_recaptcha, google_recaptcha_secret, google_recaptcha_key,
-			 logo_option, layout, student_view_groups, teacher_group_manage,
+			 logo_option, layout, front_layout, student_view_groups, teacher_group_manage,
 			 teacher_class_manage, teacher_class, date_picker_format,
 			 calendar_picker_format, reserve_books, fp_currency_symbol,
 			 cache_time, announcements_section, classes_section, subjects_section,

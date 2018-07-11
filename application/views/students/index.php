@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <?php if ($this->common->has_permissions(array("admin", "student_manager"), $this->user)) : ?>
+            <?php if ($this->common->has_permissions(array("admin", "student_manager", "reception_manager"), $this->user)) : ?>
                 <a href="<?php echo site_url("students/add_student") ?>" class="btn btn-primary btn-sm"><?php echo lang("ctn_765") ?></a>
             <?php endif; ?>
 
@@ -49,7 +49,7 @@
 
 </div>
 
-<?php if ($this->common->has_permissions(array("admin", "class_manager"), $this->user)) : ?>
+<?php if ($this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) : ?>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">

@@ -208,7 +208,7 @@ class Login extends CI_Controller
 		if(!empty($redirect)) {
 			redirect(site_url(urldecode($redirect)));
 		} else {
-			redirect(base_url());
+			redirect(site_url("home"));//base_url() . "home"
 		}
 	}
 
@@ -652,7 +652,7 @@ class Login extends CI_Controller
 		delete_cookie($config. "oauthtoken");
 		delete_cookie($config. "oauthsecret");
 		$this->session->sess_destroy();
-		redirect(base_url());
+		redirect(site_url("home"));//base_url()
 	}
 
 	public function resetpw($token,$userid) 

@@ -990,11 +990,12 @@ class Classes_Model extends CI_Model {
                         ->get("class_assignments");
     }
 
-    public function get_class_events($start, $end, $classid, $events = []) {
+    public function get_class_events($start, $end, $classid, $events = [], $lesson_flag = 1) {
         return $this->db
                         ->where("classid", $classid)
                         ->where("start >=", $start)
                         ->where("end <=", $end)
+                        ->where("lesson_flag", $lesson_flag)
                         ->where_not_in("ID", $events)
                         ->order_by("start", "asc")
                         ->get("calendar_events");

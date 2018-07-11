@@ -1103,4 +1103,7 @@ $lang['ctn_1036'] = 'Add to black list';
 $lang['ctn_1037'] = 'Are you sure to add to black list?';
 $lang['ctn_1038'] = 'Are you sure to remove from black list?';
 $lang['ctn_1039'] = 'Remove from black list';
+$lang['ctn_1040'] = 'Reseption Manager';
+$lang['ctn_1041'] = 'Can manage classes, students, subjects, files, invoices and library';
+$lang['ctn_1042'] = 'Activities';
 

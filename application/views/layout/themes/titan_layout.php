@@ -106,9 +106,9 @@
             <span class="icon-bar"></span>
           </button>
           <?php if($this->settings->info->logo_option) : ?>
-          <a class="navbar-brand-two" href="<?php echo site_url() ?>" title="<?php echo $this->settings->info->site_name ?>"><img src="<?php echo base_url() ?><?php echo $this->settings->info->upload_path_relative ?>/<?php echo $this->settings->info->site_logo ?>" width="123" height="32"></a>
+          <a class="navbar-brand-two" href="<?php echo site_url("home") ?>" title="<?php echo $this->settings->info->site_name ?>"><img src="<?php echo base_url() ?><?php echo $this->settings->info->upload_path_relative ?>/<?php echo $this->settings->info->site_logo ?>" width="123" height="32"></a>
         <?php else : ?>
-          <a class="navbar-brand" href="<?php echo site_url() ?>" title="<?php echo $this->settings->info->site_name ?>"><?php echo $this->settings->info->site_name ?></a>
+          <a class="navbar-brand" href="<?php echo site_url("home") ?>" title="<?php echo $this->settings->info->site_name ?>"><?php echo $this->settings->info->site_name ?></a>
         <?php endif; ?>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -206,7 +206,7 @@
 
     </div>
     <div id="footer" class="clearfix">
-      <span class="pull-left"><?php echo lang("ctn_170") ?> <a href="https://www.ttweb.org/">TTWeb</a> <?php echo $this->settings->info->site_name ?> V<?php echo $this->settings->version ?></span> <span class="pull-right"><a href="<?php echo site_url("home/change_language") ?>"><?php echo lang("ctn_171") ?></a></span> 
+      <span class="pull-left"><?php echo lang("ctn_170") ?> <a href="https://www.ttweb.org/">TTWeb</a> <?php echo $this->settings->info->site_name ?> V<?php echo $this->settings->version ?></span>  <span class="pull-right"><a href="<?php echo site_url("home/change_language") ?>"><?php echo lang("ctn_171") ?></a></span>
     </div>
 
     <!-- SCRIPTS -->

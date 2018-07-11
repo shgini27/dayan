@@ -46,7 +46,7 @@
                 </div>
               </li>
             <?php endif; ?>
-            <li class="<?php if(isset($activeLink['home']['general'])) echo "active" ?>"><a href="<?php echo site_url() ?>"><span class="glyphicon glyphicon-dashboard sidebar-icon sidebar-icon-orange"></span> <?php echo lang("ctn_154") ?> <span class="sr-only">(current)</span></a></li>
+            <li class="<?php if(isset($activeLink['home']['general'])) echo "active" ?>"><a href="<?php echo site_url("home") ?>"><span class="glyphicon glyphicon-dashboard sidebar-icon sidebar-icon-orange"></span> <?php echo lang("ctn_154") ?> <span class="sr-only">(current)</span></a></li>
             <?php if($this->settings->info->announcements_section) : ?>
               <li id="behaviour_sb">
                   <a data-toggle="collapse" data-parent="#announcement_sb" href="#announcement_sb_c" class="collapsed <?php if(isset($activeLink['announcement'])) echo "active" ?>" >
@@ -61,7 +61,7 @@
                 </li>
             <?php endif; ?>
             <?php if($this->settings->info->classes_section) : ?>
-             <?php if($this->common->has_permissions(array("admin", "class_manager", "class_viewer"), $this->user)) : ?>
+             <?php if($this->common->has_permissions(array("admin", "class_manager", "class_viewer", "reception_manager"), $this->user)) : ?>
             <li id="classes_sb">
                 <a data-toggle="collapse" data-parent="#classes_sb" href="#classes_sb_c" class="collapsed <?php if(isset($activeLink['classes'])) echo "active" ?>" >
                   <span class="glyphicon glyphicon-bell sidebar-icon sidebar-icon-red"></span> <?php echo lang("ctn_471") ?>
@@ -73,11 +73,12 @@
                     <li class="<?php if(isset($activeLink['classes']['your'])) echo "active" ?>"><a href="<?php echo site_url("classes/your") ?>"> <?php echo lang("ctn_625") ?></a></li>
                     <li class="<?php if(isset($activeLink['classes']['your_assignments'])) echo "active" ?>"><a href="<?php echo site_url("classes/your_assignments") ?>"> <?php echo lang("ctn_594") ?></a></li>
                     <li class="<?php if(isset($activeLink['classes']['your_timetable'])) echo "active" ?>"><a href="<?php echo site_url("classes/your_timetable") ?>"> <?php echo lang("ctn_709") ?></a></li>
-                    <?php if($this->common->has_permissions(array("admin", "class_manager"), $this->user)) : ?>
+                    <?php if($this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) : ?>
                       <li class="<?php if(isset($activeLink['classes']['cats'])) echo "active" ?>"><a href="<?php echo site_url("classes/categories") ?>"> <?php echo lang("ctn_710") ?></a></li>
-                      <li class="<?php if(isset($activeLink['classes']['branches'])) echo "active" ?>"><a href="<?php echo site_url("classes/branches") ?>"> <?php echo lang("ctn_985") ?></a></li>
+                      <li class="<?php if(isset($activeLink['classes']['branches'])) echo "active" ?>"><a href="<?php echo site_url("classes/branches") ?>"> <span class="glyphicon glyphicon-tree-conifer sidebar-icon sidebar-icon-green"></span><?php echo lang("ctn_985") ?></a></li>
                       <li class="<?php if(isset($activeLink['classes']['rooms'])) echo "active" ?>"><a href="<?php echo site_url("classes/rooms") ?>"> <?php echo lang("ctn_992") ?></a></li>
-                      <li class="<?php if(isset($activeLink['classes']['all_timetable'])) echo "active" ?>"><a href="<?php echo site_url("classes/overall_events") ?>"> <?php echo lang("ctn_1007") ?></a></li>
+                      <li class="<?php if(isset($activeLink['classes']['all_timetable'])) echo "active" ?>"><a href="<?php echo site_url("classes/overall_events") ?>"> <span class="glyphicon glyphicon-calendar sidebar-icon sidebar-icon-blue"></span><?php echo lang("ctn_1007") ?></a></li>
+                      <li class="<?php if(isset($activeLink['classes']['all_activities'])) echo "active" ?>"><a href="<?php echo site_url("classes/activities") ?>"> <span class="glyphicon glyphicon-calendar sidebar-icon sidebar-icon-red"></span><?php echo lang("ctn_1042") ?></a></li>
                     <?php endif; ?>
                   </ul>
                 </div>
@@ -85,10 +86,10 @@
             <?php endif; ?>
             <?php endif; ?>
             <?php if($this->settings->info->subjects_section) : ?>
-              <?php if($this->common->has_permissions(array("admin", "subject_manager", "subject_viewer"), $this->user)) : ?>
+              <?php if($this->common->has_permissions(array("admin", "subject_manager", "subject_viewer", "reception_manager"), $this->user)) : ?>
               <li id="subject_sb">
                   <a data-toggle="collapse" data-parent="#subject_sb" href="#subject_sb_c" class="collapsed <?php if(isset($activeLink['subject'])) echo "active" ?>" >
-                    <span class="glyphicon glyphicon-education sidebar-icon sidebar-icon-blue"></span> <?php echo lang("ctn_728") ?>
+                    <span class="glyphicon glyphicon-blackboard sidebar-icon sidebar-icon-blue"></span> <?php echo lang("ctn_728") ?>
                     <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
                   </a>
                   <div id="subject_sb_c" class="panel-collapse collapse sidebar-links-inner <?php if(isset($activeLink['subject'])) echo "in" ?>">
@@ -101,15 +102,15 @@
               <?php endif; ?>
             <?php endif; ?>
             <?php if($this->settings->info->students_section) : ?>
-              <?php if($this->common->has_permissions(array("admin", "student_group_manager", "student_group_viewer", "student_manager", "student_viewer"), $this->user)) : ?>
+              <?php if($this->common->has_permissions(array("admin", "student_group_manager", "student_group_viewer", "student_manager", "student_viewer", "reception_manager"), $this->user)) : ?>
               <li id="students_sb">
                   <a data-toggle="collapse" data-parent="#students_sb" href="#students_sb_c" class="collapsed <?php if(isset($activeLink['students'])) echo "active" ?>" >
-                    <span class="glyphicon glyphicon-blackboard sidebar-icon sidebar-icon-orange"></span> <?php echo lang("ctn_481") ?>
+                    <span class="glyphicon glyphicon-education sidebar-icon sidebar-icon-orange"></span> <?php echo lang("ctn_481") ?>
                     <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
                   </a>
                   <div id="students_sb_c" class="panel-collapse collapse sidebar-links-inner <?php if(isset($activeLink['students'])) echo "in" ?>">
                     <ul class="inner-sidebar-links">
-                        <?php if($this->common->has_permissions(array("admin", "student_manager", "student_viewer"), $this->user)) : ?>
+                        <?php if($this->common->has_permissions(array("admin", "student_manager", "student_viewer", "reception_manager"), $this->user)) : ?>
                         <li class="<?php if(isset($activeLink['students']['general'])) echo "active" ?>"><a href="<?php echo site_url("students") ?>"> <?php echo lang("ctn_713") ?></a></li>
                         <li class="<?php if(isset($activeLink['students']['dropped'])) echo "active" ?>"><a href="<?php echo site_url("students/dropped_students") ?>"> <?php echo lang("ctn_1009") ?></a></li>
                       <?php endif; ?>
@@ -125,7 +126,7 @@
               <?php endif; ?>
             <?php endif; ?>
               <?php if($this->settings->info->parent_section) : ?>
-             <?php if($this->common->has_permissions(array("admin", "parent_manager"), $this->user)) : ?>
+             <?php if($this->common->has_permissions(array("admin", "parent_manager", "reception_manager"), $this->user)) : ?>
             <li id="parent_sb">
                 <a data-toggle="collapse" data-parent="#parent_sb" href="#parent_sb_c" class="collapsed <?php if(isset($activeLink['parent'])) echo "active" ?>" >
                   <span class="glyphicon glyphicon-user sidebar-icon sidebar-icon-green"></span> <?php echo lang("ctn_862") ?>
@@ -140,7 +141,7 @@
             <?php endif; ?>
             <?php endif; ?>
             <?php if($this->settings->info->files_section) : ?>
-              <?php if($this->common->has_permissions(array("admin", "files_manager", "files_viewer"), $this->user)) : ?>
+              <?php if($this->common->has_permissions(array("admin", "files_manager", "files_viewer", "reception_manager"), $this->user)) : ?>
               <li id="classes_sb">
                   <a data-toggle="collapse" data-parent="#files_sb" href="#files_sb_c" class="collapsed <?php if(isset($activeLink['files'])) echo "active" ?>" >
                     <span class="glyphicon glyphicon-file sidebar-icon sidebar-icon-red"></span> <?php echo lang("ctn_555") ?>
@@ -149,7 +150,7 @@
                   <div id="files_sb_c" class="panel-collapse collapse sidebar-links-inner <?php if(isset($activeLink['files'])) echo "in" ?>">
                     <ul class="inner-sidebar-links">
                       <li class="<?php if(isset($activeLink['files']['general'])) echo "active" ?>"><a href="<?php echo site_url("Files") ?>"> <?php echo lang("ctn_716") ?></a></li>
-                      <?php if($this->common->has_permissions(array("admin", "files_manager"), $this->user)) : ?>
+                      <?php if($this->common->has_permissions(array("admin", "files_manager", "reception_manager"), $this->user)) : ?>
                       <li class="<?php if(isset($activeLink['files']['cats'])) echo "active" ?>"><a href="<?php echo site_url("files/categories") ?>"> <?php echo lang("ctn_710") ?></a></li>
                     <?php endif; ?>
                     </ul>
@@ -176,15 +177,15 @@
               <?php endif; ?>
             <?php endif; ?>
             <?php if($this->settings->info->invoices_section) : ?>
-              <?php if($this->common->has_permissions(array("admin", "invoice_manager", "invoice_viewer"), $this->user)) : ?>
+              <?php if($this->common->has_permissions(array("admin", "invoice_manager", "invoice_viewer", "reception_manager"), $this->user)) : ?>
               <li id="invoice_sb">
                   <a data-toggle="collapse" data-parent="#invoice_sb" href="#invoice_sb_c" class="collapsed <?php if(isset($activeLink['invoice'])) echo "active" ?>" >
-                    <span class="glyphicon glyphicon-education sidebar-icon sidebar-icon-pink"></span> <?php echo lang("ctn_614") ?>
+                    <span class="glyphicon glyphicon-credit-card sidebar-icon sidebar-icon-pink"></span> <?php echo lang("ctn_614") ?>
                     <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
                   </a>
                   <div id="invoice_sb_c" class="panel-collapse collapse sidebar-links-inner <?php if(isset($activeLink['invoice'])) echo "in" ?>">
                     <ul class="inner-sidebar-links">
-                    <?php if($this->common->has_permissions(array("admin", "invoice_manager"), $this->user)) : ?>
+                    <?php if($this->common->has_permissions(array("admin", "invoice_manager", "reception_manager"), $this->user)) : ?>
                       <li class="<?php if(isset($activeLink['invoice']['general'])) echo "active" ?>"><a href="<?php echo site_url("invoices") ?>"> <?php echo lang("ctn_718") ?></a></li>
                       <li class="<?php if(isset($activeLink['invoice']['templates'])) echo "active" ?>"><a href="<?php echo site_url("invoices/templates") ?>"> <?php echo lang("ctn_719") ?></a></li>
                       <!-- <li class="<?php if(isset($activeLink['invoice']['reoccuring'])) echo "active" ?>"><a href="<?php echo site_url("invoices/reoccuring") ?>"> <?php echo lang("ctn_670") ?></a></li> -->
@@ -201,7 +202,7 @@
               <?php endif; ?>
             <?php endif; ?>
             <?php if($this->settings->info->behaviour_section) : ?>
-            <?php if($this->common->has_permissions(array("admin", "behaviour_manager", "behaviour_viewer"), $this->user)) : ?>
+            <?php if($this->common->has_permissions(array("admin", "behaviour_manager", "behaviour_viewer", "reception_manager"), $this->user)) : ?>
             <li id="behaviour_sb">
                 <a data-toggle="collapse" data-parent="#behaviour_sb" href="#behaviour_sb_c" class="collapsed <?php if(isset($activeLink['behaviour'])) echo "active" ?>" >
                   <span class="glyphicon glyphicon-flag sidebar-icon sidebar-icon-red"></span> <?php echo lang("ctn_729") ?>
@@ -209,7 +210,7 @@
                 </a>
                 <div id="behaviour_sb_c" class="panel-collapse collapse sidebar-links-inner <?php if(isset($activeLink['behaviour'])) echo "in" ?>">
                   <ul class="inner-sidebar-links">
-                  <?php if($this->common->has_permissions(array("admin", "behaviour_manager"), $this->user)) : ?>
+                  <?php if($this->common->has_permissions(array("admin", "behaviour_manager", "reception_manager"), $this->user)) : ?>
                     <li class="<?php if(isset($activeLink['behaviour']['general'])) echo "active" ?>"><a href="<?php echo site_url("behaviour") ?>"> <?php echo lang("ctn_455") ?></a></li>
                     <li class="<?php if(isset($activeLink['behaviour']['rules'])) echo "active" ?>"><a href="<?php echo site_url("behaviour/rules") ?>"> <?php echo lang("ctn_730") ?></a></li>
                   <?php endif; ?>
@@ -220,7 +221,7 @@
             <?php endif; ?>
           <?php endif; ?>
           <?php if($this->settings->info->library_section) : ?>
-            <?php if($this->common->has_permissions(array("admin", "library_manager", "library_viewer"), $this->user)) : ?>
+            <?php if($this->common->has_permissions(array("admin", "library_manager", "library_viewer", "reception_manager"), $this->user)) : ?>
             <li id="subject_sb">
                 <a data-toggle="collapse" data-parent="#library_sb" href="#library_sb_c" class="collapsed <?php if(isset($activeLink['library'])) echo "active" ?>" >
                   <span class="glyphicon glyphicon-book sidebar-icon sidebar-icon-green"></span> <?php echo lang("ctn_731") ?>

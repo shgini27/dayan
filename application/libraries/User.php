@@ -50,7 +50,7 @@ class User
 				user_roles.finance_manager, user_roles.finance_viewer,
 				user_roles.files_manager, user_roles.files_viewer,
 				user_roles.report_manager, user_roles.parent, 
-				user_roles.parent_manager,
+				user_roles.parent_manager, user_roles.reception_manager,
 				user_roles.ID as user_role_id";
  		
  		// Twitter

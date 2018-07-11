@@ -3,7 +3,7 @@
 </style>
 
 <div class="white-area-content">
-    <?php if ($this->common->has_permissions(array("admin", "class_manager"), $this->user)) : ?>
+    <?php if ($this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) : ?>
     <div class="row">
         <div class="col-md-4">
             <div class="dashboard-window clearfix" style="background: #9e3c9b; border-left: 5px solid #82227f;">
@@ -109,7 +109,7 @@
                 </div> -->
             <?php endif; ?>
 
-            <?php if ($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer"), $this->user)) : ?>
+            <?php if ($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer", "reception_manager"), $this->user)) : ?>
                 <div class="block-area align-center content-separator">
                     <h4 class="home-label"><?php echo lang("ctn_613") ?></h4>
                     <div id="calendar">
@@ -133,7 +133,7 @@
             <?php endif; ?>
 
 
-            <?php if ($this->settings->info->invoices_section && $this->common->has_permissions(array("admin", "invoice_manager", "invoice_viewer"), $this->user)) : ?>
+            <?php if ($this->settings->info->invoices_section && $this->common->has_permissions(array("admin", "invoice_manager", "invoice_viewer", "reception_manager"), $this->user)) : ?>
                 <!-- <div class="content-separator block-area">
                 <h4 class="home-label"><?php echo lang("ctn_614") ?></h4>
                 <div class="table-responsive">
@@ -186,7 +186,7 @@
             <?php endif; ?>
 
             <!-- Birthdate Panel -->
-            <?php if ($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer"), $this->user)) : ?>
+            <?php if ($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer", "reception_manager"), $this->user)) : ?>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h4 class="home-label"><?php echo lang("ctn_1010") ?></h4>
@@ -203,7 +203,7 @@
             <?php endif; ?>
             <!-- End of Birthdate Panel -->
 
-            <?php if ($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer"), $this->user)) : ?>
+            <?php if ($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer", "reception_manager"), $this->user)) : ?>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h4 class="home-label"><?php echo lang("ctn_623") ?></h4>
@@ -222,7 +222,7 @@
             <?php endif; ?>
 
 
-            <?php if ($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer"), $this->user)) : ?>
+            <?php if ($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer", "reception_manager"), $this->user)) : ?>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h4 class="home-label"><?php echo lang("ctn_625") ?></h4>

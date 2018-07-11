@@ -33,7 +33,7 @@ class Classes extends CI_Controller {
         $this->template->loadData("activeLink", array("classes" => array("general" => 1)));
 
         if (!$this->common->has_permissions(array("admin", "class_manager",
-                    "class_viewer"), $this->user)) {
+                    "class_viewer", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
 
@@ -3748,7 +3748,7 @@ class Classes extends CI_Controller {
         $class = $class->row();
 
         if ($this->settings->info->teacher_class_manage) {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $member = $this->classes_model
                         ->get_class_student_user($this->user->info->ID, $class_id);
                 if ($member->num_rows() == 0) {
@@ -3760,7 +3760,7 @@ class Classes extends CI_Controller {
                 }
             }
         } else {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
         }
@@ -4854,6 +4854,60 @@ class Classes extends CI_Controller {
         echo json_encode(array("events" => $data_events));
         exit();
     }
+    
+    /**
+
+     * Method to populate table with class activities other than classes     /
+     */
+    public function get_class_activities() {
+        $start = $this->common->nohtml($this->input->get("start"));
+        $end = $this->common->nohtml($this->input->get("end"));
+        $classid = intval($this->input->get("classid"));
+
+        $startdt = new DateTime('now'); // setup a local datetime
+        $startdt->setTimestamp($start); // Set the date based on timestamp
+        $format = $startdt->format('Y-m-d H:i:s');
+
+        $enddt = new DateTime('now'); // setup a local datetime
+        $enddt->setTimestamp($end); // Set the date based on timestamp
+        $format2 = $enddt->format('Y-m-d H:i:s');
+
+
+        $class = $this->classes_model->get_class($classid);
+        if ($classid != 0 && $class->num_rows() == 0) {
+            $this->template->error(lang("error_92"));
+        }
+
+        $class = $class->row();
+
+        // Global calendar
+        $class_name = '';
+        if($classid != 0){
+            $class_name = $class->name;
+        }
+        
+        $event_ids[] = 0;
+
+        $events = $this->classes_model->get_class_events($format, $format2, $classid, $event_ids, 0);
+        $data_events = array();
+        foreach ($events->result() as $r) {
+            $data_events[] = array(
+                "id" => $r->ID,
+                "title" => $r->title . " $r->room",
+                "description" => $r->description,
+                "end" => $r->end,
+                "start" => $r->start,
+                "color" => "#" . $r->color,
+                "classid" => $classid,
+                "class_name" => $class_name,
+                "room" => $r->room,
+                "lesson_flag" => $r->lesson_flag
+            );
+        }
+
+        echo json_encode(array("events" => $data_events));
+        exit();
+    }
 
     /**
 
@@ -4872,8 +4926,40 @@ class Classes extends CI_Controller {
                 <script src="' . base_url() . 'scripts/libraries/jscolor.min.js"></script>'
         );
 
+        $this->template->loadData("activeLink", array("classes" => array("all_timetable" => 1)));
+        
         $this->template->loadContent("classes/all_events.php", array(
             "classes" => $classes
+                )
+        );
+    }
+    
+    /**
+
+     *   Method to get activities other then classes   /
+     */
+    public function activities() {
+        $classes = $this->classes_model->get_all_classes()->result();
+        
+        $rooms = $this->classes_model->get_rooms();
+
+        $this->template->loadExternal(
+                '<link rel="stylesheet" href="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.css" />
+		<script src="' . base_url() . 'scripts/libraries/datetimepicker/jquery.datetimepicker.full.min.js"></script>
+                <link rel="stylesheet" href="' . base_url() . 'scripts/libraries/full/fullcalendar.min.css" />
+                <link rel="stylesheet" href="' . base_url() . 'scripts/libraries/full/fullcalendar.print.min.css" media="print" type="text/css" />
+		<script src="' . base_url() . 'scripts/libraries/full/lib/moment.min.js"></script>
+		<script src="' . base_url() . 'scripts/libraries/full/fullcalendar.min.js"></script>
+                <script src="' . base_url() . 'scripts/libraries/full/gcal.min.js"></script>
+                <script src="' . base_url() . 'scripts/libraries/full/locale-all.js"></script>
+                <script src="' . base_url() . 'scripts/libraries/jscolor.min.js"></script>'
+        );
+
+        $this->template->loadData("activeLink", array("classes" => array("all_activities" => 1)));
+        
+        $this->template->loadContent("classes/all_activities.php", array(
+            "classes" => $classes,
+            "rooms" => $rooms
                 )
         );
     }
@@ -4881,14 +4967,14 @@ class Classes extends CI_Controller {
     public function add_class_event($id) {
         $id = intval($id);
         $class = $this->classes_model->get_class($id);
-        if ($class->num_rows() == 0) {
+        if ($id != 0 && $class->num_rows() == 0) {
             $this->template->error(lang("error_92"));
         }
 
         $class = $class->row();
 
         if ($this->settings->info->teacher_class_manage) {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $member = $this->classes_model
                         ->get_class_student_user($this->user->info->ID, $class->ID);
                 if ($member->num_rows() == 0) {
@@ -4900,7 +4986,7 @@ class Classes extends CI_Controller {
                 }
             }
         } else {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
         }
@@ -4953,8 +5039,13 @@ class Classes extends CI_Controller {
                 )
         );
 
+        $redirect = "classes/timetable/" . $id;
+        
+        if($id === 0){
+            $redirect = 'classes/activities';
+        }
         $this->session->set_flashdata("globalmsg", lang("success_80"));
-        redirect(site_url("classes/timetable/" . $id));
+        redirect(site_url($redirect));
     }
 
     public function update_class_event($classid) {
@@ -4967,7 +5058,7 @@ class Classes extends CI_Controller {
         $event->row();
 
         if ($this->settings->info->teacher_class_manage) {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $member = $this->classes_model
                         ->get_class_student_user($this->user->info->ID, $event->classid);
                 if ($member->num_rows() == 0) {
@@ -4979,7 +5070,7 @@ class Classes extends CI_Controller {
                 }
             }
         } else {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
         }
@@ -5029,7 +5120,15 @@ class Classes extends CI_Controller {
             $this->classes_model->delete_class_event($eventid);
             $this->session->set_flashdata("globalmsg", lang("success_82"));
         }
-        redirect(site_url("classes/timetable/" . $classid));
+        
+        $redirect = "classes/timetable/" . $classid;
+        
+        if(intval($classid) === 0){
+            $redirect = 'classes/activities';
+        }
+        
+        $this->session->set_flashdata("globalmsg", lang("success_81"));
+        redirect(site_url($redirect));
     }
 
     public function your_timetable() {
@@ -5069,7 +5168,7 @@ class Classes extends CI_Controller {
         $class = $class->row();
 
         if ($this->settings->info->teacher_class_manage) {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $member = $this->classes_model
                         ->get_class_student_user($this->user->info->ID, $class->ID);
                 if ($member->num_rows() == 0) {
@@ -5081,7 +5180,7 @@ class Classes extends CI_Controller {
                 }
             }
         } else {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
         }
@@ -5116,7 +5215,7 @@ class Classes extends CI_Controller {
         $class = $class->row();
 
         if ($this->settings->info->teacher_class_manage) {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $member = $this->classes_model
                         ->get_class_student_user($this->user->info->ID, $class->ID);
                 if ($member->num_rows() == 0) {
@@ -5128,7 +5227,7 @@ class Classes extends CI_Controller {
                 }
             }
         } else {
-            if (!$this->common->has_permissions(array("admin", "class_manager"), $this->user)) {
+            if (!$this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
         }

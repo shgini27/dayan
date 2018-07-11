@@ -53,6 +53,52 @@ class Template
 		$this->CI->load->view($this->layout, $site);
 		if($die) die($this->CI->output->get_output());
 	}
+        
+        public function loadFrontContent($view,$data=array(),$die=0)
+	{
+            $this->CI =& get_instance();
+		$site = array();
+
+		/*if(empty($this->layout)) {
+			$this->set_layout($this->CI->settings->info->layout);
+		}
+
+		$site['cssincludes'] = $this->cssincludes;
+		foreach($this->data as $k=>$v) {
+			$site[$k] = $v;
+		}
+		foreach($this->data as $k=>$v) {
+			$data[$k] = $v;
+		}
+		if($this->sidebar) {
+			$site['sidebar'] = $this->CI->load->view($this->sidebar,$data,true);
+		}
+
+		if($this->page_title) {
+			$site['page_title'] = $this->page_title;
+		}
+
+		if($this->responsive_sidebar) {
+			$site['responsive_sidebar'] = $this->CI->load
+				->view($this->responsive_sidebar,$data,true);
+		}*/
+                $site['cssincludes'] = $this->cssincludes;
+		foreach($this->data as $k=>$v) {
+			$site[$k] = $v;
+		}
+		foreach($this->data as $k=>$v) {
+			$data[$k] = $v;
+		}
+
+		$site = $this->set_language($site);
+
+		$data['site'] = $site;
+
+		$site['content'] = $this->CI->load->view($view,$data,true);
+
+		$this->CI->load->view($this->CI->settings->info->front_layout, $site);
+		if($die) die($this->CI->output->get_output());
+        }
 
 	public function loadAjax($view,$data=array(),$die=0) 
 	{

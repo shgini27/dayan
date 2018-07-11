@@ -1,6 +1,6 @@
 <div id="responsive-menu-links">
           <select name='link' OnChange="window.location.href=$(this).val();" class="form-control">
-          <option value='<?php echo site_url() ?>'><?php echo lang("ctn_154") ?></option>
+          <option value='<?php echo site_url("home") ?>'><?php echo lang("ctn_154") ?></option>
           <option value='<?php echo site_url("user_settings") ?>'><?php echo lang("ctn_156") ?></option>
           <?php if($this->user->loggedin && isset($this->user->info->user_role_id) && 
            ($this->user->info->admin || $this->user->info->admin_settings || $this->user->info->admin_members || $this->user->info->admin_payment)
@@ -39,16 +39,17 @@
            <?php if($this->settings->info->announcements_section && $this->common->has_permissions(array("admin", "announcement_manager", "announcement_viewer"), $this->user)) : ?>
             <option value='<?php echo site_url("announcements") ?>'><?php echo lang("ctn_447") ?></option>
            <?php endif; ?>
-           <?php if($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer"), $this->user)) : ?>
+           <?php if($this->settings->info->classes_section && $this->common->has_permissions(array("admin", "class_manager", "class_viewer", "reception_manager"), $this->user)) : ?>
             <option value='<?php echo site_url("classes") ?>'><?php echo lang("ctn_708") ?></option>
             <option value='<?php echo site_url("classes/your") ?>'><?php echo lang("ctn_625") ?></option>
             <option value='<?php echo site_url("classes/your_assignments") ?>'><?php echo lang("ctn_594") ?></option>
             <option value='<?php echo site_url("classes/your_timetable") ?>'><?php echo lang("ctn_709") ?></option>
-            <?php if($this->common->has_permissions(array("admin", "class_manager"), $this->user)) : ?>
+            <?php if($this->common->has_permissions(array("admin", "class_manager", "reception_manager"), $this->user)) : ?>
             <option value='<?php echo site_url("classes/categories") ?>'><?php echo lang("ctn_710") ?></option>
             <option value='<?php echo site_url("classes/branches") ?>'><?php echo lang("ctn_985") ?></option>
             <option value='<?php echo site_url("classes/rooms") ?>'><?php echo lang("ctn_992") ?></option>
             <option value='<?php echo site_url("classes/overall_events") ?>'><?php echo lang("ctn_1007") ?></option>
+            <option value='<?php echo site_url("classes/activities") ?>'><?php echo lang("ctn_1042") ?></option>
             <?php endif; ?>
            <?php endif; ?>
            <?php if($this->settings->info->subjects_section && $this->common->has_permissions(array("admin", "subject_manager", "subject_viewer"), $this->user)) : ?>

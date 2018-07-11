@@ -6,11 +6,11 @@
 </div>
 
 <ol class="breadcrumb">
-  <li><a href="<?php echo site_url() ?>"><?php echo lang("ctn_2") ?></a></li>
+  <li><a href="<?php echo site_url("home") ?>"><?php echo lang("ctn_2") ?></a></li>
   <li class="active"><?php echo lang("ctn_1") ?></li>
 </ol>
 
-<p><?php echo lang("ctn_64") ?></p>
+    <p><?php echo lang("ctn_64") ?></p>
 
 <hr>
 </div>

@@ -141,7 +141,7 @@ class Home extends CI_Controller {
             $classes_events[] = array("classid" => $r->classid);
         }
 
-        if ($this->user->info->admin) {
+        if ($this->user->info->admin || $this->user->info->reception_manager) {
             $all_classes = $this->classes_model->get_all_classes();
             foreach ($all_classes->result() as $r) {
                 $classes_events[] = array("classid" => $r->ID);

@@ -62,7 +62,7 @@
                 element.attr('data-placement', "bottom");
                 element.tooltip();
             },
-            timeFormat: 'HH:mm',
+            timeFormat: 'HH:mm'
         });
 
     });

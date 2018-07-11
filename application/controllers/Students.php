@@ -32,7 +32,7 @@ class Students extends CI_Controller {
 
     public function index() {
         if (!$this->common->has_permissions(array("admin", "student_manager",
-                    "student_viewer"), $this->user)) {
+                    "student_viewer", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         $date = date("Y-m-d");
@@ -46,7 +46,7 @@ class Students extends CI_Controller {
 
     public function student_page() {
         if (!$this->common->has_permissions(array("admin", "student_manager",
-                    "student_viewer"), $this->user)) {
+                    "student_viewer", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         $this->load->library("datatables");
@@ -84,6 +84,9 @@ class Students extends CI_Controller {
             if ($this->common->has_permissions(array("admin", "student_manager"), $this->user)) {
                 $options .= ' <a href="' . site_url("students/edit_student/" . $r->ID) . '" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_55") . '"><span class="glyphicon glyphicon-cog"></span></a>';
                 $options .= ' <a href="' . site_url("students/delete_student/" . $r->ID . "/" . $this->security->get_csrf_hash()) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'' . lang("ctn_317") . '\')" data-toggle="tooltip" data-placement="bottom" title="' . lang("ctn_57") . '"><span class="glyphicon glyphicon-trash"></span></a>';
+            }
+            
+            if ($this->common->has_permissions(array("admin", "student_manager", "reception_manager"), $this->user)) {
                 $options .= ' <input type="button" class="btn btn-success btn-xs addStudentDialog" value="' . lang("ctn_504") . '" data-toggle="modal" data-id="' . $r->ID .'" data-target="#myModal" />';
                 $options .= $black_list;
             }
@@ -101,7 +104,7 @@ class Students extends CI_Controller {
     }
 
     public function add_student() {
-        if (!$this->common->has_permissions(array("admin", "student_manager"), $this->user)) {
+        if (!$this->common->has_permissions(array("admin", "student_manager", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         
@@ -133,8 +136,7 @@ class Students extends CI_Controller {
     }
     
     public function black_list($id, $action){
-        if (!$this->common->has_permissions(array("admin", "student_manager",
-                        ), $this->user)) {
+        if (!$this->common->has_permissions(array("admin", "student_manager", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         $this->template->loadData("activeLink", array("students" => array("general" => 1)));
@@ -171,8 +173,7 @@ class Students extends CI_Controller {
     }
 
     public function edit_student($id) {
-        if (!$this->common->has_permissions(array("admin", "student_manager",
-                        ), $this->user)) {
+        if (!$this->common->has_permissions(array("admin", "student_manager", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         $this->template->loadData("activeLink", array("students" => array("general" => 1)));
@@ -221,8 +222,7 @@ class Students extends CI_Controller {
     }
 
     public function edit_student_pro($id) {
-        if (!$this->common->has_permissions(array("admin", "student_manager",
-                        ), $this->user)) {
+        if (!$this->common->has_permissions(array("admin", "student_manager", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         $id = intval($id);
@@ -519,7 +519,7 @@ class Students extends CI_Controller {
 
     public function dropped_students() {
         if (!$this->common->has_permissions(array("admin", "student_manager",
-                    "student_viewer"), $this->user)) {
+                    "student_viewer", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         $this->template->loadData("activeLink", array("students" => array("dropped" => 1)));
@@ -531,7 +531,7 @@ class Students extends CI_Controller {
     
     public function dropped_studens_page() {
         if (!$this->common->has_permissions(array("admin", "student_manager",
-                    "student_viewer"), $this->user)) {
+                    "student_viewer", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         $this->load->library("datatables");
@@ -584,14 +584,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -624,14 +624,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -670,14 +670,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -723,7 +723,7 @@ class Students extends CI_Controller {
 
     public function edit_report($id) {
         if (!$this->common->has_permissions(array("admin", "student_manager",
-                    "student_viewer"), $this->user)) {
+                    "student_viewer", "reception_manager"), $this->user)) {
             $this->template->error(lang("error_2"));
         }
         $id = intval($id);
@@ -764,14 +764,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -800,14 +800,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -882,14 +882,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -918,14 +918,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -996,14 +996,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -1078,14 +1078,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
@@ -1115,14 +1115,14 @@ class Students extends CI_Controller {
             
         } else {
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer", "parent"), $this->user)) {
+                        "student_viewer", "parent", "reception_manager"), $this->user)) {
                 $this->template->error(lang("error_2"));
             }
 
             // Check if user is a parent that the child is theres
             // All roles except parent means they are a parent
             if (!$this->common->has_permissions(array("admin", "student_manager",
-                        "student_viewer"), $this->user)) {
+                        "student_viewer", "reception_manager"), $this->user)) {
                 $child = $this->user_model->check_child($this->user->info->ID, $id);
                 if ($child->num_rows() == 0) {
                     $this->template->error(lang("error_161"));
